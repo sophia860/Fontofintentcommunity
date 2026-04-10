@@ -1,0 +1,136 @@
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  max-width: 680px;
+  margin: 0 auto;
+  padding: 3rem 1.5rem 5rem;
+  font-family: var(--font-body, 'Georgia', serif);
+  color: var(--color-text, #1a1a1a);
+}
+
+.intro {
+  border-bottom: 1px solid #d4cfc7;
+  padding-bottom: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.intro h2 {
+  font-family: var(--font-display, 'Georgia', serif);
+  font-size: 1.75rem;
+  font-weight: 400;
+  letter-spacing: -0.02em;
+  margin: 0 0 0.75rem;
+  color: #1a1a1a;
+}
+
+.intro p {
+  font-size: 0.975rem;
+  line-height: 1.65;
+  color: #4a4a45;
+  margin: 0;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.field label {
+  font-size: 0.875rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #2c2c28;
+}
+
+.hint {
+  font-weight: 400;
+  text-transform: none;
+  letter-spacing: 0;
+  color: #888;
+  font-size: 0.8rem;
+}
+
+.field input,
+.field textarea,
+.field select {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: 1px solid #ccc9c0;
+  border-radius: 3px;
+  background: #faf9f7;
+  font-family: var(--font-body, 'Georgia', serif);
+  font-size: 1rem;
+  color: #1a1a1a;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  resize: vertical;
+  appearance: none;
+}
+
+.field input:focus,
+.field textarea:focus,
+.field select:focus {
+  outline: none;
+  border-color: #8c5a4a;
+  box-shadow: 0 0 0 3px rgba(140, 90, 74, 0.12);
+  background: #fff;
+}
+
+.field input::placeholder,
+.field textarea::placeholder {
+  color: #aaa;
+  font-style: italic;
+}
+
+.submit {
+  align-self: flex-start;
+  margin-top: 1rem;
+  padding: 0.85rem 2.5rem;
+  background: #2c2c28;
+  color: #faf9f7;
+  border: none;
+  border-radius: 3px;
+  font-family: var(--font-body, 'Georgia', serif);
+  font-size: 0.9rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.1s ease;
+}
+
+.submit:hover {
+  background: #8c5a4a;
+  transform: translateY(-1px);
+}
+
+.submit:active {
+  transform: translateY(0);
+}
+
+.confirmation {
+  max-width: 680px;
+  margin: 4rem auto;
+  padding: 3rem 2rem;
+  border: 1px solid #d4cfc7;
+  border-radius: 4px;
+  background: #faf9f7;
+  text-align: center;
+}
+
+.confirmation h2 {
+  font-family: var(--font-display, 'Georgia', serif);
+  font-size: 1.5rem;
+  font-weight: 400;
+  margin: 0 0 1rem;
+  color: #2c2c28;
+}
+
+.confirmation p {
+  font-size: 1rem;
+  line-height: 1.7;
+  color: #4a4a45;
+  margin: 0;
+}
