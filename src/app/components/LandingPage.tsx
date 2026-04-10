@@ -176,7 +176,7 @@ export function LandingPage() {
           what your fingers felt
         </h1>
 
-        {/* Subtitle — explicit line break */}
+        {/* Subtitle — piece of writing, not a letter */}
         <p
           className="text-[#8B7E74]"
           style={{
@@ -187,7 +187,7 @@ export function LandingPage() {
             marginBottom: 0,
           }}
         >
-          a letter that proves you were here.
+          a piece of writing that proves you were here.
           <br />
           not generated. not autocompleted. yours.
         </p>
@@ -279,7 +279,7 @@ export function LandingPage() {
                   fontSize: '0.9rem',
                 }}
               >
-                watching a letter unfold...
+                a piece of writing taking shape...
               </p>
             )}
           </div>
@@ -310,7 +310,7 @@ export function LandingPage() {
             onMouseEnter={(e) => { (e.target as HTMLElement).style.borderBottomColor = '#2C2824'; }}
             onMouseLeave={(e) => { (e.target as HTMLElement).style.borderBottomColor = '#C4B5A6'; }}
           >
-            Write Your Letter{' '}
+            Begin Writing{' '}
             <span
               className="inline-block"
               style={{
@@ -343,7 +343,7 @@ export function LandingPage() {
             marginBottom: '0.5rem',
           }}
         >
-          the letter only a human could write
+          the writing only a human could make
         </p>
         <p
           style={{
