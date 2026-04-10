@@ -1,0 +1,139 @@
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  max-width: 680px;
+  margin: 0 auto;
+  padding: 3rem 1.5rem 5rem;
+  font-family: var(--font-body, 'Georgia', serif);
+  color: var(--color-text, #1a1a1a);
+}
+
+.intro {
+  border-bottom: 2px solid #1a1a1a;
+  padding-bottom: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.intro h2 {
+  font-family: var(--font-display, 'Georgia', serif);
+  font-size: 1.75rem;
+  font-weight: 400;
+  letter-spacing: -0.02em;
+  margin: 0 0 0.75rem;
+  color: #1a1a1a;
+}
+
+.intro p {
+  font-size: 0.975rem;
+  line-height: 1.7;
+  color: #3a3a35;
+  margin: 0;
+  font-style: italic;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.field label {
+  font-size: 0.875rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #2c2c28;
+}
+
+.hint {
+  font-weight: 400;
+  text-transform: none;
+  letter-spacing: 0;
+  color: #888;
+  font-size: 0.8rem;
+}
+
+.field input,
+.field textarea,
+.field select {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: 1px solid #a0a09a;
+  border-radius: 2px;
+  background: #f5f4f1;
+  font-family: var(--font-body, 'Georgia', serif);
+  font-size: 1rem;
+  color: #1a1a1a;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  resize: vertical;
+  appearance: none;
+}
+
+.field input:focus,
+.field textarea:focus,
+.field select:focus {
+  outline: none;
+  border-color: #1a1a1a;
+  box-shadow: 0 0 0 2px rgba(26, 26, 26, 0.08);
+  background: #fff;
+}
+
+.field input::placeholder,
+.field textarea::placeholder {
+  color: #b0b0a8;
+  font-style: italic;
+}
+
+.submit {
+  align-self: flex-start;
+  margin-top: 1.5rem;
+  padding: 1rem 3rem;
+  background: #1a1a1a;
+  color: #f5f4f1;
+  border: none;
+  border-radius: 2px;
+  font-family: var(--font-body, 'Georgia', serif);
+  font-size: 0.875rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background 0.2s ease, letter-spacing 0.2s ease;
+}
+
+.submit:hover {
+  background: #2c2c28;
+  letter-spacing: 0.16em;
+}
+
+.submit:active {
+  background: #1a1a1a;
+}
+
+.confirmation {
+  max-width: 680px;
+  margin: 4rem auto;
+  padding: 3rem 2rem;
+  border-top: 2px solid #1a1a1a;
+  border-bottom: 1px solid #ccc9c0;
+  background: transparent;
+  text-align: center;
+}
+
+.confirmation h2 {
+  font-family: var(--font-display, 'Georgia', serif);
+  font-size: 1.5rem;
+  font-weight: 400;
+  margin: 0 0 1rem;
+  color: #1a1a1a;
+  letter-spacing: -0.01em;
+}
+
+.confirmation p {
+  font-size: 1rem;
+  line-height: 1.8;
+  color: #3a3a35;
+  margin: 0;
+  font-style: italic;
+}
