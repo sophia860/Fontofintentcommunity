@@ -11,6 +11,18 @@ type Sub = {
   writings: { title: string; profiles: { display_name: string } | null } | null;
 };
 
+type BloomRow = {
+  id: string;
+  title: string;
+  body?: string;
+  tags?: string[];
+  word_count?: number;
+  scouted?: boolean;
+  author_id: string;
+  updated_at: string;
+  profiles?: { display_name?: string } | null;
+};
+
 type BloomPiece = {
   id: string;
   title: string;
@@ -50,9 +62,9 @@ export function JournalDashboard() {
         .order('updated_at', { ascending: false }),
     ]);
 
-    setSubs((subsRes.data as any) || []);
+    setSubs((subsRes.data as Sub[]) || []);
 
-    const bloom = ((bloomRes.data as any[]) || []).map((row: any) => ({
+    const bloom: BloomPiece[] = ((bloomRes.data as BloomRow[]) || []).map((row) => ({
       id: row.id,
       title: row.title,
       body: row.body,

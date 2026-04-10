@@ -76,7 +76,7 @@ export function WritingSurface() {
   const [theme, setTheme] = useState<FoiTheme>(getStoredTheme);
   const [firstCharAnim, setFirstCharAnim] = useState(false);
   const [saving, setSaving] = useState(false);
-  const [pieceTitle] = useState('Untitled');
+  const [pieceTitle, setPieceTitle] = useState('Untitled');
   const [tags, setTags] = useState<string[]>([]);
   const [tagInput, setTagInput] = useState('');
   const [showTagInput, setShowTagInput] = useState(false);
@@ -107,6 +107,7 @@ export function WritingSurface() {
         return;
       }
       setTags((data as { tags?: string[] }).tags ?? []);
+      setPieceTitle((data as { title?: string }).title || 'Untitled');
       // Populate text buffer and bursts from existing body
       if ((data as { body?: string }).body) {
         sessionStartRef.current = performance.now();

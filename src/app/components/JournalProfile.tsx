@@ -23,13 +23,25 @@ export function JournalProfile() {
   useEffect(() => {
     if (!id) { setLoading(false); return; }
     async function load() {
-      // Try slug first, then id
-      const { data } = await supabase
+      // Try by slug first, then by id — avoids string interpolation in query
+      const bySlug = await supabase
         .from('journals')
         .select('id, name, slug, description, editorial_statement, aesthetic_tags, website, status, pays_contributors')
-        .or(`slug.eq.${id},id.eq.${id}`)
-        .single();
-      setJournal((data as Journal) || null);
+        .eq('slug', id)
+        .maybeSingle();
+
+      let result = bySlug.data;
+
+      if (!result) {
+        const byId = await supabase
+          .from('journals')
+          .select('id, name, slug, description, editorial_statement, aesthetic_tags, website, status, pays_contributors')
+          .eq('id', id)
+          .maybeSingle();
+        result = byId.data;
+      }
+
+      setJournal((result as Journal) || null);
       setLoading(false);
     }
     load();

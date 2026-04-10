@@ -38,7 +38,7 @@ function WriterForm() {
   async function handleSubmit(ev: React.FormEvent) {
     ev.preventDefault(); setLoading(true); setError('');
     const { error: err } = await supabase.from('writer_applications').insert({
-      name: form.name, email: form.email, bio: form.bio, forms: form.forms, sample: '', statement: form.website, status: 'pending',
+      name: form.name, email: form.email, bio: form.bio, forms: form.forms, sample: form.website, statement: '', status: 'pending',
     });
     setLoading(false);
     if (err) { setError(err.message); return; }
@@ -107,7 +107,7 @@ function JournalForm() {
 }
 
 function ResidencyForm() {
-  const [form, setForm] = useState({ name: '', email: '', bio: '', project: '', duration: '', needs: '', statement: '' });
+  const [form, setForm] = useState({ name: '', contact_name: '', contact_email: '', bio: '', project: '', duration: '', needs: '', statement: '' });
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -116,7 +116,14 @@ function ResidencyForm() {
   async function handleSubmit(ev: React.FormEvent) {
     ev.preventDefault(); setLoading(true); setError('');
     const { error: err } = await supabase.from('residency_applications').insert({
-      name: form.name, email: form.email, bio: form.bio, project: form.project, duration: form.duration, needs: form.needs, statement: form.statement, status: 'pending',
+      name: form.name,
+      email: form.contact_email,
+      bio: form.bio,
+      project: form.project,
+      duration: form.duration,
+      needs: form.needs,
+      statement: form.statement,
+      status: 'pending',
     });
     setLoading(false);
     if (err) { setError(err.message); return; }
@@ -134,7 +141,8 @@ function ResidencyForm() {
       {error && <p style={{ color: '#9b2335', fontSize: '0.85rem', marginBottom: '1rem' }}>{error}</p>}
       <p style={{ ...S.body, backgroundColor: '#f2ede8', padding: '1rem 1.25rem', borderLeft: '3px solid #c5bdb4' }}>The 2025-26 Residency Programme is now open for applications. Two to three journals will be selected. Selection is based solely on quality. There is no application fee.</p>
       <div style={S.fieldGroup}><label style={S.fieldLabel}>Journal name</label><input style={S.input} name="name" type="text" placeholder="Journal name" value={form.name} onChange={handle} required /></div>
-      <div style={S.fieldGroup}><label style={S.fieldLabel}>Contact name and email</label><input style={S.input} name="email" type="text" placeholder="Name - email@example.com" value={form.email} onChange={handle} required /></div>
+      <div style={S.fieldGroup}><label style={S.fieldLabel}>Contact name</label><input style={S.input} name="contact_name" type="text" placeholder="Editor or contact name" value={form.contact_name} onChange={handle} required /></div>
+      <div style={S.fieldGroup}><label style={S.fieldLabel}>Contact email</label><input style={S.input} name="contact_email" type="email" placeholder="hello@example.com" value={form.contact_email} onChange={handle} required /></div>
       <div style={S.fieldGroup}><label style={S.fieldLabel}>Link to a recent issue</label><p style={S.fieldNote}>Digital or physical. A PDF is fine.</p><input style={S.input} name="bio" type="url" placeholder="https://" value={form.bio} onChange={handle} /></div>
       <div style={S.fieldGroup}><label style={S.fieldLabel}>Mission statement</label><p style={S.fieldNote}>What is your journal for? What does it believe about writing?</p><textarea style={S.textarea} name="project" placeholder="" value={form.project} onChange={handle} required /></div>
       <div style={S.fieldGroup}><label style={S.fieldLabel}>Why now?</label><p style={S.fieldNote}>What is your journal trying to do that it does not yet have the infrastructure for?</p><textarea style={{ ...S.textarea, minHeight: '160px' }} name="statement" placeholder="" value={form.statement} onChange={handle} required /></div>
@@ -154,7 +162,7 @@ function TilthForm() {
   async function handleSubmit(ev: React.FormEvent) {
     ev.preventDefault(); setLoading(true); setError('');
     const { error: err } = await supabase.from('tilth_submissions').insert({
-      name: form.name, email: form.email, bio: form.context, genre: form.genre, sample: form.sample, why_tilth: form.why_tilth, status: 'pending',
+      name: form.name, email: form.email, bio: form.context, genre: form.genre, sample: form.sample, why_tilth: form.why_tilth, dates: form.dates, status: 'pending',
     });
     setLoading(false);
     if (err) { setError(err.message); return; }

@@ -38,18 +38,26 @@ export function WriterProfile() {
       const targetId = id || user?.id;
       if (!targetId) { setLoading(false); return; }
 
-      const [profileRes, writingsRes] = await Promise.all([
-        supabase.from('profiles').select('id, display_name, bio, location, forms_worked_in, website').eq('id', targetId).single(),
-        supabase.from('writings').select('id, title, body, state, tags, word_count, created_at')
-          .eq('author_id', targetId)
-          // Public view: only bloom pieces in bloom pool; own view: all
-          .or(
-            user?.id === targetId
-              ? 'state.in.(seed,sprout,bloom)'
-              : 'state.eq.bloom,in_bloom_pool.eq.true'
-          )
-          .order('created_at', { ascending: false }),
-      ]);
+      const profileRes = await supabase
+        .from('profiles')
+        .select('id, display_name, bio, location, forms_worked_in, website')
+        .eq('id', targetId)
+        .single();
+
+      // Public view: only bloom pieces that are in the bloom pool.
+      // Own view: all pieces regardless of state.
+      const isOwner = user?.id === targetId;
+      let writingsQuery = supabase
+        .from('writings')
+        .select('id, title, body, state, tags, word_count, created_at')
+        .eq('author_id', targetId)
+        .order('created_at', { ascending: false });
+
+      if (!isOwner) {
+        writingsQuery = writingsQuery.eq('state', 'bloom').eq('in_bloom_pool', true);
+      }
+
+      const writingsRes = await writingsQuery;
 
       if (profileRes.data) setProfile(profileRes.data as Profile);
       setWritings((writingsRes.data as Writing[]) || []);
