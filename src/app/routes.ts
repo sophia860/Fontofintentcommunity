@@ -1,5 +1,6 @@
 import { createBrowserRouter } from 'react-router';
 import { GardenHome } from './components/GardenHome';
+import { WriterDirectory } from './components/WriterDirectory';
 import { WriterProfile } from './components/WriterProfile';
 import { JournalDirectory } from './components/JournalDirectory';
 import { JournalProfile } from './components/JournalProfile';
@@ -18,7 +19,7 @@ export const router = createBrowserRouter([
   },
   {
     path: '/writers',
-    Component: WriterProfile,
+    Component: WriterDirectory,
   },
   {
     path: '/writers/:id',

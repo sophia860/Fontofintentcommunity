@@ -4,6 +4,7 @@
  * No hamburger menus. The identity is in the restraint.
  */
 import { Link, useLocation } from 'react-router';
+import { useAuth } from '../lib/useAuth';
 
 const NAV_LINKS = [
   { href: '/writers',   label: 'Writers'   },
@@ -15,6 +16,7 @@ const NAV_LINKS = [
 
 export function Nav() {
   const { pathname } = useLocation();
+  const { user, loading, signOut } = useAuth();
 
   return (
     <header
@@ -47,7 +49,7 @@ export function Nav() {
       </Link>
 
       {/* Navigation */}
-      <nav style={{ display: 'flex', gap: '2.5rem' }}>
+      <nav style={{ display: 'flex', gap: '2.5rem', alignItems: 'baseline' }}>
         {NAV_LINKS.map(({ href, label }) => {
           const active = pathname.startsWith(href);
           return (
@@ -70,21 +72,74 @@ export function Nav() {
           );
         })}
 
-        {/* Apply CTA */}
-        <Link
-          to="/apply"
-          style={{
-            fontFamily: 'Georgia, serif',
-            fontSize: '0.85rem',
-            letterSpacing: '0.04em',
-            color: '#faf8f5',
-            backgroundColor: '#1a1714',
-            padding: '0.3rem 0.9rem',
-            textDecoration: 'none',
-          }}
-        >
-          Apply
-        </Link>
+        {/* Auth / dashboard */}
+        {!loading && (
+          user ? (
+            <>
+              <Link
+                to="/dashboard/writer"
+                style={{
+                  fontFamily: 'Georgia, serif',
+                  fontSize: '0.85rem',
+                  letterSpacing: '0.04em',
+                  color: pathname.startsWith('/dashboard') ? '#1a1714' : '#7a7067',
+                  textDecoration: 'none',
+                  borderBottom: pathname.startsWith('/dashboard') ? '1px solid #1a1714' : '1px solid transparent',
+                  paddingBottom: '2px',
+                }}
+              >
+                Dashboard
+              </Link>
+              <button
+                onClick={signOut}
+                style={{
+                  fontFamily: 'Georgia, serif',
+                  fontSize: '0.85rem',
+                  letterSpacing: '0.04em',
+                  color: '#7a7067',
+                  background: 'none',
+                  border: 'none',
+                  cursor: 'pointer',
+                  padding: 0,
+                }}
+              >
+                Sign out
+              </button>
+            </>
+          ) : (
+            <Link
+              to="/dashboard/writer"
+              style={{
+                fontFamily: 'Georgia, serif',
+                fontSize: '0.85rem',
+                letterSpacing: '0.04em',
+                color: '#faf8f5',
+                backgroundColor: '#1a1714',
+                padding: '0.3rem 0.9rem',
+                textDecoration: 'none',
+              }}
+            >
+              Sign in
+            </Link>
+          )
+        )}
+
+        {/* Apply CTA — only shown when not signed in, to avoid overcrowding */}
+        {!loading && !user && (
+          <Link
+            to="/apply"
+            style={{
+              fontFamily: 'Georgia, serif',
+              fontSize: '0.85rem',
+              letterSpacing: '0.04em',
+              color: '#7a7067',
+              textDecoration: 'none',
+              borderBottom: '1px solid #c5bdb4',
+            }}
+          >
+            Apply
+          </Link>
+        )}
       </nav>
     </header>
   );
