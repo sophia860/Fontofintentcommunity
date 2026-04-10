@@ -1,20 +1,15 @@
+// ─── Page Gallery Garden — Core Types ───────────────────────────────────────
+
+// Legacy typing-session types (kept for WritingSurface compatibility)
 export interface TypingEvent {
-  /** Timestamp relative to session start (ms) */
   t: number;
   type: 'insert' | 'delete';
-  /** The character inserted (for 'insert' events) */
   char?: string;
-  /** Position in the text buffer */
   pos: number;
-  /** Inter-key interval in ms */
   iki: number;
-  /** Burst velocity: rolling chars/sec (EMA smoothed) */
   burst: number;
-  /** Pause duration before this keystroke (ms), 0 if no significant pause */
   pause: number;
-  /** Computed confidence 0..1 */
   confidence: number;
-  /** Computed hesitation 0..1 */
   hesitation: number;
 }
 
@@ -24,28 +19,15 @@ export interface Session {
   finalText: string;
 }
 
-/**
- * A typing burst: a group of characters typed at a consistent rhythm.
- * The unit of visual expression — styled uniformly.
- */
 export interface Burst {
   id: string;
-  /** Characters in this burst */
   chars: string[];
-  /** Aggregate confidence (average of constituent keystrokes) */
   confidence: number;
-  /** Aggregate hesitation */
   hesitation: number;
-  /** Pause duration before this burst started (ms, 0 if none) */
   pauseBefore: number;
-  /** IKIs within this burst (for debugging/tuning) */
   ikis: number[];
 }
 
-/**
- * A rendered token in the display buffer.
- * Includes both live characters and ghost traces of deleted chars.
- */
 export interface DisplayToken {
   id: string;
   char: string;
@@ -53,6 +35,119 @@ export interface DisplayToken {
   hesitation: number;
   pause: number;
   isGhost: boolean;
-  /** Timestamp when this token was created */
   createdAt: number;
+}
+
+// ─── Garden / Institution Types ───────────────────────────────────────────────
+
+export type WriterStatus = 'active' | 'seeking' | 'closed';
+export type JournalStatus = 'open' | 'closed' | 'rolling';
+export type ResidencyStatus = 'open' | 'current' | 'completed';
+export type EditionStatus = 'forthcoming' | 'available' | 'sold_out';
+
+export interface WriterProfile {
+  id: string;
+  name: string;
+  slug: string;
+  location?: string;
+  bio: string;
+  forms: string[];          // e.g. ['poetry', 'essay', 'fiction']
+  themes: string[];         // e.g. ['grief', 'migration', 'queerness']
+  status: WriterStatus;
+  gardenMember: boolean;
+  publications?: string[];
+  website?: string;
+  joinedAt: string;         // ISO date
+  featuredInEditions?: string[]; // Edition IDs
+}
+
+export interface JournalProfile {
+  id: string;
+  name: string;
+  slug: string;
+  editors: string[];
+  location?: string;
+  founded?: string;
+  mission: string;
+  forms: string[];          // what they publish
+  themes: string[];
+  status: JournalStatus;
+  pays: boolean;
+  payNote?: string;
+  readingPeriods?: ReadingPeriod[];
+  website?: string;
+  gardenPartner: boolean;
+  residencyAlumnus: boolean;
+  pageGalleryImprint: boolean;
+  joinedAt: string;
+}
+
+export interface ReadingPeriod {
+  opens: string;   // ISO date
+  closes: string;  // ISO date
+  note?: string;
+}
+
+export interface ResidencyApplication {
+  id: string;
+  journalId: string;
+  journalName: string;
+  contact: string;
+  email: string;
+  missionStatement: string;
+  sampleIssueUrl?: string;
+  whyNow: string;
+  submittedAt: string;
+  status: 'pending' | 'shortlisted' | 'accepted' | 'declined';
+}
+
+export interface Residency {
+  id: string;
+  journal: JournalProfile;
+  cohort: string;           // e.g. '2025–26'
+  status: ResidencyStatus;
+  mentorNote?: string;      // editorial note visible to public
+  absorptionPathway: boolean;
+}
+
+export interface Edition {
+  id: string;
+  title: string;
+  slug: string;
+  author: WriterProfile;
+  illustrator?: string;
+  forewordBy?: string;
+  dateWrittenStart: string; // ISO date
+  dateWrittenEnd: string;   // ISO date
+  published: string;        // ISO date
+  status: EditionStatus;
+  coverImage?: string;
+  description: string;
+  pages: number;
+  printRun: number;
+  priceChapbook: number;
+  priceGiclée?: number;
+  priceOriginal?: number;
+  isbn?: string;
+  contextSummary: string;   // editorial record of the period
+}
+
+export interface GardenCallout {
+  id: string;
+  type: 'open_call' | 'residency' | 'announcement' | 'edition';
+  title: string;
+  body: string;
+  date: string;
+  link?: string;
+  urgent: boolean;
+}
+
+export interface PrintPartner {
+  id: string;
+  name: string;
+  location: string;
+  specialisms: string[];    // e.g. ['risograph', 'letterpress', 'short-run offset']
+  minRun: number;
+  website?: string;
+  gardenPartner: boolean;
 }
