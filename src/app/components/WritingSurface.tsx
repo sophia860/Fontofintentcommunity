@@ -153,11 +153,9 @@ export function WritingSurface() {
   /** Delete word backward (iOS swipe-delete) */
   const deleteWordBackward = useCallback(() => {
     if (textBufferRef.current.length === 0) return;
-    // Delete trailing spaces first
     while (textBufferRef.current.length > 0 && textBufferRef.current[textBufferRef.current.length - 1] === ' ') {
       deleteChar();
     }
-    // Delete until next space or start
     while (textBufferRef.current.length > 0 && textBufferRef.current[textBufferRef.current.length - 1] !== ' ') {
       deleteChar();
     }
@@ -182,7 +180,6 @@ export function WritingSurface() {
     [insertChar, deleteChar]
   );
 
-  /** Handle beforeinput for mobile — catches soft-keyboard events */
   const handleBeforeInput = useCallback(
     (e: React.FormEvent<HTMLTextAreaElement>) => {
       const ie = e.nativeEvent as InputEvent;
@@ -382,7 +379,7 @@ export function WritingSurface() {
                     onMouseEnter={(e) => { (e.target as HTMLElement).style.borderBottomColor = finishUnderlineHover; }}
                     onMouseLeave={(e) => { (e.target as HTMLElement).style.borderBottomColor = finishUnderline; }}
                   >
-                    Finish Letter {'\u2192'}
+                    Add to the Garden {'\u2192'}
                   </span>
                 </button>
               </>
@@ -414,7 +411,7 @@ export function WritingSurface() {
         )}
       </div>
 
-      {/* Mobile: Finish Letter bar — full-width, always visible when content exists */}
+      {/* Mobile: Add to the Garden bar — full-width, always visible when content exists */}
       {isMobile && hasContent && (
         <div
           className="relative z-10"
@@ -447,7 +444,7 @@ export function WritingSurface() {
                 borderBottom: `1px solid ${finishUnderline}`,
               }}
             >
-              Finish Letter {'\u2192'}
+              Add to the Garden {'\u2192'}
             </span>
           </button>
         </div>
@@ -523,14 +520,13 @@ export function WritingSurface() {
           autoCapitalize="off"
           autoComplete="off"
           spellCheck={false}
-          aria-label="Type your letter here"
+          aria-label="Write a piece for the Garden"
         />
       </div>
 
       {/* Bottom bar */}
       <div className="relative z-10 flex items-end justify-center px-4 pb-4 sm:px-6 sm:pb-6 md:px-10 md:pb-8">
         {isMobile ? (
-          /* Mobile: "Done" button instead of keyboard shortcut hint */
           <button
             onClick={(e) => { e.stopPropagation(); doFinish(); }}
             className="cursor-pointer"
@@ -550,7 +546,6 @@ export function WritingSurface() {
             Done
           </button>
         ) : (
-          /* Desktop: keyboard shortcut hint */
           <p
             style={{
               fontFamily: "'Inter', sans-serif",
@@ -561,7 +556,7 @@ export function WritingSurface() {
               transition: 'color 0.3s ease',
             }}
           >
-            {isMac ? '\u2318' : 'Ctrl'}+Enter to finish
+            {isMac ? '\u2318' : 'Ctrl'}+Enter to add to the Garden
           </p>
         )}
       </div>

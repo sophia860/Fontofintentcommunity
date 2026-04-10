@@ -3,7 +3,7 @@
  *
  * The Garden is not trying to publish you.
  * It is the place where writing lives before it becomes anything else.
- * Tilth is what the Garden occasionally produces as a verdict.
+ * Chapbooks are what the Garden occasionally produces as a verdict.
  */
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router';
@@ -25,6 +25,84 @@ type Journal = {
   slug: string;
   status: string;
 };
+
+// Writers Board: a piece of writing growing in the Garden
+type GardenPiece = {
+  id: string;
+  title: string;
+  excerpt: string;
+  state: 'seed' | 'sprout' | 'bloom';
+  tags: string[];
+  wordCount: number;
+  lastVisited: string; // ISO date string
+  pattern?: string;   // surfaced insight, e.g. "returning to this every October"
+  scouted?: boolean;  // flagged by a journal editor
+};
+
+// State label copy
+const STATE_LABEL: Record<GardenPiece['state'], string> = {
+  seed: 'Seed',
+  sprout: 'Sprout',
+  bloom: 'Bloom',
+};
+
+// Dot color per state
+const STATE_COLOR: Record<GardenPiece['state'], string> = {
+  seed: '#C4B5A6',
+  sprout: '#8BA67A',
+  bloom: '#6B8E6B',
+};
+
+// Demo data — replace with Supabase query when profiles table has pieces
+const DEMO_PIECES: GardenPiece[] = [
+  {
+    id: '1',
+    title: 'The sea at Lyme, six a.m.',
+    excerpt: 'The water was the colour of nothing decided yet.',
+    state: 'bloom',
+    tags: ['grief', 'sea', 'mothers'],
+    wordCount: 847,
+    lastVisited: '2026-04-08',
+    pattern: 'You have returned to this piece four times since October.',
+    scouted: true,
+  },
+  {
+    id: '2',
+    title: 'On not finishing things',
+    excerpt: 'There is a list. There is always a list.',
+    state: 'sprout',
+    tags: ['labour', 'attention', 'form'],
+    wordCount: 312,
+    lastVisited: '2026-03-22',
+    pattern: undefined,
+    scouted: false,
+  },
+  {
+    id: '3',
+    title: 'untitled, march',
+    excerpt: '',
+    state: 'seed',
+    tags: ['night', 'insomnia'],
+    wordCount: 44,
+    lastVisited: '2026-03-07',
+    pattern: undefined,
+    scouted: false,
+  },
+  {
+    id: '4',
+    title: 'What the algorithm knows about me',
+    excerpt: 'It knows I wake at 3 a.m. It does not know why.',
+    state: 'sprout',
+    tags: ['surveillance', 'labour', 'attention'],
+    wordCount: 508,
+    lastVisited: '2026-04-01',
+    pattern: 'labour and attention appear together in six of your pieces.',
+    scouted: false,
+  },
+];
+
+// Filter types for the Writers Board
+type BoardFilter = 'all' | 'seed' | 'sprout' | 'bloom' | 'scouted';
 
 const S: Record<string, React.CSSProperties> = {
   page: {
@@ -179,7 +257,211 @@ const S: Record<string, React.CSSProperties> = {
     fontSize: '0.8rem',
     color: '#7a7067',
   },
+  // Writers Board styles
+  boardHeader: {
+    display: 'flex',
+    alignItems: 'baseline',
+    justifyContent: 'space-between',
+    marginBottom: '1.75rem',
+    flexWrap: 'wrap' as const,
+    gap: '1rem',
+  },
+  boardFilters: {
+    display: 'flex',
+    gap: '1rem',
+    alignItems: 'baseline',
+  },
+  filterBtn: {
+    background: 'none',
+    border: 'none',
+    padding: '0',
+    fontSize: '0.75rem',
+    letterSpacing: '0.07em',
+    textTransform: 'uppercase' as const,
+    cursor: 'pointer',
+    transition: 'color 0.15s',
+  },
+  pieceRow: {
+    borderTop: '1px solid #e8e4df',
+    padding: '1.5rem 0',
+    display: 'grid',
+    gridTemplateColumns: '1fr auto',
+    gap: '1.5rem',
+    alignItems: 'start',
+  },
+  pieceTitle: {
+    fontSize: '0.98rem',
+    fontWeight: 400,
+    color: '#1a1714',
+    marginBottom: '0.3rem',
+    fontFamily: 'Georgia, serif',
+    fontStyle: 'italic',
+  },
+  pieceExcerpt: {
+    fontSize: '0.85rem',
+    color: '#7a7067',
+    lineHeight: 1.55,
+    marginBottom: '0.6rem',
+    maxWidth: '52ch',
+  },
+  piecePattern: {
+    fontSize: '0.78rem',
+    color: '#9c8f83',
+    lineHeight: 1.5,
+    marginBottom: '0.6rem',
+    fontStyle: 'italic',
+  },
+  pieceMeta: {
+    display: 'flex',
+    gap: '1rem',
+    alignItems: 'center',
+    flexWrap: 'wrap' as const,
+  },
+  pieceWords: {
+    fontSize: '0.75rem',
+    color: '#a09486',
+    letterSpacing: '0.04em',
+  },
+  pieceDate: {
+    fontSize: '0.75rem',
+    color: '#a09486',
+  },
+  tagPill: {
+    fontSize: '0.7rem',
+    letterSpacing: '0.06em',
+    color: '#7a7067',
+    border: '1px solid #dcd9d5',
+    padding: '0.15rem 0.5rem',
+    borderRadius: '2px',
+    textTransform: 'lowercase' as const,
+  },
+  stateChip: {
+    fontSize: '0.68rem',
+    letterSpacing: '0.08em',
+    textTransform: 'uppercase' as const,
+    padding: '0.2rem 0.6rem',
+    border: '1px solid currentColor',
+  },
+  scoutedBadge: {
+    fontSize: '0.68rem',
+    letterSpacing: '0.08em',
+    textTransform: 'uppercase' as const,
+    padding: '0.2rem 0.6rem',
+    backgroundColor: '#1a1714',
+    color: '#faf8f5',
+  },
+  boardEmpty: {
+    padding: '3rem 0',
+    color: '#a09486',
+    fontSize: '0.9rem',
+    fontStyle: 'italic',
+  },
+  boardNewBtn: {
+    fontSize: '0.8rem',
+    letterSpacing: '0.06em',
+    textTransform: 'uppercase' as const,
+    color: '#faf8f5',
+    backgroundColor: '#1a1714',
+    padding: '0.5rem 1.2rem',
+    textDecoration: 'none',
+    display: 'inline-block',
+  },
 };
+
+function formatLastVisited(iso: string): string {
+  const d = new Date(iso);
+  const now = new Date();
+  const diffDays = Math.floor((now.getTime() - d.getTime()) / 86400000);
+  if (diffDays === 0) return 'today';
+  if (diffDays === 1) return 'yesterday';
+  if (diffDays < 7) return `${diffDays} days ago`;
+  if (diffDays < 30) return `${Math.floor(diffDays / 7)}w ago`;
+  return d.toLocaleDateString('en-GB', { month: 'short', year: 'numeric' });
+}
+
+function WritersBoard() {
+  const [filter, setFilter] = useState<BoardFilter>('all');
+  const [pieces] = useState<GardenPiece[]>(DEMO_PIECES);
+
+  const filtered = pieces.filter(p => {
+    if (filter === 'all') return true;
+    if (filter === 'scouted') return p.scouted;
+    return p.state === filter;
+  });
+
+  const filterLabel = (f: BoardFilter, label: string) => (
+    <button
+      key={f}
+      style={{
+        ...S.filterBtn,
+        color: filter === f ? '#1a1714' : '#a09486',
+        borderBottom: filter === f ? '1px solid #1a1714' : '1px solid transparent',
+      }}
+      onClick={() => setFilter(f)}
+    >
+      {label}
+    </button>
+  );
+
+  return (
+    <div>
+      <div style={S.boardHeader}>
+        <p style={S.sectionLabel}>Your Garden</p>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem' }}>
+          <div style={S.boardFilters}>
+            {filterLabel('all', 'All')}
+            {filterLabel('seed', 'Seeds')}
+            {filterLabel('sprout', 'Sprouts')}
+            {filterLabel('bloom', 'Blooms')}
+            {filterLabel('scouted', 'Scouted')}
+          </div>
+          <Link to="/write" style={S.boardNewBtn}>+ New piece</Link>
+        </div>
+      </div>
+
+      {filtered.length === 0 && (
+        <p style={S.boardEmpty}>
+          {filter === 'scouted'
+            ? 'No pieces have been scouted yet. Journals find what they need; it takes time.'
+            : 'Nothing here yet.'}
+        </p>
+      )}
+
+      {filtered.map(piece => (
+        <div key={piece.id} style={S.pieceRow}>
+          <div>
+            <p style={S.pieceTitle}>{piece.title || <em style={{ color: '#a09486' }}>untitled</em>}</p>
+            {piece.excerpt && <p style={S.pieceExcerpt}>{piece.excerpt}</p>}
+            {piece.pattern && (
+              <p style={S.piecePattern}>↳ {piece.pattern}</p>
+            )}
+            <div style={S.pieceMeta}>
+              {piece.tags.map(tag => (
+                <span key={tag} style={S.tagPill}>{tag}</span>
+              ))}
+              <span style={S.pieceWords}>{piece.wordCount.toLocaleString()} words</span>
+              <span style={S.pieceDate}>{formatLastVisited(piece.lastVisited)}</span>
+            </div>
+          </div>
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '0.5rem', paddingTop: '0.1rem' }}>
+            <span
+              style={{
+                ...S.stateChip,
+                color: STATE_COLOR[piece.state],
+                borderColor: STATE_COLOR[piece.state],
+              }}
+            >
+              {STATE_LABEL[piece.state]}
+            </span>
+            {piece.scouted && (
+              <span style={S.scoutedBadge}>Scouted</span>
+            )}
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
 
 export function GardenHome() {
   const [callouts, setCallouts] = useState<Callout[]>([]);
@@ -224,12 +506,18 @@ export function GardenHome() {
           A literary institution operating between London and New York.
           The Garden connects writers and journals.
           The Residency develops what is exceptional.
-          Tilth publishes what cannot be ignored.
+          Chapbooks are published when the work demands it and not before.
         </p>
         <div style={S.heroCta}>
           <Link to="/journals" style={S.ctaPrimary}>Enter the Garden</Link>
-          <Link to="/editions" style={S.ctaSecondary}>Read Tilth</Link>
+          <Link to="/editions" style={S.ctaSecondary}>Chapbooks &amp; Editions</Link>
         </div>
+      </div>
+
+      {/* Writers Board */}
+      <hr style={S.divider} />
+      <div style={S.section}>
+        <WritersBoard />
       </div>
 
       {/* Callouts */}
@@ -289,9 +577,9 @@ export function GardenHome() {
             The Garden treats the rest as the substance. Not as backstory. As text.
           </p>
           <p style={S.manifestoParagraph}>
-            Tilth is what the Garden occasionally produces as a verdict: fully illustrated,
+            Chapbooks are what the Garden occasionally produces as a verdict: fully illustrated,
             competitive to enter, published when the work demands it and not before.
-            The bar is the institution’s only editorial statement.
+            The bar is the institution's only editorial statement.
           </p>
           <div style={{ display: 'flex', gap: '2rem', marginTop: '2rem' }}>
             <Link to="/about" style={{ ...S.ctaSecondary, color: '#e8e4df', borderBottomColor: '#7a7067' }}>
@@ -307,7 +595,7 @@ export function GardenHome() {
       {/* Footer */}
       <div style={S.footer}>
         <span style={S.footerNote}>Page Gallery Editions — London / New York</span>
-        <span style={S.footerNote}>The Garden · Tilth · Residency · Editions</span>
+        <span style={S.footerNote}>The Garden · Chapbooks · Residency · Editions</span>
       </div>
     </div>
   );
