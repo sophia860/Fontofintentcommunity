@@ -5,41 +5,26 @@
  * It is the place where writing lives before it becomes anything else.
  * Tilth is what the Garden occasionally produces as a verdict.
  */
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router';
 import { Nav } from './Nav';
+import { supabase } from '../lib/supabase';
 
-const CALLOUTS = [
-  {
-    id: '1',
-    type: 'open_call',
-    label: 'Open Call',
-    title: 'Tilth No. 1 — Reading Period Now Open',
-    body: 'All work must be written after the opening date. All work must be dated. Submit a half-page autobiographical account alongside your piece.',
-    urgent: true,
-  },
-  {
-    id: '2',
-    type: 'residency',
-    label: 'Residency',
-    title: 'Journal Residency 2025–26 — Applications Open',
-    body: 'We are accepting applications from independent literary journals. Selection is based solely on quality. The residency is paid. We come to you, not the other way around.',
-    urgent: false,
-  },
-  {
-    id: '3',
-    type: 'announcement',
-    label: 'Announcement',
-    title: 'Page Gallery Editions is rebuilding.',
-    body: 'The journal is becoming something else. The Garden remains. Tilth will be our mark — occasional, fully illustrated, competitive to enter. More soon.',
-    urgent: false,
-  },
-];
+type Callout = {
+  id: string;
+  type: string;
+  label: string;
+  title: string;
+  body: string;
+  urgent: boolean;
+};
 
-const FEATURED_JOURNALS = [
-  { id: '1', name: 'Prototype Journal', location: 'London', status: 'open', residencyAlumnus: false, pageGalleryImprint: false },
-  { id: '2', name: 'The Scores', location: 'Edinburgh', status: 'open', residencyAlumnus: true, pageGalleryImprint: false },
-  { id: '3', name: 'Perverse', location: 'New York', status: 'rolling', residencyAlumnus: false, pageGalleryImprint: false },
-];
+type Journal = {
+  id: string;
+  name: string;
+  slug: string;
+  status: string;
+};
 
 const S: Record<string, React.CSSProperties> = {
   page: {
@@ -137,7 +122,7 @@ const S: Record<string, React.CSSProperties> = {
   },
   journalRow: {
     display: 'grid',
-    gridTemplateColumns: '1fr auto auto auto',
+    gridTemplateColumns: '1fr auto auto',
     alignItems: 'baseline',
     gap: '2rem',
     padding: '1.25rem 0',
@@ -151,14 +136,6 @@ const S: Record<string, React.CSSProperties> = {
   journalMeta: {
     fontSize: '0.8rem',
     color: '#7a7067',
-  },
-  journalBadge: {
-    fontSize: '0.7rem',
-    letterSpacing: '0.06em',
-    textTransform: 'uppercase' as const,
-    color: '#faf8f5',
-    backgroundColor: '#3d3830',
-    padding: '0.2rem 0.5rem',
   },
   statusDot: {
     display: 'inline-block',
@@ -205,81 +182,107 @@ const S: Record<string, React.CSSProperties> = {
 };
 
 export function GardenHome() {
+  const [callouts, setCallouts] = useState<Callout[]>([]);
+  const [journals, setJournals] = useState<Journal[]>([]);
+
+  useEffect(() => {
+    async function fetchData() {
+      const [calloutsRes, journalsRes] = await Promise.all([
+        supabase
+          .from('callouts')
+          .select('id, type, label, title, body, urgent')
+          .eq('active', true)
+          .order('sort_order'),
+        supabase
+          .from('journals')
+          .select('id, name, slug, status')
+          .eq('is_public', true)
+          .in('status', ['active', 'pre_launch'])
+          .limit(6)
+          .order('name'),
+      ]);
+
+      if (calloutsRes.data) setCallouts(calloutsRes.data);
+      if (journalsRes.data) setJournals(journalsRes.data);
+    }
+    fetchData();
+  }, []);
+
   return (
     <div style={S.page}>
       <Nav />
 
       {/* Hero */}
-      <section style={S.hero}>
+      <div style={S.hero}>
         <p style={S.heroEpigraph}>Page Gallery Editions — The Garden</p>
         <h1 style={S.heroTitle}>
-          The place where<br />writing lives before<br />it becomes anything else.
+          The place where{' '}<br />
+          writing lives before{' '}<br />
+          it becomes anything else.
         </h1>
         <p style={S.heroBody}>
           A literary institution operating between London and New York.
-          The Garden connects writers and journals. The Residency develops
-          what is exceptional. Tilth publishes what cannot be ignored.
+          The Garden connects writers and journals.
+          The Residency develops what is exceptional.
+          Tilth publishes what cannot be ignored.
         </p>
         <div style={S.heroCta}>
-          <Link to="/apply" style={S.ctaPrimary}>Enter the Garden</Link>
+          <Link to="/journals" style={S.ctaPrimary}>Enter the Garden</Link>
           <Link to="/editions" style={S.ctaSecondary}>Read Tilth</Link>
         </div>
-      </section>
-
-      <div style={S.divider} />
+      </div>
 
       {/* Callouts */}
-      <section style={S.section}>
-        <p style={S.sectionLabel}>Current</p>
-        <div style={S.calloutGrid}>
-          {CALLOUTS.map(c => (
-            <div key={c.id} style={S.calloutItem}>
-              <p style={c.urgent
-                ? { ...S.calloutLabel, color: '#8b4040' }
-                : S.calloutLabel
-              }>{c.label}</p>
-              <p style={S.calloutTitle}>{c.title}</p>
-              <p style={S.calloutBody}>{c.body}</p>
+      {callouts.length > 0 && (
+        <>
+          <hr style={S.divider} />
+          <div style={S.section}>
+            <p style={S.sectionLabel}>Current</p>
+            <div style={S.calloutGrid}>
+              {callouts.map(c => (
+                <div key={c.id} style={S.calloutItem}>
+                  <p style={S.calloutLabel}>{c.label}</p>
+                  <p style={S.calloutTitle}>{c.title}</p>
+                  <p style={S.calloutBody}>{c.body}</p>
+                </div>
+              ))}
             </div>
-          ))}
-        </div>
-      </section>
-
-      <div style={S.divider} />
+          </div>
+        </>
+      )}
 
       {/* Journals in the Garden */}
-      <section style={S.section}>
-        <p style={S.sectionLabel}>Journals in the Garden</p>
-        {FEATURED_JOURNALS.map(j => (
-          <div key={j.id} style={S.journalRow}>
-            <Link to={`/journals/${j.id}`} style={S.journalName}>
-              {j.name}
-            </Link>
-            <span style={S.journalMeta}>{j.location}</span>
-            <span style={S.journalMeta}>
-              {j.status === 'open' && (
-                <><span style={S.statusDot} />Open</>)}
-              {j.status === 'rolling' && 'Rolling'}
-              {j.status === 'closed' && 'Closed'}
-            </span>
-            {j.residencyAlumnus && (
-              <span style={S.journalBadge}>Residency</span>
-            )}
+      {journals.length > 0 && (
+        <>
+          <hr style={S.divider} />
+          <div style={S.section}>
+            <p style={S.sectionLabel}>Journals in the Garden</p>
+            {journals.map(j => (
+              <div key={j.id} style={S.journalRow}>
+                <Link to={`/journals/${j.slug}`} style={S.journalName}>{j.name}</Link>
+                <span style={S.journalMeta}>
+                  {j.status === 'active' && (
+                    <><span style={S.statusDot} />Open</>
+                  )}
+                  {j.status === 'pre_launch' && 'Coming soon'}
+                </span>
+              </div>
+            ))}
+            <div style={{ paddingTop: '1.5rem' }}>
+              <Link to="/journals" style={S.ctaSecondary}>Browse all journals</Link>
+            </div>
           </div>
-        ))}
-        <div style={{ marginTop: '2rem' }}>
-          <Link to="/journals" style={S.ctaSecondary}>Browse all journals</Link>
-        </div>
-      </section>
+        </>
+      )}
 
       {/* Manifesto block */}
-      <section style={S.manifesto}>
+      <div style={S.manifesto}>
         <div style={S.manifestoInner}>
           <p style={S.manifestoTitle}>What the Garden believes</p>
           <p style={S.manifestoParagraph}>
             When a writer dies, the rough drafts go first — the note that trails off,
-            the notebook with three pages and then nothing. This is not metaphorical
-            but literal: the rough draft is the actual person.
+            the notebook with three pages and then nothing.
+            This is not metaphorical but literal: the rough draft is the actual person.
           </p>
           <p style={S.manifestoParagraph}>
             Literary culture has always published the poem and discarded the rest.
@@ -290,22 +293,22 @@ export function GardenHome() {
             competitive to enter, published when the work demands it and not before.
             The bar is the institution’s only editorial statement.
           </p>
-          <div style={{ marginTop: '2.5rem', display: 'flex', gap: '2rem' }}>
-            <Link to="/about" style={{ ...S.ctaSecondary, color: '#c5bdb4', borderBottomColor: '#3d3830' }}>
+          <div style={{ display: 'flex', gap: '2rem', marginTop: '2rem' }}>
+            <Link to="/about" style={{ ...S.ctaSecondary, color: '#e8e4df', borderBottomColor: '#7a7067' }}>
               Read the full argument
             </Link>
-            <Link to="/residency" style={{ ...S.ctaSecondary, color: '#c5bdb4', borderBottomColor: '#3d3830' }}>
+            <Link to="/residency" style={{ ...S.ctaSecondary, color: '#e8e4df', borderBottomColor: '#7a7067' }}>
               Journal Residency
             </Link>
           </div>
         </div>
-      </section>
+      </div>
 
       {/* Footer */}
-      <footer style={S.footer}>
+      <div style={S.footer}>
         <span style={S.footerNote}>Page Gallery Editions — London / New York</span>
         <span style={S.footerNote}>The Garden · Tilth · Residency · Editions</span>
-      </footer>
+      </div>
     </div>
   );
 }
