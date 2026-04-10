@@ -166,7 +166,14 @@ function ProfileForm({ userId }: { userId: string }) {
         <input
           style={S.input}
           value={draft.slug ?? ''}
-          onChange={e => set('slug', e.target.value.toLowerCase().replace(/\s+/g, '-') || null)}
+          onChange={e => set('slug', e.target.value
+            .toLowerCase()
+            .replace(/[^a-z0-9\s-]/g, '')
+            .trim()
+            .replace(/[\s]+/g, '-')
+            .replace(/-{2,}/g, '-')
+            || null
+          )}
           placeholder="e.g. ada-lovelace → /writers/ada-lovelace"
         />
       </div>

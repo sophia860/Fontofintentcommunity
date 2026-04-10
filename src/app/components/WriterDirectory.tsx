@@ -8,7 +8,18 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router';
 import { Nav } from './Nav';
 import { supabase } from '../lib/supabase';
-import type { Profile } from '../lib/types';
+
+/** Subset of Profile used in directory listings. */
+type ProfileListItem = {
+  id: string;
+  display_name: string | null;
+  slug: string | null;
+  short_bio: string | null;
+  location: string | null;
+  genres: string[];
+  themes: string[];
+  role: string;
+};
 
 const ALL_GENRES = ['poetry', 'fiction', 'essay', 'prose poem', 'hybrid', 'lyric essay', 'nonfiction', 'criticism'];
 
@@ -36,7 +47,7 @@ const S: Record<string, React.CSSProperties> = {
 };
 
 export function WriterDirectory() {
-  const [writers, setWriters] = useState<Profile[]>([]);
+  const [writers, setWriters] = useState<ProfileListItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [activeGenre, setActiveGenre] = useState<string | null>(null);
 
@@ -49,7 +60,7 @@ export function WriterDirectory() {
         .order('display_name');
 
       if (!error && data) {
-        setWriters(data as Profile[]);
+        setWriters(data as ProfileListItem[]);
       }
       setLoading(false);
     }
