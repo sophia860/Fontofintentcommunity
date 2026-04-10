@@ -53,54 +53,6 @@ const STATE_COLOR: Record<GardenPiece['state'], string> = {
   bloom: '#6B8E6B',
 };
 
-// Demo data — replace with Supabase query when profiles table has pieces
-const DEMO_PIECES: GardenPiece[] = [
-  {
-    id: '1',
-    title: 'The sea at Lyme, six a.m.',
-    excerpt: 'The water was the colour of nothing decided yet.',
-    state: 'bloom',
-    tags: ['grief', 'sea', 'mothers'],
-    wordCount: 847,
-    lastVisited: '2026-04-08',
-    pattern: 'You have returned to this piece four times since October.',
-    scouted: true,
-  },
-  {
-    id: '2',
-    title: 'On not finishing things',
-    excerpt: 'There is a list. There is always a list.',
-    state: 'sprout',
-    tags: ['labour', 'attention', 'form'],
-    wordCount: 312,
-    lastVisited: '2026-03-22',
-    pattern: undefined,
-    scouted: false,
-  },
-  {
-    id: '3',
-    title: 'untitled, march',
-    excerpt: '',
-    state: 'seed',
-    tags: ['night', 'insomnia'],
-    wordCount: 44,
-    lastVisited: '2026-03-07',
-    pattern: undefined,
-    scouted: false,
-  },
-  {
-    id: '4',
-    title: 'What the algorithm knows about me',
-    excerpt: 'It knows I wake at 3 a.m. It does not know why.',
-    state: 'sprout',
-    tags: ['surveillance', 'labour', 'attention'],
-    wordCount: 508,
-    lastVisited: '2026-04-01',
-    pattern: 'labour and attention appear together in six of your pieces.',
-    scouted: false,
-  },
-];
-
 // Filter types for the Writers Board
 type BoardFilter = 'all' | 'seed' | 'sprout' | 'bloom' | 'scouted';
 
@@ -381,7 +333,51 @@ function formatLastVisited(iso: string): string {
 
 function WritersBoard() {
   const [filter, setFilter] = useState<BoardFilter>('all');
-  const [pieces] = useState<GardenPiece[]>(DEMO_PIECES);
+  const [pieces, setPieces] = useState<GardenPiece[]>([]);
+  const [tagPatterns, setTagPatterns] = useState<{ tag: string; count: number }[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [userId, setUserId] = useState<string | null>(null);
+
+  useEffect(() => {
+    async function loadData() {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) { setLoading(false); return; }
+      setUserId(user.id);
+
+      const { data } = await supabase
+        .from('writings')
+        .select('id, title, body, state, tags, word_count, updated_at, scouted')
+        .eq('author_id', user.id)
+        .order('updated_at', { ascending: false });
+
+      if (data) {
+        const mapped: GardenPiece[] = (data as any[]).map(row => ({
+          id: row.id,
+          title: row.title || '',
+          excerpt: (row.body || '').slice(0, 120),
+          state: row.state ?? 'seed',
+          tags: row.tags ?? [],
+          wordCount: row.word_count ?? 0,
+          lastVisited: row.updated_at,
+          scouted: row.scouted ?? false,
+        }));
+        setPieces(mapped);
+
+        // Compute tag patterns
+        const freq: Record<string, number> = {};
+        for (const p of mapped) {
+          for (const t of p.tags) freq[t] = (freq[t] ?? 0) + 1;
+        }
+        const top = Object.entries(freq)
+          .sort((a, b) => b[1] - a[1])
+          .slice(0, 5)
+          .map(([tag, count]) => ({ tag, count }));
+        setTagPatterns(top);
+      }
+      setLoading(false);
+    }
+    loadData();
+  }, []);
 
   const filtered = pieces.filter(p => {
     if (filter === 'all') return true;
@@ -403,6 +399,33 @@ function WritersBoard() {
     </button>
   );
 
+  // Not signed in
+  if (!loading && !userId) {
+    return (
+      <div>
+        <div style={S.boardHeader}>
+          <p style={S.sectionLabel}>Your Garden</p>
+          <Link to="/write" style={S.boardNewBtn}>+ New piece</Link>
+        </div>
+        <p style={{ ...S.boardEmpty, fontStyle: 'normal' }}>
+          <Link to="/auth?returnTo=/" style={{ color: '#1a1714', borderBottom: '1px solid #c5bdb4' }}>Sign in</Link>
+          {' '}to see your Garden.
+        </p>
+      </div>
+    );
+  }
+
+  if (loading) {
+    return (
+      <div>
+        <div style={S.boardHeader}>
+          <p style={S.sectionLabel}>Your Garden</p>
+        </div>
+        <p style={S.boardEmpty}>Loading your Garden…</p>
+      </div>
+    );
+  }
+
   return (
     <div>
       <div style={S.boardHeader}>
@@ -419,18 +442,39 @@ function WritersBoard() {
         </div>
       </div>
 
+      {/* Pattern insights */}
+      {tagPatterns.length > 0 && (
+        <div style={{ marginBottom: '1.5rem', padding: '0.75rem 1rem', backgroundColor: '#f5f0eb', borderLeft: '3px solid #dcd9d5' }}>
+          <p style={{ fontSize: '0.72rem', letterSpacing: '0.08em', textTransform: 'uppercase', color: '#7a7067', marginBottom: '0.5rem' }}>
+            Your obsessions
+          </p>
+          <p style={{ fontSize: '0.83rem', color: '#3d3830', lineHeight: 1.5 }}>
+            {tagPatterns.map(({ tag, count }, i) => (
+              <span key={tag}>
+                <em>{tag}</em> ({count})
+                {i < tagPatterns.length - 1 ? ' · ' : ''}
+              </span>
+            ))}
+          </p>
+        </div>
+      )}
+
       {filtered.length === 0 && (
         <p style={S.boardEmpty}>
           {filter === 'scouted'
             ? 'No pieces have been scouted yet. Journals find what they need; it takes time.'
-            : 'Nothing here yet.'}
+            : pieces.length === 0
+              ? 'Nothing planted yet. Write your first seed.'
+              : 'Nothing here yet.'}
         </p>
       )}
 
       {filtered.map(piece => (
         <div key={piece.id} style={S.pieceRow}>
           <div>
-            <p style={S.pieceTitle}>{piece.title || <em style={{ color: '#a09486' }}>untitled</em>}</p>
+            <Link to={`/piece/${piece.id}`} style={{ textDecoration: 'none' }}>
+              <p style={S.pieceTitle}>{piece.title || <em style={{ color: '#a09486' }}>untitled</em>}</p>
+            </Link>
             {piece.excerpt && <p style={S.pieceExcerpt}>{piece.excerpt}</p>}
             {piece.pattern && (
               <p style={S.piecePattern}>↳ {piece.pattern}</p>

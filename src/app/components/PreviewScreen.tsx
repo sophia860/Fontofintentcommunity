@@ -27,6 +27,8 @@ export function PreviewScreen() {
   const session = location.state?.session as Session | undefined;
   const resumeState = location.state?.resumeState as WritingSurfaceResumeState | undefined;
   const theme = (location.state?.theme as FoiTheme) || 'light';
+  const savedToGarden = location.state?.savedToGarden as boolean | undefined;
+  const pieceId = location.state?.pieceId as string | undefined;
   const isDark = theme === 'dark';
 
   const [copied, setCopied] = useState(false);
@@ -55,8 +57,12 @@ export function PreviewScreen() {
   }, [shareUrl]);
 
   const handleKeepWriting = useCallback(() => {
-    navigate('/write', { state: { resume: resumeState } });
-  }, [navigate, resumeState]);
+    if (pieceId) {
+      navigate(`/piece/${pieceId}`, { state: { resume: resumeState } });
+    } else {
+      navigate('/write', { state: { resume: resumeState } });
+    }
+  }, [navigate, resumeState, pieceId]);
 
   const handleWriteAnother = useCallback(() => {
     navigate('/write');
@@ -214,6 +220,7 @@ export function PreviewScreen() {
             <MobileActionLink label="Watch Replay" onClick={handleReplay} style={actionStyle} />
             <MobileActionLink label={copied ? 'Link Copied!' : 'Copy Link'} onClick={copyShareLink} style={actionStyle} />
             <MobileActionLink label="Write Another" onClick={handleWriteAnother} style={actionStyle} />
+            {savedToGarden && <MobileActionLink label="Go to Garden →" onClick={() => navigate('/dashboard/writer')} style={actionStyle} />}
           </div>
         ) : (
           /* Desktop: inline with middle dots */
@@ -225,7 +232,26 @@ export function PreviewScreen() {
             <ActionLink label={copied ? 'Copied!' : 'Copy Link'} onClick={copyShareLink} style={actionStyle} hoverColor={actionHover} />
             <Dot color={dotColor} />
             <ActionLink label="Write Another" onClick={handleWriteAnother} style={actionStyle} hoverColor={actionHover} />
+            {savedToGarden && (
+              <>
+                <Dot color={dotColor} />
+                <ActionLink label="Go to Garden →" onClick={() => navigate('/dashboard/writer')} style={actionStyle} hoverColor={actionHover} />
+              </>
+            )}
           </div>
+        )}
+
+        {/* Saved indicator */}
+        {savedToGarden && (
+          <p style={{
+            fontFamily: "'Inter', sans-serif",
+            fontSize: '0.72rem',
+            letterSpacing: '0.06em',
+            color: '#8BA67A',
+            marginTop: '1rem',
+          }}>
+            ✓ Saved to your Garden
+          </p>
         )}
 
         {/* Typographic bookend — echoes landing page footer */}
