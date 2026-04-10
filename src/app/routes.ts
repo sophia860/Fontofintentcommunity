@@ -10,6 +10,7 @@ import { WriterDashboard } from './components/WriterDashboard';
 import { JournalDashboard } from './components/JournalDashboard';
 import { Apply } from './components/Apply';
 import { About } from './components/About';
+import { WritingSurface } from './components/WritingSurface';
 
 export const router = createBrowserRouter([
   {
@@ -60,4 +61,8 @@ export const router = createBrowserRouter([
     path: '/about',
     Component: About,
   },
+    {
+      path: '/piece/:id',
+      Component: WritingSurface,
+    },
 ], { basename: '/Fontofintentcommunity' });
