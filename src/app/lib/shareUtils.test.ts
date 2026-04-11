@@ -103,7 +103,8 @@ describe('buildShareUrl', () => {
   it('uses window.location.origin as the base', () => {
     vi.stubGlobal('window', { location: { origin: 'https://mysite.io' } });
     const url = buildShareUrl(SAMPLE_SESSION);
-    expect(url.startsWith('https://mysite.io')).toBe(true);
+    const parsed = new URL(url);
+    expect(parsed.origin).toBe('https://mysite.io');
     vi.unstubAllGlobals();
   });
 
