@@ -1,8 +1,9 @@
 /**
  * Nav — The Page Gallery
- * Minimal, typographic, literary register.
- * No hamburger menus. The identity is in the restraint.
+ * Structural, typographic, forensic register.
+ * No hamburger menus. The identity is in the structure.
  */
+import type { CSSProperties } from 'react';
 import { Link, useLocation } from 'react-router';
 import { useGardenAuth } from '../lib/useGardenAuth';
 import { ADMIN_EMAIL } from '../lib/adminConfig';
@@ -17,6 +18,16 @@ const NAV_LINKS = [
   { href: '/about',    label: 'About'      },
 ];
 
+const NAV_LINK_BASE: CSSProperties = {
+  fontFamily: "system-ui, sans-serif",
+  fontSize: '0.68rem',
+  letterSpacing: '0.1em',
+  textTransform: 'uppercase',
+  textDecoration: 'none',
+  paddingBottom: '2px',
+  transition: 'color 0.12s',
+};
+
 export function Nav() {
   const { pathname } = useLocation();
   const { isAuthenticated, authUser, signOut } = useGardenAuth();
@@ -27,9 +38,9 @@ export function Nav() {
         display: 'flex',
         alignItems: 'baseline',
         justifyContent: 'space-between',
-        padding: '2rem 3rem',
-        borderBottom: '1px solid #e8e4df',
-        backgroundColor: '#F5EDE4',
+        padding: '1.5rem 3rem',
+        borderBottom: '2px solid #1a1714',
+        backgroundColor: '#F9F6F2',
         position: 'sticky',
         top: 0,
         zIndex: 100,
@@ -40,9 +51,9 @@ export function Nav() {
         to="/"
         style={{
           fontFamily: pickHeadingFont('Nav-wordmark'),
-          fontSize: '1.4rem',
-          fontWeight: 600,
-          letterSpacing: '0.02em',
+          fontSize: '1.6rem',
+          fontWeight: 700,
+          letterSpacing: '0.01em',
           color: '#1a1714',
           textDecoration: 'none',
         }}
@@ -51,7 +62,7 @@ export function Nav() {
       </Link>
 
       {/* Navigation */}
-      <nav style={{ display: 'flex', gap: '2.5rem', alignItems: 'baseline' }}>
+      <nav style={{ display: 'flex', gap: '2rem', alignItems: 'baseline' }}>
         {NAV_LINKS.map(({ href, label }) => {
           const active = pathname.startsWith(href);
           return (
@@ -59,14 +70,9 @@ export function Nav() {
               key={href}
               to={href}
               style={{
-                fontFamily: 'Georgia, serif',
-                fontSize: '0.85rem',
-                letterSpacing: '0.04em',
-                color: active ? '#1a1714' : '#7a7067',
-                textDecoration: 'none',
-                borderBottom: active ? '1px solid #1a1714' : '1px solid transparent',
-                paddingBottom: '2px',
-                transition: 'color 0.15s, border-color 0.15s',
+                ...NAV_LINK_BASE,
+                color: active ? '#B71C1C' : '#7a7067',
+                fontWeight: active ? 600 : 400,
               }}
             >
               {label}
@@ -81,14 +87,9 @@ export function Nav() {
               <Link
                 to="/admin"
                 style={{
-                  fontFamily: 'Georgia, serif',
-                  fontSize: '0.85rem',
-                  letterSpacing: '0.04em',
-                  color: '#9b2335',
-                  textDecoration: 'none',
-                  borderBottom: pathname.startsWith('/admin') ? '1px solid #9b2335' : '1px solid transparent',
-                  paddingBottom: '2px',
-                  opacity: 0.85,
+                  ...NAV_LINK_BASE,
+                  color: '#B71C1C',
+                  fontWeight: pathname.startsWith('/admin') ? 600 : 400,
                 }}
               >
                 Admin
@@ -97,13 +98,9 @@ export function Nav() {
             <Link
               to="/dashboard/writer"
               style={{
-                fontFamily: 'Georgia, serif',
-                fontSize: '0.85rem',
-                letterSpacing: '0.04em',
-                color: '#7a7067',
-                textDecoration: 'none',
-                borderBottom: pathname.startsWith('/dashboard') ? '1px solid #1a1714' : '1px solid transparent',
-                paddingBottom: '2px',
+                ...NAV_LINK_BASE,
+                color: pathname.startsWith('/dashboard') ? '#B71C1C' : '#7a7067',
+                fontWeight: pathname.startsWith('/dashboard') ? 600 : 400,
               }}
             >
               Garden
@@ -114,9 +111,7 @@ export function Nav() {
                 background: 'none',
                 border: 'none',
                 padding: 0,
-                fontFamily: 'Georgia, serif',
-                fontSize: '0.85rem',
-                letterSpacing: '0.04em',
+                ...NAV_LINK_BASE,
                 color: '#7a7067',
                 cursor: 'pointer',
               }}
@@ -128,13 +123,8 @@ export function Nav() {
           <Link
             to="/auth"
             style={{
-              fontFamily: 'Georgia, serif',
-              fontSize: '0.85rem',
-              letterSpacing: '0.04em',
+              ...NAV_LINK_BASE,
               color: '#7a7067',
-              textDecoration: 'none',
-              borderBottom: '1px solid transparent',
-              paddingBottom: '2px',
             }}
           >
             Sign in
@@ -145,13 +135,12 @@ export function Nav() {
         <Link
           to="/apply"
           style={{
-            fontFamily: 'Georgia, serif',
-            fontSize: '0.85rem',
-            letterSpacing: '0.04em',
-            color: '#F5EDE4',
+            ...NAV_LINK_BASE,
+            color: '#F9F6F2',
             backgroundColor: '#1a1714',
-            padding: '0.3rem 0.9rem',
-            textDecoration: 'none',
+            padding: '0.35rem 0.9rem',
+            letterSpacing: '0.12em',
+            fontWeight: 600,
           }}
         >
           Apply

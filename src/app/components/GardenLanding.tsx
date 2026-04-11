@@ -4,7 +4,7 @@ import { Nav } from './Nav';
 const S: Record<string, React.CSSProperties> = {
   page: {
     minHeight: '100vh',
-    backgroundColor: '#faf8f5',
+    backgroundColor: '#F9F6F2',
     fontFamily: 'Georgia, serif',
     color: '#1a1714',
   },
@@ -12,10 +12,12 @@ const S: Record<string, React.CSSProperties> = {
     padding: '7rem 3rem 5rem',
     maxWidth: '860px',
     margin: '0 auto',
+    paddingLeft: '2.5rem',
+    borderLeft: '4px solid #B71C1C',
   },
   eyebrow: {
-    fontFamily: 'Georgia, serif',
-    fontSize: '0.75rem',
+    fontFamily: "system-ui, sans-serif",
+    fontSize: '0.68rem',
     letterSpacing: '0.12em',
     textTransform: 'uppercase' as const,
     color: '#7a7067',
@@ -23,9 +25,9 @@ const S: Record<string, React.CSSProperties> = {
   },
   headline: {
     fontFamily: 'Georgia, serif',
-    fontSize: 'clamp(2.4rem, 5vw, 4rem)',
-    fontWeight: 400,
-    lineHeight: 1.1,
+    fontSize: 'clamp(3.5rem, 9vw, 8rem)',
+    fontWeight: 700,
+    lineHeight: 1.0,
     color: '#1a1714',
     marginBottom: '1.25rem',
   },
@@ -47,7 +49,7 @@ const S: Record<string, React.CSSProperties> = {
   },
   divider: {
     border: 'none',
-    borderTop: '1px solid #e8e4df',
+    borderTop: '2px solid #1a1714',
     margin: '0',
   },
   audienceSection: {
@@ -56,8 +58,8 @@ const S: Record<string, React.CSSProperties> = {
     margin: '0 auto',
   },
   sectionLabel: {
-    fontFamily: 'Georgia, serif',
-    fontSize: '0.72rem',
+    fontFamily: "system-ui, sans-serif",
+    fontSize: '0.68rem',
     letterSpacing: '0.12em',
     textTransform: 'uppercase' as const,
     color: '#7a7067',
@@ -66,20 +68,20 @@ const S: Record<string, React.CSSProperties> = {
   audienceGrid: {
     display: 'grid',
     gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))',
-    gap: '1.5px',
-    backgroundColor: '#e8e4df',
+    gap: '2px',
+    backgroundColor: '#1a1714',
   },
   audienceCard: {
-    backgroundColor: '#faf8f5',
+    backgroundColor: '#F9F6F2',
     padding: '2rem',
   },
   audienceName: {
-    fontFamily: 'Georgia, serif',
-    fontSize: '0.9rem',
-    fontWeight: 400,
+    fontFamily: "system-ui, sans-serif",
+    fontSize: '0.72rem',
+    fontWeight: 600,
     color: '#1a1714',
     marginBottom: '0.6rem',
-    letterSpacing: '0.04em',
+    letterSpacing: '0.1em',
     textTransform: 'uppercase' as const,
   },
   audienceDesc: {
@@ -90,7 +92,7 @@ const S: Record<string, React.CSSProperties> = {
     fontStyle: 'italic',
   },
   ctaSection: {
-    backgroundColor: '#f2ede8',
+    backgroundColor: '#1a1714',
     padding: '4rem 3rem',
   },
   ctaInner: {
@@ -98,8 +100,8 @@ const S: Record<string, React.CSSProperties> = {
     margin: '0 auto',
   },
   ctaLabel: {
-    fontFamily: 'Georgia, serif',
-    fontSize: '0.72rem',
+    fontFamily: "system-ui, sans-serif",
+    fontSize: '0.68rem',
     letterSpacing: '0.12em',
     textTransform: 'uppercase' as const,
     color: '#7a7067',
@@ -113,15 +115,15 @@ const S: Record<string, React.CSSProperties> = {
   },
   ctaLink: {
     fontFamily: 'Georgia, serif',
-    fontSize: '0.95rem',
-    color: '#1a1714',
+    fontSize: '1rem',
+    color: '#F9F6F2',
     textDecoration: 'none',
-    borderBottom: '1px solid #1a1714',
+    borderBottom: '1px solid #F9F6F2',
     paddingBottom: '1px',
     letterSpacing: '0.02em',
   },
   ctaSeparator: {
-    color: '#c8c0b8',
+    color: '#3d3830',
     fontSize: '0.8rem',
   },
   backSection: {
@@ -130,16 +132,16 @@ const S: Record<string, React.CSSProperties> = {
     margin: '0 auto',
   },
   backLink: {
-    fontFamily: 'Georgia, serif',
-    fontSize: '0.875rem',
+    fontFamily: "system-ui, sans-serif",
+    fontSize: '0.72rem',
+    letterSpacing: '0.08em',
+    textTransform: 'uppercase' as const,
     color: '#7a7067',
     textDecoration: 'none',
-    borderBottom: '1px solid #e8e4df',
-    paddingBottom: '1px',
   },
   footer: {
     padding: '3rem',
-    borderTop: '1px solid #e8e4df',
+    borderTop: '2px solid #1a1714',
     maxWidth: '860px',
     margin: '0 auto',
     display: 'flex',
@@ -149,10 +151,11 @@ const S: Record<string, React.CSSProperties> = {
     gap: '1rem',
   },
   footerWord: {
-    fontFamily: 'Georgia, serif',
-    fontSize: '0.8rem',
+    fontFamily: "system-ui, sans-serif",
+    fontSize: '0.68rem',
+    letterSpacing: '0.1em',
+    textTransform: 'uppercase' as const,
     color: '#7a7067',
-    letterSpacing: '0.04em',
   },
 };
 

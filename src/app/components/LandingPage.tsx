@@ -145,6 +145,7 @@ export function LandingPage() {
             fontSize: '1rem',
             letterSpacing: '0.15em',
             color: '#2C2824',
+          }}
         >
           font of intent
         </p>
@@ -208,17 +209,11 @@ export function LandingPage() {
             className="foi-demo-card"
             style={{
               background: '#FFFDF8',
-              borderLeft: '3px solid #2C2824',
+              border: '1px solid #2C2824',
+              borderLeft: '4px solid #B71C1C',
               padding: '2.5rem 3rem',
               minHeight: '100px',
-              boxShadow: '0 1px 3px rgba(0,0,0,0.03)',
-              transition: 'box-shadow 300ms ease',
-            }}
-            onMouseEnter={(e) => {
-              (e.currentTarget as HTMLElement).style.boxShadow = '0 2px 16px rgba(44, 40, 36, 0.06)';
-            }}
-            onMouseLeave={(e) => {
-              (e.currentTarget as HTMLElement).style.boxShadow = '0 1px 3px rgba(0,0,0,0.03)';
+              boxShadow: 'none',
             }}
           >
             {(bursts.length > 0 || ghosts.length > 0) && (
