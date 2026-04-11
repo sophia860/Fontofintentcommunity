@@ -101,9 +101,10 @@ export function JournalDirectory() {
         <p style={S.headerLabel}>The Garden — Journals</p>
         <h1 style={S.headerTitle}>Journal Directory</h1>
         <p style={S.headerBody}>
-          Independent literary journals in the Garden ecosystem. Registered journals can discover writers,
+          Independent literary journals registered in the Garden. Journals here can discover writers,
           access print partnerships, and apply for the annual Residency Programme.
           Any journal may register. Not every journal will be invited to residency.
+          The distinction matters.
         </p>
       </div>
 
@@ -165,7 +166,7 @@ export function JournalDirectory() {
 
       <div style={S.cta}>
         <p style={{ fontSize: '0.88rem', color: '#3d3830', marginBottom: '1rem' }}>
-          Are you a journal? Register in the Garden.
+          Running a journal? Bring it into the Garden.
         </p>
         <Link to="/apply" style={{ fontSize: '0.85rem', color: '#1a1714', borderBottom: '1px solid #1a1714', textDecoration: 'none' }}>
           Register your journal
