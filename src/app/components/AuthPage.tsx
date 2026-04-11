@@ -1,10 +1,11 @@
 /**
- * AuthPage — sign in / sign up for the Garden.
- * Minimal, typographic, literary register — matches the rest of the site.
+ * AuthPage — sign in to the Garden.
+ * Magic link is the default — works for all existing Garden members with no password.
+ * Password tab available for users who have set one.
  */
-import { useState } from 'react';
-import { useNavigate, useSearchParams } from 'react-router';
-import { supabase } from '../lib/supabase';
+import { useState } from 'react'
+import { useNavigate, useSearchParams } from 'react-router'
+import { useGardenAuth } from '../lib/useGardenAuth'
 
 const S: Record<string, React.CSSProperties> = {
   page: {
@@ -22,7 +23,7 @@ const S: Record<string, React.CSSProperties> = {
     width: '100%',
     maxWidth: '400px',
   },
-  label: {
+  eyebrow: {
     fontSize: '0.75rem',
     letterSpacing: '0.1em',
     textTransform: 'uppercase' as const,
@@ -114,6 +115,19 @@ const S: Record<string, React.CSSProperties> = {
     borderLeft: '3px solid #c5bdb4',
     marginBottom: '1rem',
   },
+  ghostLink: {
+    display: 'block',
+    textAlign: 'center' as const,
+    marginTop: '1rem',
+    fontSize: '0.78rem',
+    color: '#7a7067',
+    cursor: 'pointer',
+    background: 'none',
+    border: 'none',
+    fontFamily: 'Georgia, serif',
+    textDecoration: 'underline',
+    textUnderlineOffset: '3px',
+  },
   note: {
     fontSize: '0.78rem',
     color: '#7a7067',
@@ -122,112 +136,154 @@ const S: Record<string, React.CSSProperties> = {
     paddingTop: '1.5rem',
     borderTop: '1px solid #e8e4df',
   },
-};
+  noteInline: {
+    fontSize: '0.78rem',
+    color: '#7a7067',
+    lineHeight: 1.6,
+    marginTop: '1rem',
+  },
+}
+
+type Mode = 'magic' | 'password'
 
 export function AuthPage() {
-  const navigate = useNavigate();
-  const [searchParams] = useSearchParams();
-  const returnTo = searchParams.get('returnTo') || '/';
+  const navigate = useNavigate()
+  const [searchParams] = useSearchParams()
+  const returnTo = searchParams.get('returnTo') || '/'
 
-  const [mode, setMode] = useState<'signin' | 'signup'>('signin');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
-  const [signupSent, setSignupSent] = useState(false);
+  const { signInWithMagicLink, signInWithPassword, loading, error } = useGardenAuth()
 
-  async function handleSignIn(e: React.FormEvent) {
-    e.preventDefault();
-    setError('');
-    setLoading(true);
-    const { error: err } = await supabase.auth.signInWithPassword({ email, password });
-    setLoading(false);
+  const [mode, setMode] = useState<Mode>('magic')
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const [sent, setSent] = useState(false)
+  const [localError, setLocalError] = useState('')
+
+  function switchMode(m: Mode) {
+    setMode(m)
+    setLocalError('')
+  }
+
+  async function handleMagicLink(e: React.FormEvent) {
+    e.preventDefault()
+    setLocalError('')
+    const { error: err } = await signInWithMagicLink(email, returnTo)
     if (err) {
-      setError(err.message);
+      setLocalError(err.message)
     } else {
-      navigate(returnTo, { replace: true });
+      setSent(true)
     }
   }
 
-  async function handleSignUp(e: React.FormEvent) {
-    e.preventDefault();
-    setError('');
-    setLoading(true);
-    const { error: err } = await supabase.auth.signUp({
-      email,
-      password,
-      options: {
-        emailRedirectTo: `${window.location.origin}${returnTo}`,
-      },
-    });
-    setLoading(false);
-    if (err) {
-      setError(err.message);
-    } else {
-      setSignupSent(true);
-    }
+  async function handlePassword(e: React.FormEvent) {
+    e.preventDefault()
+    setLocalError('')
+    const { error: err } = await signInWithPassword(email, password)
+    if (!err) navigate(returnTo, { replace: true })
+    else setLocalError(err.message)
   }
+
+  const displayError = localError || error || ''
 
   return (
     <div style={S.page}>
       <div style={S.card}>
-        <span style={S.label}>Page Gallery Editions</span>
+        <span style={S.eyebrow}>Page Gallery Editions</span>
         <h1 style={S.h1}>
-          {mode === 'signin' ? 'Sign in to the Garden.' : 'Enter the Garden.'}
+          {sent ? 'Check your inbox.' : 'Sign in to the Garden.'}
         </h1>
 
-        <div style={S.tabs}>
-          <button style={mode === 'signin' ? S.tabActive : S.tab} onClick={() => { setMode('signin'); setError(''); setSignupSent(false); }}>
-            Sign in
-          </button>
-          <button style={mode === 'signup' ? S.tabActive : S.tab} onClick={() => { setMode('signup'); setError(''); setSignupSent(false); }}>
-            Create account
-          </button>
-        </div>
-
-        {signupSent ? (
-          <p style={S.success}>
-            Check your email. We've sent a confirmation link to <strong>{email}</strong>. Follow it to activate your Garden account.
-          </p>
-        ) : (
-          <form onSubmit={mode === 'signin' ? handleSignIn : handleSignUp}>
-            {error && <p style={S.error}>{error}</p>}
-            <div style={S.fieldGroup}>
-              <label style={S.fieldLabel}>Email</label>
-              <input
-                style={S.input}
-                type="email"
-                value={email}
-                onChange={e => setEmail(e.target.value)}
-                placeholder="hello@example.com"
-                required
-                autoFocus
-              />
-            </div>
-            <div style={S.fieldGroup}>
-              <label style={S.fieldLabel}>Password</label>
-              <input
-                style={S.input}
-                type="password"
-                value={password}
-                onChange={e => setPassword(e.target.value)}
-                placeholder={mode === 'signup' ? 'Choose a password (8+ characters)' : 'Your password'}
-                required
-                minLength={mode === 'signup' ? 8 : undefined}
-              />
-            </div>
-            <button style={S.submit} type="submit" disabled={loading}>
-              {loading ? 'Please wait…' : mode === 'signin' ? 'Sign in' : 'Create account'}
+        {sent ? (
+          <>
+            <p style={S.success}>
+              We've sent a sign-in link to <strong>{email}</strong>.
+              Follow it to enter the Garden — no password needed.
+            </p>
+            <button style={S.ghostLink} onClick={() => setSent(false)}>
+              Try a different email
             </button>
-          </form>
-        )}
+          </>
+        ) : (
+          <>
+            {/* Mode tabs */}
+            <div style={S.tabs}>
+              <button
+                style={mode === 'magic' ? S.tabActive : S.tab}
+                onClick={() => switchMode('magic')}
+              >
+                Email link
+              </button>
+              <button
+                style={mode === 'password' ? S.tabActive : S.tab}
+                onClick={() => switchMode('password')}
+              >
+                Password
+              </button>
+            </div>
 
-        <p style={S.note}>
-          {mode === 'signin'
-            ? 'The Garden is a free private writing environment. Your work is private by default.'
-            : 'The Garden is free for writers. Your work is private unless you choose to share it.'}
-        </p>
+            {mode === 'magic' ? (
+              <form onSubmit={handleMagicLink}>
+                {displayError && <p style={S.error}>{displayError}</p>}
+                <div style={S.fieldGroup}>
+                  <label style={S.fieldLabel}>Email address</label>
+                  <input
+                    style={S.input}
+                    type="email"
+                    required
+                    autoFocus
+                    value={email}
+                    onChange={e => setEmail(e.target.value)}
+                    placeholder="hello@example.com"
+                  />
+                </div>
+                <button style={S.submit} type="submit" disabled={loading || !email}>
+                  {loading ? 'Sending…' : 'Send me a sign-in link'}
+                </button>
+                <p style={S.noteInline}>
+                  Works for all existing Garden members — no password required.
+                </p>
+              </form>
+            ) : (
+              <form onSubmit={handlePassword}>
+                {displayError && <p style={S.error}>{displayError}</p>}
+                <div style={S.fieldGroup}>
+                  <label style={S.fieldLabel}>Email address</label>
+                  <input
+                    style={S.input}
+                    type="email"
+                    required
+                    autoFocus
+                    value={email}
+                    onChange={e => setEmail(e.target.value)}
+                    placeholder="hello@example.com"
+                  />
+                </div>
+                <div style={S.fieldGroup}>
+                  <label style={S.fieldLabel}>Password</label>
+                  <input
+                    style={S.input}
+                    type="password"
+                    required
+                    value={password}
+                    onChange={e => setPassword(e.target.value)}
+                    placeholder="Your password"
+                  />
+                </div>
+                <button style={S.submit} type="submit" disabled={loading || !email || !password}>
+                  {loading ? 'Signing in…' : 'Sign in'}
+                </button>
+                <button style={S.ghostLink} type="button" onClick={() => switchMode('magic')}>
+                  No password? Use an email link instead
+                </button>
+              </form>
+            )}
+
+            <p style={S.note}>
+              The Garden is a private writing environment. Your work is yours.
+            </p>
+          </>
+        )}
       </div>
     </div>
-  );
+  )
 }
