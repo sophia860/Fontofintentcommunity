@@ -107,17 +107,32 @@ create trigger on_order_updated
 
 -- ─── decrement_stock RPC ──────────────────────────────────────────────────────
 -- Called by the capture edge function after a successful payment.
+-- Uses SELECT FOR UPDATE to prevent overselling under concurrent load.
 -- No-ops safely if stock is already 0 or null (unlimited).
 
 create or replace function public.decrement_stock(variant_id uuid, qty int)
 returns void
 language plpgsql security definer as $$
+declare
+  _stock integer;
 begin
-  update public.edition_variants
-  set
-    stock      = case when stock is null then null else greatest(stock - qty, 0) end,
-    sold_count = sold_count + qty
+  -- Lock the row to serialise concurrent calls
+  select stock into _stock
+  from public.edition_variants
   where id = variant_id
-    and (stock is null or stock >= qty);
+  for update;
+
+  if not found then
+    return;
+  end if;
+
+  -- Unlimited stock (null) or sufficient stock: proceed
+  if _stock is null or _stock >= qty then
+    update public.edition_variants
+    set
+      stock      = case when _stock is null then null else _stock - qty end,
+      sold_count = sold_count + qty
+    where id = variant_id;
+  end if;
 end;
 $$;

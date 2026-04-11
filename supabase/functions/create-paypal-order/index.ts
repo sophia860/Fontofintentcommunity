@@ -119,7 +119,7 @@ serve(async (req) => {
 
     const paypalOrder = await paypalRes.json();
 
-    // Insert pending order row
+    // Insert pending order row — fatal: if this fails we can't track the capture
     const { error: insertError } = await supabase.from("orders").insert({
       variant_id: variantId,
       quantity,
@@ -131,7 +131,17 @@ serve(async (req) => {
 
     if (insertError) {
       console.error("Order insert error:", insertError);
-      // Non-fatal — PayPal order still exists; capture will reconcile
+      // Void the PayPal order so funds are not held without a DB record
+      try {
+        const voidToken = await getPayPalAccessToken();
+        await fetch(`${PAYPAL_BASE}/v2/checkout/orders/${paypalOrder.id}`, {
+          method: "DELETE",
+          headers: { Authorization: `Bearer ${voidToken}` },
+        });
+      } catch (voidErr) {
+        console.error("PayPal order void failed:", voidErr);
+      }
+      throw new Error("Failed to record order — please try again.");
     }
 
     return new Response(
