@@ -128,6 +128,12 @@ const S: Record<string, React.CSSProperties> = {
     textDecoration: 'underline',
     textUnderlineOffset: '3px',
   },
+  tabs: {
+    display: 'flex',
+    gap: '2rem',
+    marginBottom: '1.5rem',
+    borderBottom: '1px solid #e8e4df',
+  },
   note: {
     fontSize: '0.78rem',
     color: '#7a7067',
