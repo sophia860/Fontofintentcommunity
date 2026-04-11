@@ -1,21 +1,24 @@
 /**
- * Nav — Page Gallery Editions
+ * Nav — The Page Gallery
  * Minimal, typographic, literary register.
  * No hamburger menus. The identity is in the restraint.
  */
 import { Link, useLocation } from 'react-router';
 import { useGardenAuth } from '../lib/useGardenAuth';
+import { ADMIN_EMAIL } from '../lib/adminConfig';
 
 const NAV_LINKS = [
-  { href: '/writers',   label: 'Writers'   },
-  { href: '/journals',  label: 'Journals'  },
-  { href: '/residency', label: 'Residency' },
-  { href: '/about',     label: 'About'     },
+  { href: '/garden',   label: 'The Garden' },
+  { href: '/writers',  label: 'Writers'    },
+  { href: '/journals', label: 'Journals'   },
+  { href: '/editions', label: 'Editions'   },
+  { href: '/programs', label: 'Programs'   },
+  { href: '/about',    label: 'About'      },
 ];
 
 export function Nav() {
   const { pathname } = useLocation();
-  const { isAuthenticated, signOut } = useGardenAuth();
+  const { isAuthenticated, authUser, signOut } = useGardenAuth();
 
   return (
     <header
@@ -44,7 +47,7 @@ export function Nav() {
           textTransform: 'uppercase',
         }}
       >
-        Page Gallery Editions
+        The Page Gallery
       </Link>
 
       {/* Navigation */}
@@ -74,7 +77,7 @@ export function Nav() {
         {/* Auth state */}
         {isAuthenticated ? (
           <>
-            {user.email === ADMIN_EMAIL && (
+            {authUser?.email === ADMIN_EMAIL && (
               <Link
                 to="/admin"
                 style={{
