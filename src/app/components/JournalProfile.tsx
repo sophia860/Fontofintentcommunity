@@ -123,7 +123,7 @@ export function JournalProfile() {
             )}
 
             {journal.status === 'open' && (
-              <Link to="/apply?tab=tilth" style={S.applyBtn}>
+              <Link to="/apply" style={S.applyBtn}>
                 Submit a piece
               </Link>
             )}

@@ -171,12 +171,6 @@ const BRAND_ROWS = [
     role: 'Books, chapbooks, printed works',
   },
   {
-    name: 'Tilth',
-    type: 'Editorial property',
-    audience: 'Readers, contributors, literary audience',
-    role: 'Magazine and media brand',
-  },
-  {
     name: 'Programs',
     type: 'Future layer',
     audience: 'Applicants, institutions, members',
