@@ -140,10 +140,10 @@ export function LandingPage() {
         <p
           className="uppercase"
           style={{
-            fontFamily: "'Inter', sans-serif",
-            fontVariationSettings: "'wght' 600",
-            fontSize: '0.75rem',
-            letterSpacing: '0.35em',
+            fontFamily: "'ACFrenchToast', cursive",
+            fontWeight: 600,
+            fontSize: '1rem',
+            letterSpacing: '0.15em',
             color: '#2C2824',
           }}
         >
@@ -162,20 +162,19 @@ export function LandingPage() {
       >
         {/* Headline — THE moment */}
         <h1
-          className="text-[#2C2824]"
           style={{
-            fontFamily: "'Playfair Display', serif",
-            fontStyle: 'italic',
-            fontWeight: 500,
-            fontSize: 'clamp(3rem, 8vw, 6rem)',
+            fontFamily: "'ACFrenchToast', cursive",
+            fontWeight: 600,
+            fontSize: 'clamp(3rem, 9vw, 7rem)',
             lineHeight: 1.1,
-            letterSpacing: '-0.03em',
+            letterSpacing: '0.01em',
             marginBottom: '0.5rem',
+            color: 'var(--ink-red)',
           }}
         >
           your words reveal
           <br />
-          what your fingers felt
+          what your fingers <mark className="mark">felt</mark>
         </h1>
 
         {/* Subtitle — piece of writing, not a letter */}
@@ -287,7 +286,7 @@ export function LandingPage() {
           </div>
         </div>
 
-        {/* CTA — the invitation, Playfair italic with persistent underline */}
+        {/* CTA — the invitation, ACFrenchToast with persistent underline */}
         <button
           onClick={() => navigate('/write')}
           className="self-start cursor-pointer"
@@ -296,10 +295,9 @@ export function LandingPage() {
             border: 'none',
             padding: '0.5rem 0',
             color: '#2C2824',
-            fontFamily: "'Playfair Display', serif",
-            fontStyle: 'italic',
-            fontWeight: 400,
-            fontSize: '1.1rem',
+            fontFamily: "'ACFrenchToast', cursive",
+            fontWeight: 500,
+            fontSize: '1.4rem',
             minHeight: '44px',
           }}
         >
@@ -337,10 +335,9 @@ export function LandingPage() {
       >
         <p
           style={{
-            fontFamily: "'Playfair Display', serif",
-            fontStyle: 'italic',
+            fontFamily: "'ACFrenchToast', cursive",
             fontWeight: 400,
-            fontSize: '0.85rem',
+            fontSize: '1.1rem',
             color: '#8B7E74',
             marginBottom: '0.5rem',
           }}

@@ -38,6 +38,28 @@ export interface DisplayToken {
   createdAt: number;
 }
 
+// ─── Supabase Profiles ────────────────────────────────────────────────────────
+
+/** Mirrors the public.profiles table in Supabase. */
+export interface Profile {
+  id: string;
+  display_name: string | null;
+  slug: string | null;
+  avatar_url: string | null;
+  short_bio: string | null;
+  full_bio: string | null;
+  location: string | null;
+  website: string | null;
+  instagram: string | null;
+  genres: string[];
+  themes: string[];
+  publication_history: string | null;
+  is_public: boolean;
+  role: 'writer' | 'editor' | 'journal' | 'admin';
+  created_at: string;
+  updated_at: string;
+}
+
 // ─── Garden / Institution Types ───────────────────────────────────────────────
 
 export type WriterStatus = 'active' | 'seeking' | 'closed';
@@ -150,4 +172,82 @@ export interface PrintPartner {
   minRun: number;
   website?: string;
   gardenPartner: boolean;
+}
+
+// ─── Revenue & Membership Types ───────────────────────────────────────────────
+
+export type PlanTier = 'writer_pro' | 'artist_pro' | 'journal_os' | 'institution';
+
+export interface MembershipPlan {
+  id: string;
+  tier: PlanTier;
+  name: string;
+  price_monthly: number | null;   // null = contact sales
+  price_annual: number | null;
+  currency: string;
+  features: string[];
+  active: boolean;
+}
+
+export interface Membership {
+  id: string;
+  profile_id: string;
+  plan_id: string;
+  tier: PlanTier;
+  status: 'active' | 'cancelled' | 'past_due' | 'trialing';
+  started_at: string;
+  ends_at: string | null;
+  stripe_subscription_id: string | null;
+}
+
+export type CommissionStatus = 'open' | 'in_progress' | 'delivered' | 'cancelled';
+
+export interface Commission {
+  id: string;
+  artist_id: string;
+  client_id: string;
+  title: string;
+  description: string;
+  budget_min: number;
+  budget_max: number;
+  currency: string;
+  status: CommissionStatus;
+  specialism: 'cover_design' | 'illustration' | 'licensed_artwork' | 'other';
+  submitted_at: string;
+  delivered_at: string | null;
+  marketplace_fee_pct: number;    // e.g. 10
+}
+
+export interface Bid {
+  id: string;
+  commission_id: string;
+  artist_id: string;
+  amount: number;
+  currency: string;
+  note: string;
+  status: 'pending' | 'accepted' | 'declined';
+  submitted_at: string;
+}
+
+export interface Product {
+  id: string;
+  seller_id: string;
+  title: string;
+  description: string;
+  price: number;
+  currency: string;
+  type: 'poem_collection' | 'chapbook' | 'essay' | 'digital' | 'print';
+  status: 'draft' | 'published' | 'sold_out';
+  created_at: string;
+}
+
+export interface Application {
+  id: string;
+  applicant_id: string;
+  program_type: 'residency' | 'manuscript_lab' | 'workshop' | 'prize';
+  status: 'draft' | 'submitted' | 'shortlisted' | 'accepted' | 'declined';
+  submitted_at: string | null;
+  fee_paid: boolean;
+  fee_amount: number | null;
+  notes: string | null;
 }

@@ -26,7 +26,7 @@ const S: Record<string, React.CSSProperties> = {
   page: { minHeight: '100vh', backgroundColor: '#F5EDE4', fontFamily: 'Georgia, serif', color: '#1a1714' },
   inner: { maxWidth: 760, margin: '0 auto', padding: '4rem 1.5rem' },
   label: { fontSize: '0.75rem', letterSpacing: '0.1em', textTransform: 'uppercase' as const, color: '#7a7067', marginBottom: '1rem', display: 'block' },
-  h1: { fontWeight: 400, fontSize: '2.25rem', marginBottom: '0.5rem' },
+  h1: { fontWeight: 600, fontSize: 'clamp(2.2rem, 4vw, 3.25rem)', marginBottom: '0.5rem', lineHeight: 1.1, fontFamily: "'ACFrenchToast', cursive" },
   bio: { fontSize: '0.95rem', lineHeight: 1.75, color: '#3d3830', maxWidth: '540px', marginBottom: '1.5rem' },
   meta: { fontSize: '0.78rem', color: '#7a7067', marginBottom: '2.5rem', lineHeight: 1.6 },
   pieceRow: { padding: '1.25rem 0', borderBottom: '1px solid #e8e4df' },
@@ -35,7 +35,7 @@ const S: Record<string, React.CSSProperties> = {
   pieceMeta: { fontSize: '0.75rem', color: '#aaa' },
   // Logged-out landing styles
   landingHeader: { padding: '5rem 0 3rem' },
-  landingTitle: { fontSize: 'clamp(1.8rem, 4vw, 2.5rem)', fontWeight: 400, lineHeight: 1.15, marginBottom: '1.5rem' },
+  landingTitle: { fontSize: 'clamp(2.2rem, 4vw, 3.5rem)', fontWeight: 600, lineHeight: 1.1, marginBottom: '1.5rem', fontFamily: "'ACFrenchToast', cursive" },
   landingBody: { fontSize: '1rem', lineHeight: 1.75, color: '#3d3830', maxWidth: '540px', marginBottom: '2rem' },
   howSection: { padding: '3rem 0', borderTop: '1px solid #e8e4df' },
   howGrid: { display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: '2rem', marginTop: '1.5rem' },

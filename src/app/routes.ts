@@ -1,5 +1,13 @@
 import { createBrowserRouter } from 'react-router';
+import { PageGalleryHome } from './components/PageGalleryHome';
 import { GardenHome } from './components/GardenHome';
+import { GardenLanding } from './components/GardenLanding';
+import { Pricing } from './components/Pricing';
+import { BrandArchitecture } from './components/BrandArchitecture';
+import { Programs } from './components/Programs';
+import { WriterShop } from './components/WriterShop';
+import { ArtistCommission } from './components/ArtistCommission';
+import { WriterDirectory } from './components/WriterDirectory';
 import { WriterProfile } from './components/WriterProfile';
 import { WritersPage } from './components/WritersPage';
 import { JournalDirectory } from './components/JournalDirectory';
@@ -13,10 +21,40 @@ import { WritingSurface } from './components/WritingSurface';
 import { PreviewScreen } from './components/PreviewScreen';
 import { ReplayView } from './components/ReplayView';
 import { AuthPage } from './components/AuthPage';
+import { AuthCallbackPage } from './components/AuthCallbackPage';
+import { AdminDashboard } from './components/AdminDashboard';
 
 export const router = createBrowserRouter([
   {
     path: '/',
+    Component: PageGalleryHome,
+  },
+  {
+    path: '/garden',
+    Component: GardenLanding,
+  },
+  {
+    path: '/pricing',
+    Component: Pricing,
+  },
+  {
+    path: '/brand',
+    Component: BrandArchitecture,
+  },
+  {
+    path: '/programs',
+    Component: Programs,
+  },
+  {
+    path: '/shop',
+    Component: WriterShop,
+  },
+  {
+    path: '/commissions',
+    Component: ArtistCommission,
+  },
+  {
+    path: '/garden-home',
     Component: GardenHome,
   },
   {
@@ -40,12 +78,16 @@ export const router = createBrowserRouter([
     Component: AuthPage,
   },
   {
+    path: '/auth/callback',
+    Component: AuthCallbackPage,
+  },
+  {
     path: '/writer',
     Component: WritersPage,
   },
   {
     path: '/writers',
-    Component: WriterProfile,
+    Component: WriterDirectory,
   },
   {
     path: '/writers/:id',
@@ -78,5 +120,9 @@ export const router = createBrowserRouter([
   {
     path: '/about',
     Component: About,
+  },
+  {
+    path: '/admin',
+    Component: AdminDashboard,
   },
 ]);

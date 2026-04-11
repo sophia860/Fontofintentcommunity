@@ -33,7 +33,7 @@ const S: Record<string, React.CSSProperties> = {
   page: { minHeight: '100vh', backgroundColor: '#F5EDE4', fontFamily: 'Georgia, serif', color: '#1a1714' },
   hero: { padding: '5rem 3rem 4rem', borderBottom: '1px solid #e8e4df' },
   label: { fontSize: '0.75rem', letterSpacing: '0.1em', textTransform: 'uppercase' as const, color: '#7a7067', marginBottom: '1rem' },
-  h1: { fontSize: '2.5rem', fontWeight: 400, margin: '0 0 1.5rem', lineHeight: 1.15, maxWidth: '600px' },
+  h1: { fontSize: 'clamp(2.5rem, 5vw, 4rem)', fontWeight: 600, margin: '0 0 1.5rem', lineHeight: 1.1, maxWidth: '600px', fontFamily: "'ACFrenchToast', cursive" },
   heroBody: { fontSize: '0.95rem', lineHeight: 1.75, color: '#3d3830', maxWidth: '520px', marginBottom: '1rem' },
   argument: {
     padding: '3rem',

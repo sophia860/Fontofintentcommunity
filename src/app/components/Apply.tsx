@@ -14,7 +14,7 @@ const S: Record<string, React.CSSProperties> = {
   page: { minHeight: '100vh', backgroundColor: '#F5EDE4', fontFamily: 'Georgia, serif', color: '#1a1714', position: 'relative' },
   hero: { padding: '5rem 3rem 3rem', borderBottom: '1px solid #e8e4df' },
   label: { fontSize: '0.75rem', letterSpacing: '0.1em', textTransform: 'uppercase' as const, color: '#7a7067', marginBottom: '1rem' },
-  h1: { fontSize: '2.5rem', fontWeight: 400, margin: '0 0 1.5rem', lineHeight: 1.15 },
+  h1: { fontSize: 'clamp(2.5rem, 5vw, 4rem)', fontWeight: 600, margin: '0 0 1.5rem', lineHeight: 1.1, fontFamily: "'ACFrenchToast', cursive" },
   body: { fontSize: '0.95rem', lineHeight: 1.75, color: '#3d3830', maxWidth: '520px', marginBottom: '1.5rem' },
   tabs: { display: 'flex', gap: '0', borderBottom: '1px solid #e8e4df', padding: '0 3rem', marginBottom: '0' },
   tab: { padding: '1rem 1.5rem 1rem', fontSize: '0.85rem', cursor: 'pointer', border: 'none', backgroundColor: 'transparent', fontFamily: 'Georgia, serif', color: '#7a7067', borderBottom: '2px solid transparent', marginBottom: '-1px' },

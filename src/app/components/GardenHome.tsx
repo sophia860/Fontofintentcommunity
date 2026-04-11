@@ -10,6 +10,7 @@ import { Link } from 'react-router';
 import { Nav } from './Nav';
 import { WatercolorBackground } from './WatercolorBackground';
 import { supabase } from '../lib/supabase';
+import GardenROICalculator from './GardenROICalculator';
 
 type Callout = {
   id: string;
@@ -89,11 +90,12 @@ const S: Record<string, React.CSSProperties> = {
     marginBottom: '1.5rem',
   },
   heroTitle: {
-    fontSize: 'clamp(2rem, 5vw, 3.5rem)',
-    fontWeight: 400,
-    lineHeight: 1.15,
+    fontSize: 'clamp(2.2rem, 5vw, 4rem)',
+    fontWeight: 600,
+    lineHeight: 1.1,
     margin: '0 0 2rem',
     letterSpacing: '-0.01em',
+    fontFamily: "'ACFrenchToast', cursive",
   },
   heroBody: {
     fontSize: '1.05rem',
@@ -663,6 +665,9 @@ export function GardenHome() {
           </div>
         </>
       )}
+
+      {/* ROI Calculator */}
+      <GardenROICalculator />
 
       {/* Manifesto block */}
       <div style={S.manifesto}>

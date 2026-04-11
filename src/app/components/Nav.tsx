@@ -1,35 +1,24 @@
 /**
- * Nav — Page Gallery Editions
+ * Nav — The Page Gallery
  * Minimal, typographic, literary register.
  * No hamburger menus. The identity is in the restraint.
  */
-import { useEffect, useState } from 'react';
 import { Link, useLocation } from 'react-router';
-import { supabase } from '../lib/supabase';
-import type { User } from '@supabase/supabase-js';
+import { useGardenAuth } from '../lib/useGardenAuth';
+import { ADMIN_EMAIL } from '../lib/adminConfig';
 
 const NAV_LINKS = [
-  { href: '/writers',   label: 'Writers'   },
-  { href: '/journals',  label: 'Journals'  },
-  { href: '/residency', label: 'Residency' },
-  { href: '/about',     label: 'About'     },
+  { href: '/garden',   label: 'The Garden' },
+  { href: '/writers',  label: 'Writers'    },
+  { href: '/journals', label: 'Journals'   },
+  { href: '/editions', label: 'Editions'   },
+  { href: '/programs', label: 'Programs'   },
+  { href: '/about',    label: 'About'      },
 ];
 
 export function Nav() {
   const { pathname } = useLocation();
-  const [user, setUser] = useState<User | null>(null);
-
-  useEffect(() => {
-    supabase.auth.getUser().then(({ data }) => setUser(data.user));
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      setUser(session?.user ?? null);
-    });
-    return () => subscription.unsubscribe();
-  }, []);
-
-  async function handleSignOut() {
-    await supabase.auth.signOut();
-  }
+  const { isAuthenticated, authUser, signOut } = useGardenAuth();
 
   return (
     <header
@@ -49,16 +38,15 @@ export function Nav() {
       <Link
         to="/"
         style={{
-          fontFamily: 'Georgia, serif',
-          fontSize: '1rem',
-          fontWeight: 400,
-          letterSpacing: '0.05em',
+          fontFamily: "'ACFrenchToast', cursive",
+          fontSize: '1.4rem',
+          fontWeight: 600,
+          letterSpacing: '0.02em',
           color: '#1a1714',
           textDecoration: 'none',
-          textTransform: 'uppercase',
         }}
       >
-        Page Gallery Editions
+        The Page Gallery
       </Link>
 
       {/* Navigation */}
@@ -86,8 +74,25 @@ export function Nav() {
         })}
 
         {/* Auth state */}
-        {user ? (
+        {isAuthenticated ? (
           <>
+            {authUser?.email === ADMIN_EMAIL && (
+              <Link
+                to="/admin"
+                style={{
+                  fontFamily: 'Georgia, serif',
+                  fontSize: '0.85rem',
+                  letterSpacing: '0.04em',
+                  color: '#9b2335',
+                  textDecoration: 'none',
+                  borderBottom: pathname.startsWith('/admin') ? '1px solid #9b2335' : '1px solid transparent',
+                  paddingBottom: '2px',
+                  opacity: 0.85,
+                }}
+              >
+                Admin
+              </Link>
+            )}
             <Link
               to="/dashboard/writer"
               style={{
@@ -103,7 +108,7 @@ export function Nav() {
               Garden
             </Link>
             <button
-              onClick={handleSignOut}
+              onClick={signOut}
               style={{
                 background: 'none',
                 border: 'none',

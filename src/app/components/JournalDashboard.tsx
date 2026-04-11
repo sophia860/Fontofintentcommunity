@@ -110,7 +110,7 @@ export function JournalDashboard() {
 
   return (
     <main style={S.page}>
-      <h1 style={{ fontWeight: 400, fontSize: '2rem', marginBottom: '0.25rem' }}>Journal Dashboard</h1>
+      <h1 style={{ fontWeight: 600, fontSize: 'clamp(2.2rem, 4vw, 3.25rem)', marginBottom: '0.25rem', lineHeight: 1.1, fontFamily: "'ACFrenchToast', cursive" }}>Journal Dashboard</h1>
       <p style={{ color: '#666', fontStyle: 'italic', marginBottom: '2rem' }}>Discover writers and review submissions</p>
 
       <div style={S.tabs}>
