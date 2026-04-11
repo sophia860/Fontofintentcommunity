@@ -401,7 +401,7 @@ export function ReplayView() {
                 }}
               >
                 {bursts.map((burst) => (
-                  <span key={burst.id} style={getBurstStyle(burst.confidence, burst.hesitation, burst.pauseBefore, true)}>
+                  <span key={burst.id} style={getBurstStyle(burst.confidence, burst.hesitation, burst.pauseBefore, true, burst.chars)}>
                     {burst.chars.map((ch, i) =>
                       ch === '\n' ? <br key={`${burst.id}-br-${i}`} /> : ch
                     ).reduce<(string | JSX.Element)[]>((acc, item) => {

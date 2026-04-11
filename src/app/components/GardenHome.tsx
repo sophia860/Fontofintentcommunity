@@ -8,7 +8,9 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router';
 import { Nav } from './Nav';
+import { WatercolorBackground } from './WatercolorBackground';
 import { supabase } from '../lib/supabase';
+import GardenROICalculator from './GardenROICalculator';
 
 type Callout = {
   id: string;
@@ -59,9 +61,10 @@ type BoardFilter = 'all' | 'seed' | 'sprout' | 'bloom' | 'scouted';
 const S: Record<string, React.CSSProperties> = {
   page: {
     minHeight: '100vh',
-    backgroundColor: '#faf8f5',
+    backgroundColor: '#F5EDE4',
     fontFamily: 'Georgia, serif',
     color: '#1a1714',
+    position: 'relative',
   },
   hero: {
     padding: '6rem 3rem 5rem',
@@ -87,11 +90,12 @@ const S: Record<string, React.CSSProperties> = {
     marginBottom: '1.5rem',
   },
   heroTitle: {
-    fontSize: 'clamp(2rem, 5vw, 3.5rem)',
-    fontWeight: 400,
-    lineHeight: 1.15,
+    fontSize: 'clamp(2.2rem, 5vw, 4rem)',
+    fontWeight: 600,
+    lineHeight: 1.1,
     margin: '0 0 2rem',
     letterSpacing: '-0.01em',
+    fontFamily: "'ACFrenchToast', cursive",
   },
   heroBody: {
     fontSize: '1.05rem',
@@ -109,7 +113,7 @@ const S: Record<string, React.CSSProperties> = {
     fontSize: '0.85rem',
     letterSpacing: '0.05em',
     textTransform: 'uppercase' as const,
-    color: '#faf8f5',
+    color: '#F5EDE4',
     backgroundColor: '#1a1714',
     padding: '0.6rem 1.4rem',
     textDecoration: 'none',
@@ -191,7 +195,7 @@ const S: Record<string, React.CSSProperties> = {
   manifesto: {
     padding: '5rem 3rem',
     backgroundColor: '#1a1714',
-    color: '#faf8f5',
+    color: '#F5EDE4',
     maxWidth: '100%',
   },
   manifestoInner: {
@@ -312,7 +316,7 @@ const S: Record<string, React.CSSProperties> = {
     textTransform: 'uppercase' as const,
     padding: '0.2rem 0.6rem',
     backgroundColor: '#1a1714',
-    color: '#faf8f5',
+    color: '#F5EDE4',
   },
   boardEmpty: {
     padding: '3rem 0',
@@ -324,7 +328,7 @@ const S: Record<string, React.CSSProperties> = {
     fontSize: '0.8rem',
     letterSpacing: '0.06em',
     textTransform: 'uppercase' as const,
-    color: '#faf8f5',
+    color: '#F5EDE4',
     backgroundColor: '#1a1714',
     padding: '0.5rem 1.2rem',
     textDecoration: 'none',
@@ -456,7 +460,7 @@ function WritersBoard() {
 
       {/* Pattern insights */}
       {tagPatterns.length > 0 && (
-        <div style={{ marginBottom: '1.5rem', padding: '0.75rem 1rem', backgroundColor: '#f5f0eb', borderLeft: '3px solid #dcd9d5' }}>
+        <div style={{ marginBottom: '1.5rem', padding: '0.75rem 1rem', backgroundColor: '#EDE1D5', borderLeft: '3px solid #dcd9d5' }}>
           <p style={{ fontSize: '0.72rem', letterSpacing: '0.08em', textTransform: 'uppercase', color: '#7a7067', marginBottom: '0.5rem' }}>
             Your obsessions
           </p>
@@ -548,6 +552,7 @@ export function GardenHome() {
 
   return (
     <div style={S.page}>
+      <WatercolorBackground seed={1} />
       <Nav />
 
       {/* Hero */}
@@ -660,6 +665,9 @@ export function GardenHome() {
           </div>
         </>
       )}
+
+      {/* ROI Calculator */}
+      <GardenROICalculator />
 
       {/* Manifesto block */}
       <div style={S.manifesto}>

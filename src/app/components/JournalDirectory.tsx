@@ -7,6 +7,7 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router';
 import { Nav } from './Nav';
+import { WatercolorBackground } from './WatercolorBackground';
 import { supabase } from '../lib/supabase';
 
 type Journal = {
@@ -75,15 +76,15 @@ function displayStatus(status: string): 'open' | 'rolling' | 'closed' {
 }
 
 const S: Record<string, React.CSSProperties> = {
-  page: { minHeight: '100vh', backgroundColor: '#faf8f5', fontFamily: 'Georgia, serif', color: '#1a1714' },
+  page: { minHeight: '100vh', backgroundColor: '#F5EDE4', fontFamily: 'Georgia, serif', color: '#1a1714', position: 'relative' },
   header: { padding: '4rem 3rem 2rem', borderBottom: '1px solid #e8e4df' },
   headerLabel: { fontSize: '0.75rem', letterSpacing: '0.1em', textTransform: 'uppercase' as const, color: '#7a7067', marginBottom: '1rem' },
-  headerTitle: { fontSize: '2rem', fontWeight: 400, margin: '0 0 1rem', lineHeight: 1.2 },
+  headerTitle: { fontSize: 'clamp(2.2rem, 4vw, 3.5rem)', fontWeight: 600, margin: '0 0 1rem', lineHeight: 1.1, fontFamily: "'ACFrenchToast', cursive" },
   headerBody: { fontSize: '0.9rem', color: '#3d3830', lineHeight: 1.65, maxWidth: '540px' },
   filters: { padding: '1.5rem 3rem', borderBottom: '1px solid #e8e4df', display: 'flex', gap: '1rem', flexWrap: 'wrap' as const, alignItems: 'center' },
   filterLabel: { fontSize: '0.75rem', letterSpacing: '0.08em', textTransform: 'uppercase' as const, color: '#7a7067', marginRight: '0.5rem' },
   filterChip: { fontSize: '0.78rem', padding: '0.25rem 0.7rem', border: '1px solid #c5bdb4', backgroundColor: 'transparent', color: '#3d3830', cursor: 'pointer', fontFamily: 'Georgia, serif' },
-  filterChipActive: { fontSize: '0.78rem', padding: '0.25rem 0.7rem', border: '1px solid #1a1714', backgroundColor: '#1a1714', color: '#faf8f5', cursor: 'pointer', fontFamily: 'Georgia, serif' },
+  filterChipActive: { fontSize: '0.78rem', padding: '0.25rem 0.7rem', border: '1px solid #1a1714', backgroundColor: '#1a1714', color: '#F5EDE4', cursor: 'pointer', fontFamily: 'Georgia, serif' },
   list: { padding: '0 3rem' },
   journalCard: { padding: '2rem 0', borderBottom: '1px solid #e8e4df' },
   journalTop: { display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: '0.5rem' },
@@ -96,7 +97,7 @@ const S: Record<string, React.CSSProperties> = {
   statusDot: { width: '6px', height: '6px', borderRadius: '50%', backgroundColor: '#6b9e6b', display: 'inline-block' },
   loading: { padding: '4rem 3rem', color: '#7a7067', fontSize: '0.9rem' },
   cta: { padding: '3rem', borderTop: '1px solid #e8e4df', textAlign: 'center' as const },
-  residentBadge: { fontSize: '0.66rem', letterSpacing: '0.09em', textTransform: 'uppercase' as const, padding: '0.2rem 0.55rem', backgroundColor: '#1a1714', color: '#faf8f5', whiteSpace: 'nowrap' as const, fontFamily: 'system-ui, sans-serif' },
+  residentBadge: { fontSize: '0.66rem', letterSpacing: '0.09em', textTransform: 'uppercase' as const, padding: '0.2rem 0.55rem', backgroundColor: '#1a1714', color: '#F5EDE4', whiteSpace: 'nowrap' as const, fontFamily: 'system-ui, sans-serif' },
 };
 
 function JournalCard({ j }: { j: Journal }) {
@@ -167,6 +168,7 @@ export function JournalDirectory() {
 
   return (
     <div style={S.page}>
+      <WatercolorBackground seed={5} />
       <Nav />
 
       <div style={S.header}>

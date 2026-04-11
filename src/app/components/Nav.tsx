@@ -28,7 +28,7 @@ export function Nav() {
         justifyContent: 'space-between',
         padding: '2rem 3rem',
         borderBottom: '1px solid #e8e4df',
-        backgroundColor: '#faf8f5',
+        backgroundColor: '#F5EDE4',
         position: 'sticky',
         top: 0,
         zIndex: 100,
@@ -38,13 +38,12 @@ export function Nav() {
       <Link
         to="/"
         style={{
-          fontFamily: 'Georgia, serif',
-          fontSize: '1rem',
-          fontWeight: 400,
-          letterSpacing: '0.05em',
+          fontFamily: "'ACFrenchToast', cursive",
+          fontSize: '1.4rem',
+          fontWeight: 600,
+          letterSpacing: '0.02em',
           color: '#1a1714',
           textDecoration: 'none',
-          textTransform: 'uppercase',
         }}
       >
         The Page Gallery
@@ -148,7 +147,7 @@ export function Nav() {
             fontFamily: 'Georgia, serif',
             fontSize: '0.85rem',
             letterSpacing: '0.04em',
-            color: '#faf8f5',
+            color: '#F5EDE4',
             backgroundColor: '#1a1714',
             padding: '0.3rem 0.9rem',
             textDecoration: 'none',

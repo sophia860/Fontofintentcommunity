@@ -4,6 +4,7 @@
  */
 import { Link } from 'react-router';
 import { Nav } from './Nav';
+import { WatercolorBackground } from './WatercolorBackground';
 
 const FAQS = [
   {
@@ -33,13 +34,13 @@ const FAQS = [
 ];
 
 const S: Record<string, React.CSSProperties> = {
-  page: { minHeight: '100vh', backgroundColor: '#faf8f5', fontFamily: 'Georgia, serif', color: '#1a1714' },
+  page: { minHeight: '100vh', backgroundColor: '#F5EDE4', fontFamily: 'Georgia, serif', color: '#1a1714', position: 'relative' },
   hero: { padding: '5rem 3rem 4rem', borderBottom: '1px solid #e8e4df', maxWidth: '720px' },
   label: { fontSize: '0.75rem', letterSpacing: '0.1em', textTransform: 'uppercase' as const, color: '#7a7067', marginBottom: '1.5rem' },
-  h1: { fontSize: '2.5rem', fontWeight: 400, margin: '0 0 2rem', lineHeight: 1.15 },
+  h1: { fontSize: 'clamp(2.5rem, 5vw, 4rem)', fontWeight: 600, margin: '0 0 2rem', lineHeight: 1.1, fontFamily: "'ACFrenchToast', cursive" },
   body: { fontSize: '1.05rem', lineHeight: 1.85, color: '#3d3830', marginBottom: '1.5rem', maxWidth: '640px' },
   section: { padding: '4rem 3rem', borderBottom: '1px solid #e8e4df', maxWidth: '720px' },
-  h2: { fontSize: '1.1rem', fontWeight: 400, margin: '0 0 1.5rem', letterSpacing: '0.01em', color: '#1a1714' },
+  h2: { fontSize: 'clamp(1.5rem, 3vw, 2.25rem)', fontWeight: 500, margin: '0 0 1.5rem', letterSpacing: '0.01em', color: '#1a1714', fontFamily: "'ACFrenchToast', cursive" },
   epigraph: {
     margin: '2rem 0',
     paddingLeft: '2rem',
@@ -52,7 +53,7 @@ const S: Record<string, React.CSSProperties> = {
   epigraphSource: { display: 'block', marginTop: '0.75rem', fontSize: '0.8rem', color: '#7a7067', fontStyle: 'normal', letterSpacing: '0.02em' },
   footer: { padding: '4rem 3rem', display: 'flex', gap: '3rem', flexWrap: 'wrap' as const },
   footerLink: { fontSize: '0.85rem', color: '#1a1714', borderBottom: '1px solid #c5bdb4', textDecoration: 'none', paddingBottom: '2px' },
-  contact: { padding: '3rem', backgroundColor: '#f2ede8', borderTop: '1px solid #e8e4df' },
+  contact: { padding: '3rem', backgroundColor: '#EDE1D5', borderTop: '1px solid #e0d8d0' },
   contactInner: { maxWidth: '640px' },
   faqSection: { padding: '4rem 3rem', borderBottom: '1px solid #e8e4df', maxWidth: '720px' },
   faqItem: { marginBottom: '2rem' },
@@ -63,6 +64,7 @@ const S: Record<string, React.CSSProperties> = {
 export function About() {
   return (
     <div style={S.page}>
+      <WatercolorBackground seed={2} />
       <Nav />
 
       <section style={S.hero}>
@@ -74,7 +76,7 @@ export function About() {
           It is an institution that holds a conviction about what writing is and where it lives.
         </p>
         <p style={S.body}>
-          The conviction is this: the life around the poem is worth printing.
+          The conviction is this: <mark className="mark">the life around the poem is worth printing.</mark>
           The note that trails off, the third coffee, the friend who called just before the line came
           — literary culture has always published the poem and discarded the rest.
           Page Gallery Editions treats the rest as the substance.

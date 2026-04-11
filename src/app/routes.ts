@@ -21,6 +21,7 @@ import { WritingSurface } from './components/WritingSurface';
 import { PreviewScreen } from './components/PreviewScreen';
 import { ReplayView } from './components/ReplayView';
 import { AuthPage } from './components/AuthPage';
+import { AuthCallbackPage } from './components/AuthCallbackPage';
 import { AdminDashboard } from './components/AdminDashboard';
 
 export const router = createBrowserRouter([
@@ -75,6 +76,10 @@ export const router = createBrowserRouter([
   {
     path: '/auth',
     Component: AuthPage,
+  },
+  {
+    path: '/auth/callback',
+    Component: AuthCallbackPage,
   },
   {
     path: '/writer',

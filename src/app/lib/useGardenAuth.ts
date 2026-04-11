@@ -85,12 +85,10 @@ export function useGardenAuth() {
           gardenUser: session ? prev.gardenUser : null,
           loading: !!session,
         }))
-
         if (session) {
           await fetchGardenUser()
           setState(prev => ({ ...prev, loading: false }))
         }
-
         if (event === 'SIGNED_OUT') {
           setState({
             session: null,
@@ -108,10 +106,14 @@ export function useGardenAuth() {
   }, [fetchGardenUser])
 
   const signInWithMagicLink = useCallback(async (email: string, returnTo = '/') => {
+    const callback = new URL('/auth/callback', window.location.origin)
+    callback.searchParams.set('returnTo', returnTo)
+
     const { error } = await supabase.auth.signInWithOtp({
       email,
-      options: { emailRedirectTo: `${window.location.origin}${returnTo}` },
+      options: { emailRedirectTo: callback.toString() },
     })
+
     return { error }
   }, [])
 
