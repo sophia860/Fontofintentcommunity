@@ -14,7 +14,7 @@ import {
   removeLastCharFromBursts,
   type BurstBuilderState,
 } from '../lib/burstDetector';
-import { getBurstStyle, getGhostStyle } from '../lib/fontMapper';
+import { getBurstStyle, getGhostStyle, pickHeadingFont } from '../lib/fontMapper';
 import { WatercolorBackground } from './WatercolorBackground';
 
 interface GhostAnim {
@@ -140,12 +140,11 @@ export function LandingPage() {
         <p
           className="uppercase"
           style={{
-            fontFamily: "'ACFrenchToast', cursive",
+            fontFamily: pickHeadingFont('LandingPage-wordmark'),
             fontWeight: 600,
             fontSize: '1rem',
             letterSpacing: '0.15em',
             color: '#2C2824',
-          }}
         >
           font of intent
         </p>
@@ -163,7 +162,7 @@ export function LandingPage() {
         {/* Headline — THE moment */}
         <h1
           style={{
-            fontFamily: "'ACFrenchToast', cursive",
+            fontFamily: pickHeadingFont('LandingPage-h1'),
             fontWeight: 600,
             fontSize: 'clamp(3rem, 9vw, 7rem)',
             lineHeight: 1.1,
@@ -286,7 +285,7 @@ export function LandingPage() {
           </div>
         </div>
 
-        {/* CTA — the invitation, ACFrenchToast with persistent underline */}
+        {/* CTA — the invitation, chaotic font with persistent underline */}
         <button
           onClick={() => navigate('/write')}
           className="self-start cursor-pointer"
@@ -295,7 +294,7 @@ export function LandingPage() {
             border: 'none',
             padding: '0.5rem 0',
             color: '#2C2824',
-            fontFamily: "'ACFrenchToast', cursive",
+            fontFamily: pickHeadingFont('LandingPage-cta'),
             fontWeight: 500,
             fontSize: '1.4rem',
             minHeight: '44px',
@@ -335,7 +334,7 @@ export function LandingPage() {
       >
         <p
           style={{
-            fontFamily: "'ACFrenchToast', cursive",
+            fontFamily: pickHeadingFont('LandingPage-footer'),
             fontWeight: 400,
             fontSize: '1.1rem',
             color: '#8B7E74',

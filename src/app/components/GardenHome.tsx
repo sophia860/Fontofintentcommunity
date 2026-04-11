@@ -11,6 +11,7 @@ import { Nav } from './Nav';
 import { WatercolorBackground } from './WatercolorBackground';
 import { supabase } from '../lib/supabase';
 import GardenROICalculator from './GardenROICalculator';
+import { pickHeadingFont } from '../lib/fontMapper';
 
 type Callout = {
   id: string;
@@ -95,7 +96,7 @@ const S: Record<string, React.CSSProperties> = {
     lineHeight: 1.1,
     margin: '0 0 2rem',
     letterSpacing: '-0.01em',
-    fontFamily: "'ACFrenchToast', cursive",
+    fontFamily: pickHeadingFont('GardenHome-heroTitle'),
   },
   heroBody: {
     fontSize: '1.05rem',

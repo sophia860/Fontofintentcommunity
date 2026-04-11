@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router';
 import { Nav } from './Nav';
 import { supabase } from '../lib/supabase';
+import { pickHeadingFont } from '../lib/fontMapper';
 
 type Journal = {
   id: string;
@@ -51,7 +52,7 @@ export function JournalProfile() {
     page: { minHeight: '100vh', backgroundColor: '#F5EDE4', fontFamily: 'Georgia, serif', color: '#1a1714' },
     inner: { maxWidth: 760, margin: '0 auto', padding: '4rem 1.5rem' },
     label: { fontSize: '0.75rem', letterSpacing: '0.1em', textTransform: 'uppercase' as const, color: '#7a7067', marginBottom: '1rem', display: 'block' },
-    h1: { fontWeight: 600, fontSize: 'clamp(2.2rem, 4vw, 3.25rem)', marginBottom: '0.5rem', lineHeight: 1.1, fontFamily: "'ACFrenchToast', cursive" },
+    h1: { fontWeight: 600, fontSize: 'clamp(2.2rem, 4vw, 3.25rem)', marginBottom: '0.5rem', lineHeight: 1.1, fontFamily: pickHeadingFont('JournalProfile-h1') },
     editorial: { fontSize: '0.95rem', lineHeight: 1.75, color: '#3d3830', maxWidth: '580px', marginBottom: '2rem', fontStyle: 'italic' },
     body: { fontSize: '0.9rem', lineHeight: 1.7, color: '#3d3830', maxWidth: '580px', marginBottom: '1.5rem' },
     tags: { display: 'flex', gap: '0.5rem', flexWrap: 'wrap' as const, marginBottom: '2rem' },

@@ -7,14 +7,28 @@
  * 3. Spacing: pauses between bursts create visible horizontal gaps
  *
  * Font chaos (fourth axis):
- * - Uppercase-heavy bursts → ACRealAdult (printed caps feel)
- * - ~20% of remaining bursts → BiroScriptPlus (biro scrawl)
- * - Everything else → ACFrenchToast (flowing lowercase handwriting)
+ * All bursts are assigned one of 8 handwritten fonts deterministically from
+ * their content hash, producing a lively, chaotic mix across the canvas.
  * Plus random subtle size shifts and slight baseline wobble.
  *
  * Supports both light mode (writing surface, preview) and dark mode (replay).
  */
 import type { CSSProperties } from 'react';
+
+/**
+ * Full chaos font pool — 8 handwritten / child-like faces.
+ * Order matters: hash % length maps into this array.
+ */
+export const CHAOS_FONTS = [
+  "'ACFrenchToast', cursive",
+  "'ACRealAdult', cursive",
+  "'BiroScriptPlus', cursive",
+  "'Caveat', cursive",
+  "'Kalam', cursive",
+  "'Indie Flower', cursive",
+  "'Patrick Hand', cursive",
+  "'Short Stack', cursive",
+];
 
 /**
  * Deterministic hash of a string — used so font/size choices are stable
@@ -33,24 +47,18 @@ function hashString(s: string): number {
  * Returns the full CSS font-family value.
  */
 function pickFontFamily(chars: string[]): string {
-  if (!chars || chars.length === 0) return "'ACFrenchToast', cursive";
+  const text = chars && chars.length > 0 ? chars.join('') : '';
+  const h = hashString(text || 'default');
+  return CHAOS_FONTS[h % CHAOS_FONTS.length];
+}
 
-  const text = chars.join('');
-  const letters = text.match(/[a-zA-Z]/g) ?? [];
-  const uppers = text.match(/[A-Z]/g) ?? [];
-
-  // Uppercase-heavy → ACRealAdult
-  if (letters.length > 0 && uppers.length / letters.length > 0.55) {
-    return "'ACRealAdult', cursive";
-  }
-
-  // ~20% chance → BiroScriptPlus (deterministic via hash so stable on re-render)
-  const h = hashString(text);
-  if (h % 5 === 0) {
-    return "'BiroScriptPlus', cursive";
-  }
-
-  return "'ACFrenchToast', cursive";
+/**
+ * Pick a font for a heading / UI element using a stable seed string.
+ * Pass a unique per-element seed (e.g. component name + element description)
+ * so each heading gets a different font but doesn't change on re-render.
+ */
+export function pickHeadingFont(seed: string): string {
+  return CHAOS_FONTS[hashString(seed) % CHAOS_FONTS.length];
 }
 
 /**
