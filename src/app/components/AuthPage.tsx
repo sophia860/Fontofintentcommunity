@@ -150,7 +150,7 @@ const S: Record<string, React.CSSProperties> = {
   },
 }
 
-type Mode = 'magic' | 'password'
+type Mode = 'magic' | 'password' | 'claim'
 
 export function AuthPage() {
   const navigate = useNavigate()
@@ -168,6 +168,7 @@ export function AuthPage() {
   function switchMode(m: Mode) {
     setMode(m)
     setLocalError('')
+    setSent(false)
   }
 
   async function handleMagicLink(e: React.FormEvent) {
@@ -189,23 +190,42 @@ export function AuthPage() {
     else setLocalError(err.message)
   }
 
+  // "Claim your old Garden" — sends a magic link with the Garden redirect so
+  // the callback auto-creates a profile row for users who signed up on the old site.
+  async function handleClaim(e: React.FormEvent) {
+    e.preventDefault()
+    setLocalError('')
+    const { error: err } = await signInWithMagicLink(email, '/garden')
+    if (err) {
+      setLocalError(err.message)
+    } else {
+      setSent(true)
+    }
+  }
+
   const displayError = localError || error || ''
+
+  const headingText = sent
+    ? 'Check your inbox.'
+    : mode === 'claim'
+      ? 'Claim your old Garden.'
+      : 'Sign in to the Garden.'
 
   return (
     <div style={S.page}>
       <div style={S.card}>
         <span style={S.eyebrow}>Page Gallery Editions</span>
-        <h1 style={S.h1}>
-          {sent ? 'Check your inbox.' : 'Sign in to the Garden.'}
-        </h1>
+        <h1 style={S.h1}>{headingText}</h1>
 
         {sent ? (
           <>
             <p style={S.success}>
               We've sent a sign-in link to <strong>{email}</strong>.
-              Follow it to enter the Garden — no password needed.
+              {mode === 'claim'
+                ? ' Follow it to reclaim your Garden — your old work will be waiting.'
+                : ' Follow it to enter the Garden — no password needed.'}
             </p>
-            <button style={S.ghostLink} onClick={() => setSent(false)}>
+            <button style={S.ghostLink} onClick={() => { setSent(false); setLocalError('') }}>
               Try a different email
             </button>
           </>
@@ -225,9 +245,15 @@ export function AuthPage() {
               >
                 Password
               </button>
+              <button
+                style={mode === 'claim' ? S.tabActive : S.tab}
+                onClick={() => switchMode('claim')}
+              >
+                Old Garden
+              </button>
             </div>
 
-            {mode === 'magic' ? (
+            {mode === 'magic' && (
               <form onSubmit={handleMagicLink}>
                 {displayError && <p style={S.error}>{displayError}</p>}
                 <div style={S.fieldGroup}>
@@ -249,7 +275,9 @@ export function AuthPage() {
                   Works for all existing Garden members — no password required.
                 </p>
               </form>
-            ) : (
+            )}
+
+            {mode === 'password' && (
               <form onSubmit={handlePassword}>
                 {displayError && <p style={S.error}>{displayError}</p>}
                 <div style={S.fieldGroup}>
@@ -281,6 +309,31 @@ export function AuthPage() {
                 <button style={S.ghostLink} type="button" onClick={() => switchMode('magic')}>
                   No password? Use an email link instead
                 </button>
+              </form>
+            )}
+
+            {mode === 'claim' && (
+              <form onSubmit={handleClaim}>
+                {displayError && <p style={S.error}>{displayError}</p>}
+                <div style={S.fieldGroup}>
+                  <label style={S.fieldLabel}>Your old Garden email</label>
+                  <input
+                    style={S.input}
+                    type="email"
+                    required
+                    autoFocus
+                    value={email}
+                    onChange={e => setEmail(e.target.value)}
+                    placeholder="hello@example.com"
+                  />
+                </div>
+                <button style={S.submit} type="submit" disabled={loading || !email}>
+                  {loading ? 'Sending…' : 'Claim your old Garden'}
+                </button>
+                <p style={S.noteInline}>
+                  Moved from thepagegalleryjournal.com? Enter the email you used there.
+                  We'll send a link that reconnects your account and restores your Garden.
+                </p>
               </form>
             )}
 

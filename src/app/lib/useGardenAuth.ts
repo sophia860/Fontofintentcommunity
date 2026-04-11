@@ -48,6 +48,21 @@ export function useGardenAuth() {
       if (data && data.length > 0) {
         setState(prev => ({ ...prev, gardenUser: data[0], error: null }))
       } else {
+        // No profile row yet — auto-create for old / migrated users who signed up
+        // before the handle_new_user trigger was in place.
+        const { data: { user } } = await supabase.auth.getUser()
+        if (user) {
+          await supabase.from('profiles').upsert(
+            { id: user.id },
+            { onConflict: 'id', ignoreDuplicates: true }
+          )
+          // Re-fetch once after creating the row
+          const { data: retry } = await supabase.rpc('get_my_profile')
+          if (retry && retry.length > 0) {
+            setState(prev => ({ ...prev, gardenUser: retry[0], error: null }))
+            return
+          }
+        }
         setState(prev => ({ ...prev, gardenUser: null }))
       }
     } catch (err: any) {
