@@ -9,7 +9,7 @@ import { WatercolorBackground } from './WatercolorBackground';
 import { supabase } from '../lib/supabase';
 import { pickHeadingFont } from '../lib/fontMapper';
 
-type ApplyType = 'writer' | 'journal' | 'residency' | 'tilth';
+type ApplyType = 'writer' | 'journal' | 'residency';
 
 const S: Record<string, React.CSSProperties> = {
   page: { minHeight: '100vh', backgroundColor: '#F5EDE4', fontFamily: 'Georgia, serif', color: '#1a1714', position: 'relative' },
@@ -154,50 +154,10 @@ function ResidencyForm() {
   );
 }
 
-function TilthForm() {
-  const [form, setForm] = useState({ name: '', email: '', genre: '', dates: '', context: '', sample: '', why_tilth: '' });
-  const [submitted, setSubmitted] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
-  const handle = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
-    setForm(f => ({ ...f, [e.target.name]: e.target.value }));
-  async function handleSubmit(ev: React.FormEvent) {
-    ev.preventDefault(); setLoading(true); setError('');
-    const { error: err } = await supabase.from('tilth_submissions').insert({
-      name: form.name, email: form.email, bio: form.context, genre: form.genre, sample: form.sample, why_tilth: form.why_tilth, dates: form.dates, status: 'pending',
-    });
-    setLoading(false);
-    if (err) { setError(err.message); return; }
-    setSubmitted(true);
-  }
-  if (submitted) return (
-    <div style={S.form}>
-      <p style={{ ...S.body, backgroundColor: '#EDE1D5', padding: '1rem 1.25rem', borderLeft: '3px solid #c5bdb4' }}>
-        <strong>Submission received.</strong> We read everything. We respond to everything, though response times vary.
-      </p>
-    </div>
-  );
-  return (
-    <form style={S.form} onSubmit={handleSubmit}>
-      {error && <p style={{ color: '#9b2335', fontSize: '0.85rem', marginBottom: '1rem' }}>{error}</p>}
-      <p style={{ ...S.body, backgroundColor: '#EDE1D5', padding: '1rem 1.25rem', borderLeft: '3px solid #c5bdb4' }}>Tilth publishes when the work demands it. We do not maintain a reading queue. We accept unsolicited submissions. All work must be previously unpublished.</p>
-      <div style={S.fieldGroup}><label style={S.fieldLabel}>Name</label><input style={S.input} name="name" type="text" placeholder="Your name" value={form.name} onChange={handle} required /></div>
-      <div style={S.fieldGroup}><label style={S.fieldLabel}>Email</label><input style={S.input} name="email" type="email" placeholder="hello@example.com" value={form.email} onChange={handle} required /></div>
-      <div style={S.fieldGroup}><label style={S.fieldLabel}>Title of the work</label><input style={S.input} name="genre" type="text" placeholder="" value={form.genre} onChange={handle} required /></div>
-      <div style={S.fieldGroup}><label style={S.fieldLabel}>When was the work written?</label><p style={S.fieldNote}>Start date and finish date. All Tilth submissions must include dates.</p><input style={S.input} name="dates" type="text" placeholder="e.g. October 2024 - February 2025" value={form.dates} onChange={handle} /></div>
-      <div style={S.fieldGroup}><label style={S.fieldLabel}>Context account (half a page)</label><p style={S.fieldNote}>What were you doing as you wrote this? What were the circumstances? This is a co-equal text, not a cover letter.</p><textarea style={{ ...S.textarea, minHeight: '200px' }} name="context" placeholder="" value={form.context} onChange={handle} required /></div>
-      <div style={S.fieldGroup}><label style={S.fieldLabel}>The work</label><p style={S.fieldNote}>Paste the full text below, or include a link to a PDF.</p><textarea style={{ ...S.textarea, minHeight: '300px' }} name="sample" placeholder="" value={form.sample} onChange={handle} required /></div>
-      <button style={S.submit} type="submit" disabled={loading}>{loading ? 'Submitting...' : 'Submit to Tilth'}</button>
-      <p style={S.note}>We read everything. We respond to everything, though response times vary. We pay contributors at rates informed by ALCS and established journal standards.</p>
-    </form>
-  );
-}
-
 const TABS: { key: ApplyType; label: string }[] = [
   { key: 'writer', label: 'Join as writer' },
   { key: 'journal', label: 'Register a journal' },
   { key: 'residency', label: 'Apply for residency' },
-  { key: 'tilth', label: 'Submit to Tilth' },
 ];
 
 export function Apply() {
@@ -212,7 +172,7 @@ export function Apply() {
         <p style={S.label}>Page Gallery Editions</p>
         <h1 style={S.h1}>Enter the Garden.</h1>
         <p style={S.body}>
-          Four pathways into the Page Gallery Editions ecosystem.
+          Three pathways into the Page Gallery Editions ecosystem.
           Choose the one that fits where you are.
         </p>
       </div>
@@ -232,7 +192,6 @@ export function Apply() {
       {active === 'writer' && <WriterForm />}
       {active === 'journal' && <JournalForm />}
       {active === 'residency' && <ResidencyForm />}
-      {active === 'tilth' && <TilthForm />}
     </div>
   );
 }

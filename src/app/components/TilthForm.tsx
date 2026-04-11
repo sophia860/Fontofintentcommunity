@@ -31,7 +31,7 @@ export default function TilthForm() {
     return (
       <div className={S.confirmation}>
         <h2>Submission Received</h2>
-        <p>Tilth reads every submission with full attention. We publish rarely and only when the work demands it. You will hear from us.</p>
+        <p>We read every submission with full attention. We publish rarely and only when the work demands it. You will hear from us.</p>
       </div>
     );
   }
@@ -39,8 +39,8 @@ export default function TilthForm() {
   return (
     <form className={S.form} onSubmit={handleSubmit}>
       <div className={S.intro}>
-        <h2>Tilth</h2>
-        <p>Tilth is not a general submission pool. It is the mark of work that has been prepared — turned over, made ready. We accept prose, criticism, and hybrid forms of uncommon quality. Submit only what you believe is finished.</p>
+        <h2>Submissions</h2>
+        <p>This is not a general submission pool. It is a mark of work that has been prepared — turned over, made ready. We accept prose, criticism, and hybrid forms of uncommon quality. Submit only what you believe is finished.</p>
       </div>
 
       {error && <p style={{ color: '#9b2335', marginBottom: '1rem', fontSize: '0.85rem' }}>{error}</p>}
@@ -83,12 +83,12 @@ export default function TilthForm() {
       </div>
 
       <div className={S.field}>
-        <label htmlFor="whyTilth">Why Tilth <span className={S.hint}>(optional, but valued)</span></label>
+        <label htmlFor="whyTilth">Why here <span className={S.hint}>(optional, but valued)</span></label>
         <textarea id="whyTilth" name="whyTilth" value={form.whyTilth} onChange={handleChange} rows={4} placeholder="What brings you here specifically" />
       </div>
 
       <button type="submit" className={S.submit} disabled={loading}>
-        {loading ? 'Submitting...' : 'Submit to Tilth'}
+        {loading ? 'Submitting...' : 'Submit'}
       </button>
     </form>
   );
