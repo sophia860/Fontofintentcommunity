@@ -130,7 +130,7 @@ export function LandingPage() {
   const leftPad = 'max(2rem, 8vw)';
 
   return (
-    <div className="min-h-screen flex flex-col" style={{ background: '#F5EDE4', position: 'relative' }}>
+    <div className="min-h-screen flex flex-col" style={{ background: '#F9F6F2', position: 'relative' }}>
       <WatercolorBackground seed={0} />
       {/* Header — wordmark, intentional weight */}
       <header
@@ -232,7 +232,7 @@ export function LandingPage() {
                 }}
               >
                 {bursts.map((burst) => (
-                  <span key={burst.id} style={getBurstStyle(burst.confidence, burst.hesitation, burst.pauseBefore)}>
+                  <span key={burst.id} style={getBurstStyle(burst.confidence, burst.hesitation, burst.pauseBefore, false, burst.chars)}>
                     {burst.chars.map((ch, i) =>
                       ch === '\n' ? <br key={`${burst.id}-br-${i}`} /> : ch
                     ).reduce<(string | JSX.Element)[]>((acc, item) => {

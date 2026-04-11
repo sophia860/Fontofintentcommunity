@@ -3,6 +3,8 @@
 :root {
   --font-size: 16px;
   --font-handwritten: 'ACFrenchToast', cursive;
+  --font-capitals: 'ACRealAdult', cursive;
+  --font-biro: 'BiroScriptPlus', cursive;
   --ink-red: #B71C1C;
   --highlighter: rgba(255, 244, 0, 0.45);
   --background: #ffffff;
@@ -129,7 +131,7 @@
 
   body {
     @apply bg-background text-foreground;
-    background: #F5EDE4;
+    background: #F9F6F2;
   }
 
   /**
@@ -140,8 +142,8 @@
   /* Paper grain texture — tiling SVG noise on the root element */
   html {
     font-size: var(--font-size);
-    background: #F5EDE4;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='paper'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23paper)' opacity='0.07'/%3E%3C/svg%3E");
+    background: #F9F6F2;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='paper'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23paper)' opacity='0.05'/%3E%3C/svg%3E");
     background-repeat: repeat;
     background-size: 300px 300px;
   }
