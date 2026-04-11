@@ -1,11 +1,40 @@
 
-  # font-of-intent (Community)
+# The Page Gallery
 
-  This is a code bundle for font-of-intent (Community). The original project is available at https://www.figma.com/design/Hj30cKLOYf20vHfsiRq2Qz/font-of-intent--Community-.
+A cultural company. A publishing house. A platform owner.
 
-  ## Running the code
+We publish. We build infrastructure. We create opportunity.
+We connect writers, artists, journals, and production.
 
-  Run `npm i` to install the dependencies.
+---
 
-  Run `npm run dev` to start the development server.
+## What's here
+
+- **The Garden** — the writer/artist platform. Create, publish, collaborate, earn.
+- **Editions** — the publishing imprint. Chapbooks, poetry, printed works.
+- **Collector Circle** — membership tiers supporting independent literary publishing.
+- **Programs** — residencies, workshops, labs, prizes.
+
+---
+
+## Running locally
+
+```bash
+npm install
+npm run dev
+```
+
+## Build
+
+```bash
+npm run build
+```
+
+## Stack
+
+React 18 · TypeScript · Vite · Tailwind · Supabase · Radix UI · framer-motion (motion) · zustand
+
+---
+
+*Published when the work demands it. Not before.*
   

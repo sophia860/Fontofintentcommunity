@@ -156,6 +156,22 @@ export function Nav() {
         >
           Apply
         </Link>
+
+        {/* Join Circle premium CTA */}
+        <Link
+          to="/circle"
+          style={{
+            fontFamily: 'Georgia, serif',
+            fontSize: '0.85rem',
+            letterSpacing: '0.04em',
+            color: '#F5EDE4',
+            backgroundColor: '#6B2A2A',
+            padding: '0.3rem 0.9rem',
+            textDecoration: 'none',
+          }}
+        >
+          Join Circle
+        </Link>
       </nav>
     </header>
   );
