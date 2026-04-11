@@ -138,7 +138,7 @@ export function LandingPage() {
         <p
           className="uppercase"
           style={{
-            fontFamily: "'Caveat', cursive",
+            fontFamily: "'ACFrenchToast', cursive",
             fontWeight: 600,
             fontSize: '1rem',
             letterSpacing: '0.15em',
@@ -161,7 +161,7 @@ export function LandingPage() {
         {/* Headline — THE moment */}
         <h1
           style={{
-            fontFamily: "'Caveat', cursive",
+            fontFamily: "'ACFrenchToast', cursive",
             fontWeight: 600,
             fontSize: 'clamp(3rem, 9vw, 7rem)',
             lineHeight: 1.1,
@@ -284,7 +284,7 @@ export function LandingPage() {
           </div>
         </div>
 
-        {/* CTA — the invitation, Caveat with persistent underline */}
+        {/* CTA — the invitation, ACFrenchToast with persistent underline */}
         <button
           onClick={() => navigate('/write')}
           className="self-start cursor-pointer"
@@ -293,7 +293,7 @@ export function LandingPage() {
             border: 'none',
             padding: '0.5rem 0',
             color: '#2C2824',
-            fontFamily: "'Caveat', cursive",
+            fontFamily: "'ACFrenchToast', cursive",
             fontWeight: 500,
             fontSize: '1.4rem',
             minHeight: '44px',
@@ -333,7 +333,7 @@ export function LandingPage() {
       >
         <p
           style={{
-            fontFamily: "'Caveat', cursive",
+            fontFamily: "'ACFrenchToast', cursive",
             fontWeight: 400,
             fontSize: '1.1rem',
             color: '#8B7E74',

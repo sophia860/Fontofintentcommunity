@@ -27,7 +27,7 @@ const S: Record<string, React.CSSProperties> = {
   page: { minHeight: '100vh', backgroundColor: '#faf8f5', fontFamily: 'Georgia, serif', color: '#1a1714' },
   header: { padding: '4rem 3rem 2rem', borderBottom: '1px solid #e8e4df' },
   headerLabel: { fontSize: '0.75rem', letterSpacing: '0.1em', textTransform: 'uppercase' as const, color: '#7a7067', marginBottom: '1rem' },
-  headerTitle: { fontSize: 'clamp(2.2rem, 4vw, 3.5rem)', fontWeight: 600, margin: '0 0 1rem', lineHeight: 1.1, fontFamily: "'Caveat', cursive" },
+  headerTitle: { fontSize: 'clamp(2.2rem, 4vw, 3.5rem)', fontWeight: 600, margin: '0 0 1rem', lineHeight: 1.1, fontFamily: "'ACFrenchToast', cursive" },
   headerBody: { fontSize: '0.9rem', color: '#3d3830', lineHeight: 1.65, maxWidth: '540px' },
   filters: { padding: '1.5rem 3rem', borderBottom: '1px solid #e8e4df', display: 'flex', gap: '1rem', flexWrap: 'wrap' as const, alignItems: 'center' },
   filterLabel: { fontSize: '0.75rem', letterSpacing: '0.08em', textTransform: 'uppercase' as const, color: '#7a7067', marginRight: '0.5rem' },
