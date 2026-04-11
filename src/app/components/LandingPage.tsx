@@ -160,7 +160,6 @@ export function LandingPage() {
       >
         {/* Headline — THE moment */}
         <h1
-          className="text-[#B71C1C]"
           style={{
             fontFamily: "'Caveat', cursive",
             fontWeight: 600,
@@ -168,11 +167,12 @@ export function LandingPage() {
             lineHeight: 1.1,
             letterSpacing: '0.01em',
             marginBottom: '0.5rem',
+            color: 'var(--ink-red)',
           }}
         >
           your words reveal
           <br />
-          what your fingers <mark className="mark" style={{ background: 'linear-gradient(104deg, transparent 0.9%, rgba(255,244,0,0.45) 2.4%, rgba(255,244,0,0.38) 5.8%, rgba(255,244,0,0.42) 93%, rgba(255,244,0,0.45) 96%, transparent 98%)', borderRadius: '1px', padding: '0.05em 0.2em', color: 'inherit' }}>felt</mark>
+          what your fingers <mark className="mark">felt</mark>
         </h1>
 
         {/* Subtitle — piece of writing, not a letter */}
