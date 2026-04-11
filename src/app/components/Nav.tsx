@@ -6,6 +6,7 @@
 import { useEffect, useState } from 'react';
 import { Link, useLocation } from 'react-router';
 import { supabase } from '../lib/supabase';
+import { ADMIN_EMAIL } from '../lib/adminConfig';
 import type { User } from '@supabase/supabase-js';
 
 const NAV_LINKS = [
@@ -88,6 +89,23 @@ export function Nav() {
         {/* Auth state */}
         {user ? (
           <>
+            {user.email === ADMIN_EMAIL && (
+              <Link
+                to="/admin"
+                style={{
+                  fontFamily: 'Georgia, serif',
+                  fontSize: '0.85rem',
+                  letterSpacing: '0.04em',
+                  color: '#9b2335',
+                  textDecoration: 'none',
+                  borderBottom: pathname.startsWith('/admin') ? '1px solid #9b2335' : '1px solid transparent',
+                  paddingBottom: '2px',
+                  opacity: 0.85,
+                }}
+              >
+                Admin
+              </Link>
+            )}
             <Link
               to="/dashboard/writer"
               style={{

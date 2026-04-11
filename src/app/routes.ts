@@ -13,6 +13,7 @@ import { WritingSurface } from './components/WritingSurface';
 import { PreviewScreen } from './components/PreviewScreen';
 import { ReplayView } from './components/ReplayView';
 import { AuthPage } from './components/AuthPage';
+import { AdminDashboard } from './components/AdminDashboard';
 
 export const router = createBrowserRouter([
   {
@@ -78,5 +79,9 @@ export const router = createBrowserRouter([
   {
     path: '/about',
     Component: About,
+  },
+  {
+    path: '/admin',
+    Component: AdminDashboard,
   },
 ]);
