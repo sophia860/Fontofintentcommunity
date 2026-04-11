@@ -201,7 +201,7 @@ const S: Record<string, React.CSSProperties> = {
   // Writer header
   writerHeader: { padding: '5rem 3rem 4rem', maxWidth: '860px', margin: '0 auto' },
   writerEpigraph: { fontSize: '0.75rem', letterSpacing: '0.1em', textTransform: 'uppercase' as const, color: '#7a7067', marginBottom: '1.5rem' },
-  writerName: { fontSize: 'clamp(2.2rem, 5vw, 3.5rem)', fontWeight: 600, lineHeight: 1.1, letterSpacing: '-0.01em', margin: '0 0 1.5rem', fontFamily: "'Caveat', cursive" },
+  writerName: { fontSize: 'clamp(2.2rem, 5vw, 3.5rem)', fontWeight: 600, lineHeight: 1.1, letterSpacing: '-0.01em', margin: '0 0 1.5rem', fontFamily: "'ACFrenchToast', cursive" },
   writerBio: { fontSize: '1rem', lineHeight: 1.75, color: '#3d3830', maxWidth: '52ch', marginBottom: '1.75rem' },
   writerMeta: { display: 'flex', flexWrap: 'wrap' as const, gap: '1rem', alignItems: 'center' },
   writerMuted: { fontSize: '0.8rem', color: '#7a7067', fontFamily: 'system-ui, sans-serif' },
@@ -209,7 +209,7 @@ const S: Record<string, React.CSSProperties> = {
   // Featured piece
   featuredSection: { padding: '4rem 3rem', maxWidth: '860px', margin: '0 auto' },
   featuredLabel: { fontSize: '0.75rem', letterSpacing: '0.1em', textTransform: 'uppercase' as const, color: '#7a7067', marginBottom: '2rem' },
-  featuredTitle: { fontSize: 'clamp(1.3rem, 2.5vw, 1.8rem)', fontWeight: 500, lineHeight: 1.2, fontStyle: 'italic', color: '#1a1714', marginBottom: '1.5rem', fontFamily: "'Caveat', cursive" },
+  featuredTitle: { fontSize: 'clamp(1.3rem, 2.5vw, 1.8rem)', fontWeight: 500, lineHeight: 1.2, fontStyle: 'italic', color: '#1a1714', marginBottom: '1.5rem', fontFamily: "'ACFrenchToast', cursive" },
   featuredExplainer: { fontSize: '0.76rem', color: '#a09486', letterSpacing: '0.04em', marginBottom: '1.25rem', fontFamily: 'system-ui, sans-serif', lineHeight: 1.6 },
   burstContainer: { padding: '2rem 2.5rem', backgroundColor: '#f5f0eb', borderLeft: '1px solid #dcd9d5' },
   scoutedBar: { display: 'flex', alignItems: 'baseline', gap: '1rem', marginTop: '1.5rem', flexWrap: 'wrap' as const },

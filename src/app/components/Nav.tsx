@@ -38,7 +38,7 @@ export function Nav() {
       <Link
         to="/"
         style={{
-          fontFamily: "'Caveat', cursive",
+          fontFamily: "'ACFrenchToast', cursive",
           fontSize: '1.4rem',
           fontWeight: 600,
           letterSpacing: '0.02em',

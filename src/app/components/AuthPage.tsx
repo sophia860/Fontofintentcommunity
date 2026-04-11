@@ -36,7 +36,7 @@ const S: Record<string, React.CSSProperties> = {
     fontWeight: 600,
     margin: '0 0 2rem',
     lineHeight: 1.15,
-    fontFamily: "'Caveat', cursive",
+    fontFamily: "'ACFrenchToast', cursive",
   },
   tabs: {
     display: 'flex',

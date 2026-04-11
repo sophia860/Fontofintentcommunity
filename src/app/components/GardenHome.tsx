@@ -93,7 +93,7 @@ const S: Record<string, React.CSSProperties> = {
     lineHeight: 1.1,
     margin: '0 0 2rem',
     letterSpacing: '-0.01em',
-    fontFamily: "'Caveat', cursive",
+    fontFamily: "'ACFrenchToast', cursive",
   },
   heroBody: {
     fontSize: '1.05rem',
