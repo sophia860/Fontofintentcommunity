@@ -20,6 +20,7 @@ import { Nav } from './Nav';
 import { BurstRenderer } from './BurstRenderer';
 import { buildBurstsFromEvents } from '../lib/burstDetector';
 import type { Burst } from '../lib/types';
+import { WatercolorBackground } from './WatercolorBackground';
 
 // ---------------------------------------------------------------------------
 // Types
@@ -196,7 +197,7 @@ function formatLastVisited(iso: string): string {
 // ---------------------------------------------------------------------------
 
 const S: Record<string, React.CSSProperties> = {
-  page: { minHeight: '100vh', backgroundColor: '#faf8f5', fontFamily: 'Georgia, serif', color: '#1a1714' },
+  page: { minHeight: '100vh', backgroundColor: '#F5EDE4', fontFamily: 'Georgia, serif', color: '#1a1714', position: 'relative' },
   divider: { borderTop: '1px solid #e8e4df', margin: '0' },
   // Writer header
   writerHeader: { padding: '5rem 3rem 4rem', maxWidth: '860px', margin: '0 auto' },
@@ -211,9 +212,9 @@ const S: Record<string, React.CSSProperties> = {
   featuredLabel: { fontSize: '0.75rem', letterSpacing: '0.1em', textTransform: 'uppercase' as const, color: '#7a7067', marginBottom: '2rem' },
   featuredTitle: { fontSize: 'clamp(1.3rem, 2.5vw, 1.8rem)', fontWeight: 500, lineHeight: 1.2, fontStyle: 'italic', color: '#1a1714', marginBottom: '1.5rem', fontFamily: "'ACFrenchToast', cursive" },
   featuredExplainer: { fontSize: '0.76rem', color: '#a09486', letterSpacing: '0.04em', marginBottom: '1.25rem', fontFamily: 'system-ui, sans-serif', lineHeight: 1.6 },
-  burstContainer: { padding: '2rem 2.5rem', backgroundColor: '#f5f0eb', borderLeft: '1px solid #dcd9d5' },
+  burstContainer: { padding: '2rem 2.5rem', backgroundColor: '#EDE1D5', borderLeft: '1px solid #d8cfc6' },
   scoutedBar: { display: 'flex', alignItems: 'baseline', gap: '1rem', marginTop: '1.5rem', flexWrap: 'wrap' as const },
-  scoutedBadgeLg: { fontSize: '0.7rem', letterSpacing: '0.1em', textTransform: 'uppercase' as const, backgroundColor: '#1a1714', color: '#faf8f5', padding: '0.2rem 0.6rem', fontFamily: 'system-ui, sans-serif' },
+  scoutedBadgeLg: { fontSize: '0.7rem', letterSpacing: '0.1em', textTransform: 'uppercase' as const, backgroundColor: '#1a1714', color: '#F5EDE4', padding: '0.2rem 0.6rem', fontFamily: 'system-ui, sans-serif' },
   readLink: { fontSize: '0.8rem', color: '#7a7067', borderBottom: '1px solid #c5bdb4', textDecoration: 'none' },
   pieceStat: { fontSize: '0.74rem', color: '#a09486', fontFamily: 'system-ui, sans-serif', letterSpacing: '0.03em' },
   // Board
@@ -222,7 +223,7 @@ const S: Record<string, React.CSSProperties> = {
   boardLabel: { fontSize: '0.75rem', letterSpacing: '0.1em', textTransform: 'uppercase' as const, color: '#7a7067' },
   boardFilters: { display: 'flex', gap: '1rem', alignItems: 'baseline', flexWrap: 'wrap' as const },
   filterBtn: { background: 'none', border: 'none', padding: '0', fontSize: '0.75rem', letterSpacing: '0.07em', textTransform: 'uppercase' as const, cursor: 'pointer' },
-  patternBar: { marginBottom: '1.75rem', padding: '0.9rem 1.25rem', backgroundColor: '#f5f0eb', borderLeft: '2px solid #dcd9d5' },
+  patternBar: { marginBottom: '1.75rem', padding: '0.9rem 1.25rem', backgroundColor: '#EDE1D5', borderLeft: '2px solid #d8cfc6' },
   patternLabel: { fontSize: '0.7rem', letterSpacing: '0.09em', textTransform: 'uppercase' as const, color: '#7a7067', marginBottom: '0.4rem', fontFamily: 'system-ui, sans-serif' },
   patternText: { fontSize: '0.83rem', color: '#3d3830', lineHeight: 1.5 },
   pieceRow: { borderTop: '1px solid #e8e4df', padding: '1.75rem 0', display: 'grid', gridTemplateColumns: '1fr auto', gap: '1.5rem', alignItems: 'start' },
@@ -232,7 +233,7 @@ const S: Record<string, React.CSSProperties> = {
   piecePattern: { fontSize: '0.77rem', color: '#9c8f83', fontStyle: 'italic', marginBottom: '0.6rem', lineHeight: 1.5 },
   pieceMeta: { display: 'flex', gap: '0.75rem', alignItems: 'center', flexWrap: 'wrap' as const, marginTop: '0.5rem' },
   stateChip: { fontSize: '0.66rem', letterSpacing: '0.09em', textTransform: 'uppercase' as const, padding: '0.2rem 0.55rem', border: '1px solid currentColor', whiteSpace: 'nowrap' as const, fontFamily: 'system-ui, sans-serif' },
-  scoutedBadge: { fontSize: '0.66rem', letterSpacing: '0.09em', textTransform: 'uppercase' as const, padding: '0.2rem 0.55rem', backgroundColor: '#1a1714', color: '#faf8f5', whiteSpace: 'nowrap' as const, fontFamily: 'system-ui, sans-serif' },
+  scoutedBadge: { fontSize: '0.66rem', letterSpacing: '0.09em', textTransform: 'uppercase' as const, padding: '0.2rem 0.55rem', backgroundColor: '#1a1714', color: '#F5EDE4', whiteSpace: 'nowrap' as const, fontFamily: 'system-ui, sans-serif' },
   boardEmpty: { padding: '2.5rem 0', color: '#a09486', fontSize: '0.9rem', fontStyle: 'italic' },
   // Footer
   footer: { padding: '2.5rem 3rem', borderTop: '1px solid #e8e4df', display: 'flex', justifyContent: 'space-between', alignItems: 'baseline' },
@@ -404,6 +405,7 @@ export function WritersPage() {
 
   return (
     <div style={S.page}>
+      <WatercolorBackground seed={3} />
       <Nav />
 
       {/* Writer header */}

@@ -125,7 +125,7 @@ export function WriterDashboard() {
 
       {/* Pattern surfacing */}
       {patterns.length > 0 && (
-        <div style={{ marginBottom: '2rem', padding: '1rem 1.25rem', backgroundColor: '#f5f0eb', borderLeft: '3px solid #c5bdb4' }}>
+        <div style={{ marginBottom: '2rem', padding: '1rem 1.25rem', backgroundColor: '#EDE1D5', borderLeft: '3px solid #c5bdb4' }}>
           <p style={{ fontSize: '0.75rem', letterSpacing: '0.08em', textTransform: 'uppercase', color: '#7a7067', marginBottom: '0.75rem' }}>
             Your obsessions
           </p>

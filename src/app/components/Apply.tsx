@@ -5,12 +5,13 @@
  */
 import { useState } from 'react';
 import { Nav } from './Nav';
+import { WatercolorBackground } from './WatercolorBackground';
 import { supabase } from '../lib/supabase';
 
 type ApplyType = 'writer' | 'journal' | 'residency' | 'tilth';
 
 const S: Record<string, React.CSSProperties> = {
-  page: { minHeight: '100vh', backgroundColor: '#faf8f5', fontFamily: 'Georgia, serif', color: '#1a1714' },
+  page: { minHeight: '100vh', backgroundColor: '#F5EDE4', fontFamily: 'Georgia, serif', color: '#1a1714', position: 'relative' },
   hero: { padding: '5rem 3rem 3rem', borderBottom: '1px solid #e8e4df' },
   label: { fontSize: '0.75rem', letterSpacing: '0.1em', textTransform: 'uppercase' as const, color: '#7a7067', marginBottom: '1rem' },
   h1: { fontSize: 'clamp(2.5rem, 5vw, 4rem)', fontWeight: 600, margin: '0 0 1.5rem', lineHeight: 1.1, fontFamily: "'ACFrenchToast', cursive" },
@@ -22,9 +23,9 @@ const S: Record<string, React.CSSProperties> = {
   fieldGroup: { marginBottom: '2rem' },
   fieldLabel: { display: 'block', fontSize: '0.8rem', letterSpacing: '0.06em', textTransform: 'uppercase' as const, color: '#3d3830', marginBottom: '0.5rem' },
   fieldNote: { fontSize: '0.78rem', color: '#7a7067', marginBottom: '0.5rem', lineHeight: 1.5 },
-  input: { width: '100%', padding: '0.6rem 0.75rem', border: '1px solid #c5bdb4', backgroundColor: '#faf8f5', fontFamily: 'Georgia, serif', fontSize: '0.9rem', color: '#1a1714', outline: 'none', boxSizing: 'border-box' as const },
-  textarea: { width: '100%', padding: '0.6rem 0.75rem', border: '1px solid #c5bdb4', backgroundColor: '#faf8f5', fontFamily: 'Georgia, serif', fontSize: '0.9rem', color: '#1a1714', outline: 'none', resize: 'vertical' as const, minHeight: '120px', boxSizing: 'border-box' as const },
-  submit: { fontSize: '0.85rem', letterSpacing: '0.05em', textTransform: 'uppercase' as const, color: '#faf8f5', backgroundColor: '#1a1714', padding: '0.75rem 1.75rem', border: 'none', cursor: 'pointer', fontFamily: 'Georgia, serif' },
+  input: { width: '100%', padding: '0.6rem 0.75rem', border: '1px solid #c5bdb4', backgroundColor: '#F5EDE4', fontFamily: 'Georgia, serif', fontSize: '0.9rem', color: '#1a1714', outline: 'none', boxSizing: 'border-box' as const },
+  textarea: { width: '100%', padding: '0.6rem 0.75rem', border: '1px solid #c5bdb4', backgroundColor: '#F5EDE4', fontFamily: 'Georgia, serif', fontSize: '0.9rem', color: '#1a1714', outline: 'none', resize: 'vertical' as const, minHeight: '120px', boxSizing: 'border-box' as const },
+  submit: { fontSize: '0.85rem', letterSpacing: '0.05em', textTransform: 'uppercase' as const, color: '#F5EDE4', backgroundColor: '#1a1714', padding: '0.75rem 1.75rem', border: 'none', cursor: 'pointer', fontFamily: 'Georgia, serif' },
   note: { fontSize: '0.8rem', color: '#7a7067', lineHeight: 1.6, marginTop: '1.5rem', paddingTop: '1.5rem', borderTop: '1px solid #e8e4df', maxWidth: '520px' },
 };
 
@@ -46,7 +47,7 @@ function WriterForm() {
   }
   if (submitted) return (
     <div style={S.form}>
-      <p style={{ ...S.body, backgroundColor: '#f2ede8', padding: '1rem 1.25rem', borderLeft: '3px solid #c5bdb4' }}>
+      <p style={{ ...S.body, backgroundColor: '#EDE1D5', padding: '1rem 1.25rem', borderLeft: '3px solid #c5bdb4' }}>
         <strong>Application received.</strong> Thank you for entering the Garden. We read every application and will be in touch.
       </p>
     </div>
@@ -84,7 +85,7 @@ function JournalForm() {
   }
   if (submitted) return (
     <div style={S.form}>
-      <p style={{ ...S.body, backgroundColor: '#f2ede8', padding: '1rem 1.25rem', borderLeft: '3px solid #c5bdb4' }}>
+      <p style={{ ...S.body, backgroundColor: '#EDE1D5', padding: '1rem 1.25rem', borderLeft: '3px solid #c5bdb4' }}>
         <strong>Registration received.</strong> Thank you for registering your journal. We will review and follow up shortly.
       </p>
     </div>
@@ -131,7 +132,7 @@ function ResidencyForm() {
   }
   if (submitted) return (
     <div style={S.form}>
-      <p style={{ ...S.body, backgroundColor: '#f2ede8', padding: '1rem 1.25rem', borderLeft: '3px solid #c5bdb4' }}>
+      <p style={{ ...S.body, backgroundColor: '#EDE1D5', padding: '1rem 1.25rem', borderLeft: '3px solid #c5bdb4' }}>
         <strong>Application received.</strong> Thank you for applying to the Residency Programme. We aim to respond within eight weeks.
       </p>
     </div>
@@ -139,7 +140,7 @@ function ResidencyForm() {
   return (
     <form style={S.form} onSubmit={handleSubmit}>
       {error && <p style={{ color: '#9b2335', fontSize: '0.85rem', marginBottom: '1rem' }}>{error}</p>}
-      <p style={{ ...S.body, backgroundColor: '#f2ede8', padding: '1rem 1.25rem', borderLeft: '3px solid #c5bdb4' }}>The 2025-26 Residency Programme is now open for applications. Two to three journals will be selected. Selection is based solely on quality. There is no application fee.</p>
+      <p style={{ ...S.body, backgroundColor: '#EDE1D5', padding: '1rem 1.25rem', borderLeft: '3px solid #c5bdb4' }}>The 2025-26 Residency Programme is now open for applications. Two to three journals will be selected. Selection is based solely on quality. There is no application fee.</p>
       <div style={S.fieldGroup}><label style={S.fieldLabel}>Journal name</label><input style={S.input} name="name" type="text" placeholder="Journal name" value={form.name} onChange={handle} required /></div>
       <div style={S.fieldGroup}><label style={S.fieldLabel}>Contact name</label><input style={S.input} name="contact_name" type="text" placeholder="Editor or contact name" value={form.contact_name} onChange={handle} required /></div>
       <div style={S.fieldGroup}><label style={S.fieldLabel}>Contact email</label><input style={S.input} name="contact_email" type="email" placeholder="hello@example.com" value={form.contact_email} onChange={handle} required /></div>
@@ -170,7 +171,7 @@ function TilthForm() {
   }
   if (submitted) return (
     <div style={S.form}>
-      <p style={{ ...S.body, backgroundColor: '#f2ede8', padding: '1rem 1.25rem', borderLeft: '3px solid #c5bdb4' }}>
+      <p style={{ ...S.body, backgroundColor: '#EDE1D5', padding: '1rem 1.25rem', borderLeft: '3px solid #c5bdb4' }}>
         <strong>Submission received.</strong> We read everything. We respond to everything, though response times vary.
       </p>
     </div>
@@ -178,7 +179,7 @@ function TilthForm() {
   return (
     <form style={S.form} onSubmit={handleSubmit}>
       {error && <p style={{ color: '#9b2335', fontSize: '0.85rem', marginBottom: '1rem' }}>{error}</p>}
-      <p style={{ ...S.body, backgroundColor: '#f2ede8', padding: '1rem 1.25rem', borderLeft: '3px solid #c5bdb4' }}>Tilth publishes when the work demands it. We do not maintain a reading queue. We accept unsolicited submissions. All work must be previously unpublished.</p>
+      <p style={{ ...S.body, backgroundColor: '#EDE1D5', padding: '1rem 1.25rem', borderLeft: '3px solid #c5bdb4' }}>Tilth publishes when the work demands it. We do not maintain a reading queue. We accept unsolicited submissions. All work must be previously unpublished.</p>
       <div style={S.fieldGroup}><label style={S.fieldLabel}>Name</label><input style={S.input} name="name" type="text" placeholder="Your name" value={form.name} onChange={handle} required /></div>
       <div style={S.fieldGroup}><label style={S.fieldLabel}>Email</label><input style={S.input} name="email" type="email" placeholder="hello@example.com" value={form.email} onChange={handle} required /></div>
       <div style={S.fieldGroup}><label style={S.fieldLabel}>Title of the work</label><input style={S.input} name="genre" type="text" placeholder="" value={form.genre} onChange={handle} required /></div>
@@ -203,6 +204,7 @@ export function Apply() {
 
   return (
     <div style={S.page}>
+      <WatercolorBackground seed={6} />
       <Nav />
 
       <div style={S.hero}>
