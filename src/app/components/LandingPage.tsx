@@ -165,6 +165,7 @@ export function LandingPage() {
             fontFamily: pickHeadingFont('LandingPage-h1'),
             fontWeight: 600,
             fontSize: 'clamp(3rem, 9vw, 7rem)',
+            lineHeight: 1.1,
             letterSpacing: '0.01em',
             marginBottom: '0.5rem',
             color: 'var(--ink-red)',
@@ -296,6 +297,7 @@ export function LandingPage() {
             fontFamily: pickHeadingFont('LandingPage-cta'),
             fontWeight: 500,
             fontSize: '1.4rem',
+            minHeight: '44px',
           }}
         >
           <span
@@ -335,6 +337,7 @@ export function LandingPage() {
             fontFamily: pickHeadingFont('LandingPage-footer'),
             fontWeight: 400,
             fontSize: '1.1rem',
+            color: '#8B7E74',
             marginBottom: '0.5rem',
           }}
         >
