@@ -7,6 +7,7 @@ import { BrandArchitecture } from './components/BrandArchitecture';
 import { Programs } from './components/Programs';
 import { WriterShop } from './components/WriterShop';
 import { ArtistCommission } from './components/ArtistCommission';
+import { ArtistRegister } from './components/ArtistRegister';
 import { WriterDirectory } from './components/WriterDirectory';
 import { WriterProfile } from './components/WriterProfile';
 import { WritersPage } from './components/WritersPage';
@@ -61,6 +62,10 @@ export const router = createBrowserRouter([
   {
     path: '/commissions',
     Component: ArtistCommission,
+  },
+  {
+    path: '/artist-register',
+    Component: ArtistRegister,
   },
   {
     path: '/garden-home',

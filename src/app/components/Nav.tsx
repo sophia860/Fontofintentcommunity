@@ -9,12 +9,13 @@ import { ADMIN_EMAIL } from '../lib/adminConfig';
 import { pickHeadingFont } from '../lib/fontMapper';
 
 const NAV_LINKS = [
-  { href: '/garden',   label: 'The Garden' },
-  { href: '/writers',  label: 'Writers'    },
-  { href: '/journals', label: 'Journals'   },
-  { href: '/editions', label: 'Editions'   },
-  { href: '/programs', label: 'Programs'   },
-  { href: '/about',    label: 'About'      },
+  { href: '/garden',      label: 'The Garden' },
+  { href: '/writers',     label: 'Writers'    },
+  { href: '/journals',    label: 'Journals'   },
+  { href: '/editions',    label: 'Editions'   },
+  { href: '/commissions', label: 'Commissions'},
+  { href: '/programs',    label: 'Programs'   },
+  { href: '/about',       label: 'About'      },
 ];
 
 export function Nav() {
