@@ -164,16 +164,6 @@ const BRAND_BLOCKS = [
     href: '/garden',
   },
   {
-    name: 'Page Gallery Editions',
-    desc: 'The publishing imprint. Chapbooks, poetry, printed works.',
-    href: '/editions',
-  },
-  {
-    name: 'Tilth',
-    desc: 'The editorial property. Magazine, criticism, literary culture.',
-    href: null,
-  },
-  {
     name: 'Programs',
     desc: 'Residencies, workshops, labs, prizes.',
     href: '/programs',
@@ -228,8 +218,6 @@ export function PageGalleryHome() {
         <div style={S.ctaInner}>
           <p style={S.ctaLabel}>Where to begin</p>
           <Link to="/garden" style={S.ctaLink}>Enter The Garden →</Link>
-          <span style={S.ctaSeparator}>·</span>
-          <Link to="/editions" style={S.ctaLink}>View Editions →</Link>
           <span style={S.ctaSeparator}>·</span>
           <Link to="/apply" style={S.ctaLink}>Apply to Programs →</Link>
         </div>

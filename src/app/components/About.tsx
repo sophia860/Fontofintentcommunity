@@ -14,7 +14,7 @@ const FAQS = [
   },
   {
     q: 'Is Page Gallery Editions a publisher?',
-    a: 'Not in the conventional sense. We operate as a literary institution that connects writers, journals, and readers. Tilth editions are published selectively when work demands physical form.'
+    a: 'Not in the conventional sense. We operate as a literary institution that connects writers, journals, and readers.'
   },
   {
     q: 'How does the Residency Programme work?',
@@ -26,7 +26,7 @@ const FAQS = [
   },
   {
     q: 'What does it cost?',
-    a: 'The Garden is free. The Residency Programme is fully funded—residents receive support, not invoices. Tilth editions are sold at cost to sustain printing.'
+    a: 'The Garden is free. The Residency Programme is fully funded — residents receive support, not invoices.'
   },
   {
     q: 'How do journals get listed in the directory?',
@@ -125,32 +125,6 @@ export function About() {
       </section>
 
       <section style={S.section}>
-        <h2>Tilth</h2>
-        <p style={S.body}>
-          Tilth is Old English: the condition of soil that has been worked.
-          Cultivated earth, ready for planting. The institution tills.
-          Writers work the same material again and again until it bears.
-        </p>
-        <p style={S.body}>
-          Tilth is the mark of excellence the institution produces when it encounters
-          something that cannot be ignored. Fully illustrated chapbooks, published
-          when the work demands to exist as a physical object under this imprint.
-          There is no schedule. There is no list. There is only the deliberate act.
-        </p>
-        <blockquote style={S.epigraph}>
-          August 2, 1914. Germany has declared war on Russia. Went swimming in the afternoon.
-          <cite style={S.epigraphSource}>— Franz Kafka, diary</cite>
-        </blockquote>
-        <p style={S.body}>
-          The proliferation of literary magazines has been, on balance, good for writers
-          and bad for readers. There are more places to publish than ever before.
-          Being in a journal no longer tells a reader very much.
-          Being in Tilth does — because the institution behind it has earned the right to mark,
-          and because it marks rarely.
-        </p>
-      </section>
-
-      <section style={S.section}>
         <h2>London / New York</h2>
         <p style={S.body}>
           The institution operates between London and New York not as a gesture
@@ -184,7 +158,6 @@ export function About() {
       <div style={S.footer}>
         <Link to="/apply" style={S.footerLink}>Apply / Register</Link>
         <Link to="/residency" style={S.footerLink}>Residency Programme</Link>
-        <Link to="/editions" style={S.footerLink}>Tilth Editions</Link>
         <Link to="/journals" style={S.footerLink}>Journal Directory</Link>
       </div>
     </div>

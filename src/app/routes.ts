@@ -23,7 +23,6 @@ import { ReplayView } from './components/ReplayView';
 import { AuthPage } from './components/AuthPage';
 import { AuthCallbackPage } from './components/AuthCallbackPage';
 import { AdminDashboard } from './components/AdminDashboard';
-import { Editions } from './components/Editions';
 
 export const router = createBrowserRouter([
   {
@@ -53,10 +52,6 @@ export const router = createBrowserRouter([
   {
     path: '/shop',
     Component: WriterShop,
-  },
-  {
-    path: '/editions',
-    Component: Editions,
   },
   {
     path: '/commissions',

@@ -50,7 +50,7 @@ export default function WriterForm() {
     <form className={S.form} onSubmit={handleSubmit}>
       <div className={S.intro}>
         <h2>Writer Pathway</h2>
-        <p>For prose writers, essayists, and critics seeking publication in Tilth or placement within the Page Gallery ecosystem.</p>
+        <p>For writers seeking to join the Garden and connect with the Page Gallery ecosystem.</p>
       </div>
 
       {error && <p style={{ color: '#9b2335', marginBottom: '1rem', fontSize: '0.85rem' }}>{error}</p>}
