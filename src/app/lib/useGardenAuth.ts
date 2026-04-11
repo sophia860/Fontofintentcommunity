@@ -52,8 +52,13 @@ export function useGardenAuth() {
         // before the handle_new_user trigger was in place.
         const { data: { user } } = await supabase.auth.getUser()
         if (user) {
+          const displayName: string =
+            user.user_metadata?.full_name ??
+            user.user_metadata?.name ??
+            user.email?.split('@')[0] ??
+            ''
           await supabase.from('profiles').upsert(
-            { id: user.id },
+            { id: user.id, display_name: displayName || null },
             { onConflict: 'id', ignoreDuplicates: true }
           )
           // Re-fetch once after creating the row
