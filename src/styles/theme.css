@@ -2,6 +2,9 @@
 
 :root {
   --font-size: 16px;
+  --font-handwritten: 'Caveat', cursive;
+  --ink-red: #B71C1C;
+  --highlighter: rgba(255, 244, 0, 0.45);
   --background: #ffffff;
   --foreground: oklch(0.145 0 0);
   --card: #ffffff;
@@ -140,21 +143,24 @@
   }
 
   h1 {
-    font-size: var(--text-2xl);
-    font-weight: var(--font-weight-medium);
-    line-height: 1.5;
+    font-family: var(--font-handwritten);
+    font-size: clamp(2.5rem, 5vw, 4rem);
+    font-weight: 600;
+    line-height: 1.15;
   }
 
   h2 {
-    font-size: var(--text-xl);
-    font-weight: var(--font-weight-medium);
-    line-height: 1.5;
+    font-family: var(--font-handwritten);
+    font-size: clamp(1.5rem, 3vw, 2.25rem);
+    font-weight: 500;
+    line-height: 1.2;
   }
 
   h3 {
-    font-size: var(--text-lg);
-    font-weight: var(--font-weight-medium);
-    line-height: 1.5;
+    font-family: var(--font-handwritten);
+    font-size: clamp(1.2rem, 2vw, 1.75rem);
+    font-weight: 500;
+    line-height: 1.3;
   }
 
   h4 {
@@ -180,4 +186,21 @@
     font-weight: var(--font-weight-normal);
     line-height: 1.5;
   }
+}
+
+/* Yellow marker / highlighter utility — wrap key phrases with <mark className="mark"> */
+.mark {
+  background: linear-gradient(
+    104deg,
+    transparent 0.9%,
+    var(--highlighter) 2.4%,
+    rgba(255, 244, 0, 0.35) 5.8%,
+    rgba(255, 244, 0, 0.4) 93%,
+    var(--highlighter) 96%,
+    transparent 98%
+  );
+  border-radius: 1px;
+  padding: 0.05em 0.2em;
+  color: inherit;
+  text-decoration: none;
 }

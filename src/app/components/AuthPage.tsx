@@ -32,10 +32,11 @@ const S: Record<string, React.CSSProperties> = {
     display: 'block',
   },
   h1: {
-    fontSize: '2rem',
-    fontWeight: 400,
+    fontSize: 'clamp(2.2rem, 4vw, 3rem)',
+    fontWeight: 600,
     margin: '0 0 2rem',
-    lineHeight: 1.2,
+    lineHeight: 1.15,
+    fontFamily: "'Caveat', cursive",
   },
   tabs: {
     display: 'flex',
