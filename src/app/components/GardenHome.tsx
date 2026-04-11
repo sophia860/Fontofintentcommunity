@@ -35,7 +35,7 @@ type GardenPiece = {
   tags: string[];
   wordCount: number;
   lastVisited: string; // ISO date string
-  pattern?: string;   // surfaced insight, e.g. "returning to this every October"
+  pattern?: string;   // surfaced insight
   scouted?: boolean;  // flagged by a journal editor
 };
 
@@ -476,7 +476,7 @@ function WritersBoard() {
           {filter === 'scouted'
             ? 'No pieces have been scouted yet. Journals find what they need; it takes time.'
             : pieces.length === 0
-              ? 'Nothing planted yet. Write your first seed.'
+              ? 'Nothing planted yet. Write your first piece.'
               : 'Nothing here yet.'}
         </p>
       )}
@@ -553,17 +553,17 @@ export function GardenHome() {
       {/* Hero */}
       <div style={S.hero}>
         <div style={S.heroText}>
-          <p style={S.heroEpigraph}>Page Gallery Editions — The Garden</p>
+          <p style={S.heroEpigraph}>Page Gallery — The Garden</p>
           <h1 style={S.heroTitle}>
             The place where{' '}<br />
             writing lives before{' '}<br />
             it becomes anything else.
           </h1>
           <p style={S.heroBody}>
-            A literary institution operating between London and New York.
-            The Garden connects writers and journals.
-            The Residency develops what is exceptional.
-            Chapbooks are published when the work demands it and not before.
+            A literary institution for writers, journals, and the work
+            that happens before publication. The Garden holds the fragments,
+            the drafts, the obsessive returns. Journals come here to scout.
+            Chapbooks are published when the work demands it — not before.
           </p>
           <div style={S.heroCta}>
             <Link to="/journals" style={S.ctaPrimary}>Enter the Garden</Link>
@@ -633,11 +633,12 @@ export function GardenHome() {
           <p style={S.manifestoParagraph}>
             When a writer dies, the rough drafts go first — the note that trails off,
             the notebook with three pages and then nothing.
-            This is not metaphorical but literal: the rough draft is the actual person.
+            The rough draft is the actual person: contradictory, unfinished, mid-thought.
           </p>
           <p style={S.manifestoParagraph}>
             Literary culture has always published the poem and discarded the rest.
-            The Garden treats the rest as the substance. Not as backstory. As text.
+            The Garden treats the rest as the substance — not as backstory, not as process notes,
+            but as text. As a private landscape of thinking that deserves to be held.
           </p>
           <p style={S.manifestoParagraph}>
             Chapbooks are what the Garden occasionally produces as a verdict: fully illustrated,
@@ -657,7 +658,7 @@ export function GardenHome() {
 
       {/* Footer */}
       <div style={S.footer}>
-        <span style={S.footerNote}>Page Gallery Editions — London / New York</span>
+        <span style={S.footerNote}>Page Gallery</span>
         <span style={S.footerNote}>The Garden · Chapbooks · Residency · Editions</span>
       </div>
     </div>
