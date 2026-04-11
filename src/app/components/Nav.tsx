@@ -12,7 +12,6 @@ const NAV_LINKS = [
   { href: '/writers',   label: 'Writers'   },
   { href: '/journals',  label: 'Journals'  },
   { href: '/residency', label: 'Residency' },
-  { href: '/editions',  label: 'Editions'  },
   { href: '/about',     label: 'About'     },
 ];
 
