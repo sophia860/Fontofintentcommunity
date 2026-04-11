@@ -38,6 +38,28 @@ export interface DisplayToken {
   createdAt: number;
 }
 
+// ─── Supabase Profiles ────────────────────────────────────────────────────────
+
+/** Mirrors the public.profiles table in Supabase. */
+export interface Profile {
+  id: string;
+  display_name: string | null;
+  slug: string | null;
+  avatar_url: string | null;
+  short_bio: string | null;
+  full_bio: string | null;
+  location: string | null;
+  website: string | null;
+  instagram: string | null;
+  genres: string[];
+  themes: string[];
+  publication_history: string | null;
+  is_public: boolean;
+  role: 'writer' | 'editor' | 'journal' | 'admin';
+  created_at: string;
+  updated_at: string;
+}
+
 // ─── Garden / Institution Types ───────────────────────────────────────────────
 
 export type WriterStatus = 'active' | 'seeking' | 'closed';
