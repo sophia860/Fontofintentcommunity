@@ -1,5 +1,12 @@
 import { createBrowserRouter } from 'react-router';
+import { PageGalleryHome } from './components/PageGalleryHome';
 import { GardenHome } from './components/GardenHome';
+import { GardenLanding } from './components/GardenLanding';
+import { Pricing } from './components/Pricing';
+import { BrandArchitecture } from './components/BrandArchitecture';
+import { Programs } from './components/Programs';
+import { WriterShop } from './components/WriterShop';
+import { ArtistCommission } from './components/ArtistCommission';
 import { WriterDirectory } from './components/WriterDirectory';
 import { WriterProfile } from './components/WriterProfile';
 import { WritersPage } from './components/WritersPage';
@@ -19,6 +26,34 @@ import { AdminDashboard } from './components/AdminDashboard';
 export const router = createBrowserRouter([
   {
     path: '/',
+    Component: PageGalleryHome,
+  },
+  {
+    path: '/garden',
+    Component: GardenLanding,
+  },
+  {
+    path: '/pricing',
+    Component: Pricing,
+  },
+  {
+    path: '/brand',
+    Component: BrandArchitecture,
+  },
+  {
+    path: '/programs',
+    Component: Programs,
+  },
+  {
+    path: '/shop',
+    Component: WriterShop,
+  },
+  {
+    path: '/commissions',
+    Component: ArtistCommission,
+  },
+  {
+    path: '/garden-home',
     Component: GardenHome,
   },
   {
