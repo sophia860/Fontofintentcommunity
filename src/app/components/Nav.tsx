@@ -3,10 +3,8 @@
  * Minimal, typographic, literary register.
  * No hamburger menus. The identity is in the restraint.
  */
-import { useEffect, useState } from 'react';
 import { Link, useLocation } from 'react-router';
-import { supabase } from '../lib/supabase';
-import type { User } from '@supabase/supabase-js';
+import { useGardenAuth } from '../lib/useGardenAuth';
 
 const NAV_LINKS = [
   { href: '/writers',   label: 'Writers'   },
@@ -17,19 +15,7 @@ const NAV_LINKS = [
 
 export function Nav() {
   const { pathname } = useLocation();
-  const [user, setUser] = useState<User | null>(null);
-
-  useEffect(() => {
-    supabase.auth.getUser().then(({ data }) => setUser(data.user));
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      setUser(session?.user ?? null);
-    });
-    return () => subscription.unsubscribe();
-  }, []);
-
-  async function handleSignOut() {
-    await supabase.auth.signOut();
-  }
+  const { isAuthenticated, signOut } = useGardenAuth();
 
   return (
     <header
@@ -86,7 +72,7 @@ export function Nav() {
         })}
 
         {/* Auth state */}
-        {user ? (
+        {isAuthenticated ? (
           <>
             <Link
               to="/dashboard/writer"
@@ -103,7 +89,7 @@ export function Nav() {
               Garden
             </Link>
             <button
-              onClick={handleSignOut}
+              onClick={signOut}
               style={{
                 background: 'none',
                 border: 'none',
