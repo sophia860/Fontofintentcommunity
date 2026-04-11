@@ -164,6 +164,11 @@ const BRAND_BLOCKS = [
     href: '/garden',
   },
   {
+    name: 'Page Gallery Editions',
+    desc: 'The publishing imprint. Chapbooks, poetry, printed works.',
+    href: '/editions',
+  },
+  {
     name: 'Programs',
     desc: 'Residencies, workshops, labs, prizes.',
     href: '/programs',

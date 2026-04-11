@@ -14,7 +14,7 @@ const FAQS = [
   },
   {
     q: 'Is Page Gallery Editions a publisher?',
-    a: 'Not in the conventional sense. We operate as a literary institution that connects writers, journals, and readers.'
+    a: 'Not in the conventional sense. We operate as a literary institution that connects writers, journals, and readers. Editions are published selectively when work demands physical form.'
   },
   {
     q: 'How does the Residency Programme work?',
@@ -26,7 +26,7 @@ const FAQS = [
   },
   {
     q: 'What does it cost?',
-    a: 'The Garden is free. The Residency Programme is fully funded — residents receive support, not invoices.'
+    a: 'The Garden is free. The Residency Programme is fully funded—residents receive support, not invoices. Editions are sold at cost to sustain printing.'
   },
   {
     q: 'How do journals get listed in the directory?',
@@ -125,6 +125,31 @@ export function About() {
       </section>
 
       <section style={S.section}>
+        <h2>Editions</h2>
+        <p style={S.body}>
+          Editions are fully illustrated chapbooks, published when a piece of writing
+          demands to exist as a physical object. Cultivated work, made ready.
+          The institution publishes when it encounters something that cannot be ignored.
+        </p>
+        <p style={S.body}>
+          There is no schedule. There is no list. There is only the deliberate act
+          of publishing something the institution cannot not publish.
+          Fully illustrated. Competitive to enter. Rare by design.
+        </p>
+        <blockquote style={S.epigraph}>
+          August 2, 1914. Germany has declared war on Russia. Went swimming in the afternoon.
+          <cite style={S.epigraphSource}>— Franz Kafka, diary</cite>
+        </blockquote>
+        <p style={S.body}>
+          The proliferation of literary magazines has been, on balance, good for writers
+          and bad for readers. There are more places to publish than ever before.
+          Being in a journal no longer tells a reader very much.
+          Being here does — because the institution behind it has earned the right to mark,
+          and because it marks rarely.
+        </p>
+      </section>
+
+      <section style={S.section}>
         <h2>London / New York</h2>
         <p style={S.body}>
           The institution operates between London and New York not as a gesture
@@ -158,6 +183,7 @@ export function About() {
       <div style={S.footer}>
         <Link to="/apply" style={S.footerLink}>Apply / Register</Link>
         <Link to="/residency" style={S.footerLink}>Residency Programme</Link>
+        <Link to="/editions" style={S.footerLink}>Editions</Link>
         <Link to="/journals" style={S.footerLink}>Journal Directory</Link>
       </div>
     </div>
