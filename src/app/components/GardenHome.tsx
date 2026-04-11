@@ -9,6 +9,7 @@ import { useEffect, useState } from 'react';
 import { Link } from 'react-router';
 import { Nav } from './Nav';
 import { supabase } from '../lib/supabase';
+import GardenROICalculator from './GardenROICalculator';
 
 type Callout = {
   id: string;
@@ -660,6 +661,9 @@ export function GardenHome() {
           </div>
         </>
       )}
+
+      {/* ROI Calculator */}
+      <GardenROICalculator />
 
       {/* Manifesto block */}
       <div style={S.manifesto}>
