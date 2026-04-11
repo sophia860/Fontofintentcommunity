@@ -1,25 +1,29 @@
 'use client';
 import React, { useState } from 'react';
 import S from './figma/TilthForm.module.css';
+import { supabase } from '../lib/supabase';
 
 export default function TilthForm() {
   const [form, setForm] = useState({
-    name: '',
-    email: '',
-    bio: '',
-    genre: '',
-    sample: '',
-    previousWork: '',
-    whyTilth: '',
+    name: '', email: '', bio: '', genre: '', sample: '', previousWork: '', whyTilth: '',
   });
   const [submitted, setSubmitted] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setLoading(true); setError('');
+    const { error: err } = await supabase.from('tilth_submissions').insert({
+      name: form.name, email: form.email, bio: form.bio, genre: form.genre,
+      sample: form.sample, why_tilth: form.whyTilth, status: 'pending',
+    });
+    setLoading(false);
+    if (err) { setError(err.message); return; }
     setSubmitted(true);
   };
 
@@ -38,6 +42,8 @@ export default function TilthForm() {
         <h2>Tilth</h2>
         <p>Tilth is not a general submission pool. It is the mark of work that has been prepared — turned over, made ready. We accept prose, criticism, and hybrid forms of uncommon quality. Submit only what you believe is finished.</p>
       </div>
+
+      {error && <p style={{ color: '#9b2335', marginBottom: '1rem', fontSize: '0.85rem' }}>{error}</p>}
 
       <div className={S.field}>
         <label htmlFor="name">Full Name</label>
@@ -72,7 +78,7 @@ export default function TilthForm() {
       </div>
 
       <div className={S.field}>
-        <label htmlFor="sample">The Work <span className={S.hint}>(up to 3,000 words — paste the piece itself)</span></label>
+        <label htmlFor="sample">The Work <span className={S.hint}>(up to 3,000 words)</span></label>
         <textarea id="sample" name="sample" value={form.sample} onChange={handleChange} required rows={14} placeholder="Submit only what is complete" />
       </div>
 
@@ -81,7 +87,9 @@ export default function TilthForm() {
         <textarea id="whyTilth" name="whyTilth" value={form.whyTilth} onChange={handleChange} rows={4} placeholder="What brings you here specifically" />
       </div>
 
-      <button type="submit" className={S.submit}>Submit to Tilth</button>
+      <button type="submit" className={S.submit} disabled={loading}>
+        {loading ? 'Submitting...' : 'Submit to Tilth'}
+      </button>
     </form>
   );
 }

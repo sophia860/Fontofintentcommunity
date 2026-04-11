@@ -11,11 +11,34 @@ import { JournalDashboard } from './components/JournalDashboard';
 import { Apply } from './components/Apply';
 import { About } from './components/About';
 import { WritingSurface } from './components/WritingSurface';
+import { PreviewScreen } from './components/PreviewScreen';
+import { ReplayView } from './components/ReplayView';
+import { AuthPage } from './components/AuthPage';
 
 export const router = createBrowserRouter([
   {
     path: '/',
     Component: GardenHome,
+  },
+  {
+    path: '/write',
+    Component: WritingSurface,
+  },
+  {
+    path: '/piece/:id',
+    Component: WritingSurface,
+  },
+  {
+    path: '/preview',
+    Component: PreviewScreen,
+  },
+  {
+    path: '/replay',
+    Component: ReplayView,
+  },
+  {
+    path: '/auth',
+    Component: AuthPage,
   },
   {
     path: '/writers',
@@ -61,8 +84,4 @@ export const router = createBrowserRouter([
     path: '/about',
     Component: About,
   },
-    {
-      path: '/piece/:id',
-      Component: WritingSurface,
-    },
 ], { basename: '/Fontofintentcommunity' });
