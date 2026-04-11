@@ -1,6 +1,7 @@
 import { createBrowserRouter } from 'react-router';
 import { GardenHome } from './components/GardenHome';
 import { WriterProfile } from './components/WriterProfile';
+import { WritersPage } from './components/WritersPage';
 import { JournalDirectory } from './components/JournalDirectory';
 import { JournalProfile } from './components/JournalProfile';
 import { ResidencyProgramme } from './components/ResidencyProgramme';
@@ -39,6 +40,10 @@ export const router = createBrowserRouter([
   {
     path: '/auth',
     Component: AuthPage,
+  },
+  {
+    path: '/writer',
+    Component: WritersPage,
   },
   {
     path: '/writers',
