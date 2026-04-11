@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router';
 import { supabase } from '../lib/supabase';
+import { pickHeadingFont } from '../lib/fontMapper';
 
 type GardenState = 'seed' | 'sprout' | 'bloom';
 
@@ -120,7 +121,7 @@ export function WriterDashboard() {
 
   return (
     <main style={{ maxWidth: 760, margin: '3rem auto', padding: '0 1.5rem', fontFamily: 'Georgia, serif' }}>
-      <h1 style={{ fontWeight: 600, fontSize: 'clamp(2.2rem, 4vw, 3.25rem)', marginBottom: '0.25rem', lineHeight: 1.1, fontFamily: "'ACFrenchToast', cursive" }}>Your Garden</h1>
+      <h1 style={{ fontWeight: 600, fontSize: 'clamp(2.2rem, 4vw, 3.25rem)', marginBottom: '0.25rem', lineHeight: 1.1, fontFamily: pickHeadingFont('WriterDashboard-h1') }}>Your Garden</h1>
       <p style={{ color: '#666', fontStyle: 'italic', marginBottom: '2rem' }}>Writing in progress</p>
 
       {/* Pattern surfacing */}

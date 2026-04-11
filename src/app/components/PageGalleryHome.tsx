@@ -169,11 +169,6 @@ const BRAND_BLOCKS = [
     href: '/editions',
   },
   {
-    name: 'Tilth',
-    desc: 'The editorial property. Magazine, criticism, literary culture.',
-    href: null,
-  },
-  {
     name: 'Programs',
     desc: 'Residencies, workshops, labs, prizes.',
     href: '/programs',

@@ -1,12 +1,12 @@
 /**
  * Editions — Page Gallery Editions
  *
- * Tilth: the mark of excellence.
  * Published when the work demands it. Not before.
  * Fully illustrated. Competitive to enter. Rare by design.
  */
 import { Link } from 'react-router';
 import { Nav } from './Nav';
+import { pickHeadingFont } from '../lib/fontMapper';
 
 const MOCK_EDITIONS = [
   {
@@ -33,7 +33,7 @@ const S: Record<string, React.CSSProperties> = {
   page: { minHeight: '100vh', backgroundColor: '#F5EDE4', fontFamily: 'Georgia, serif', color: '#1a1714' },
   hero: { padding: '5rem 3rem 4rem', borderBottom: '1px solid #e8e4df' },
   label: { fontSize: '0.75rem', letterSpacing: '0.1em', textTransform: 'uppercase' as const, color: '#7a7067', marginBottom: '1rem' },
-  h1: { fontSize: 'clamp(2.5rem, 5vw, 4rem)', fontWeight: 600, margin: '0 0 1.5rem', lineHeight: 1.1, maxWidth: '600px', fontFamily: "'ACFrenchToast', cursive" },
+  h1: { fontSize: 'clamp(2.5rem, 5vw, 4rem)', fontWeight: 600, margin: '0 0 1.5rem', lineHeight: 1.1, maxWidth: '600px', fontFamily: pickHeadingFont('Editions-h1') },
   heroBody: { fontSize: '0.95rem', lineHeight: 1.75, color: '#3d3830', maxWidth: '520px', marginBottom: '1rem' },
   argument: {
     padding: '3rem',
@@ -102,8 +102,8 @@ export function Editions() {
       <Nav />
 
       <div style={S.hero}>
-        <p style={S.label}>Page Gallery — Tilth</p>
-        <h1 style={S.h1}>Tilth</h1>
+        <p style={S.label}>Page Gallery — Editions</p>
+        <h1 style={S.h1}>Editions</h1>
         <p style={S.heroBody}>
           Fully illustrated chapbooks, published when a piece of writing demands
           to exist as a physical object. There is no schedule. There is no list.
@@ -111,7 +111,7 @@ export function Editions() {
           the institution cannot not publish.
         </p>
         <p style={S.heroBody}>
-          To hold a Tilth edition is to hold a serious credential.
+          To hold an edition is to hold a serious credential.
           The bar is the institution's only editorial statement.
         </p>
       </div>
@@ -122,7 +122,7 @@ export function Editions() {
           <p style={S.argumentText}>
             “The proliferation of literary magazines has been, on balance, good for writers
             and bad for readers. Being in a journal no longer tells a reader very much.
-            Being in Tilth does.”
+            Being here does.”
           </p>
         </div>
       </div>
@@ -134,7 +134,7 @@ export function Editions() {
             <div key={e.id} style={S.editionCard}>
               {/* Spine */}
               <div style={S.spine}>
-                <span style={S.spineText}>Tilth — {e.author}</span>
+                <span style={S.spineText}>Edition — {e.author}</span>
               </div>
 
               {/* Main */}
@@ -174,9 +174,9 @@ export function Editions() {
         </div>
       ) : (
         <div style={S.empty}>
-          <p style={S.emptyTitle}>The first Tilth edition is forthcoming.</p>
+          <p style={S.emptyTitle}>The first edition is forthcoming.</p>
           <p style={S.emptyBody}>
-            Tilth publishes when the work demands it.
+            We publish when the work demands it.
             The first edition will be announced when it is ready.
           </p>
           <Link to="/apply" style={{
@@ -189,12 +189,12 @@ export function Editions() {
         </div>
       )}
 
-      {/* About Tilth / tiers */}
+      {/* About / tiers */}
       <div style={S.about}>
         <div style={S.aboutInner}>
-          <p style={S.aboutLabel}>How Tilth Works</p>
+          <p style={S.aboutLabel}>How It Works</p>
           <p style={S.aboutBody}>
-            Each Tilth edition is a fully illustrated chapbook produced with a commissioned
+            Each edition is a fully illustrated chapbook produced with a commissioned
             illustrator who responds to the writing and the documented context of its making.
             The illustration is not decoration. It is a response to a specific human moment
             — the weather of thought in which a piece was written.

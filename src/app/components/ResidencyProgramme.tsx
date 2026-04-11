@@ -8,6 +8,7 @@
 import { Link } from 'react-router';
 import { Nav } from './Nav';
 import { WatercolorBackground } from './WatercolorBackground';
+import { pickHeadingFont } from '../lib/fontMapper';
 
 const CURRENT_RESIDENTS = [
   {
@@ -26,10 +27,10 @@ const S: Record<string, React.CSSProperties> = {
   page: { minHeight: '100vh', backgroundColor: '#F5EDE4', fontFamily: 'Georgia, serif', color: '#1a1714', position: 'relative' },
   hero: { padding: '5rem 3rem 4rem', borderBottom: '1px solid #e8e4df', maxWidth: '700px' },
   label: { fontSize: '0.75rem', letterSpacing: '0.1em', textTransform: 'uppercase' as const, color: '#7a7067', marginBottom: '1rem' },
-  h1: { fontSize: 'clamp(2.5rem, 5vw, 4rem)', fontWeight: 600, margin: '0 0 1.5rem', lineHeight: 1.1, fontFamily: "'ACFrenchToast', cursive" },
+  h1: { fontSize: 'clamp(2.5rem, 5vw, 4rem)', fontWeight: 600, margin: '0 0 1.5rem', lineHeight: 1.1, fontFamily: pickHeadingFont('ResidencyProgramme-h1') },
   body: { fontSize: '1rem', lineHeight: 1.75, color: '#3d3830', marginBottom: '1.25rem' },
   section: { padding: '4rem 3rem', borderBottom: '1px solid #e8e4df' },
-  h2: { fontSize: 'clamp(1.4rem, 2.5vw, 2rem)', fontWeight: 500, marginBottom: '1.5rem', letterSpacing: '0.01em', fontFamily: "'ACFrenchToast', cursive" },
+  h2: { fontSize: 'clamp(1.4rem, 2.5vw, 2rem)', fontWeight: 500, marginBottom: '1.5rem', letterSpacing: '0.01em', fontFamily: pickHeadingFont('ResidencyProgramme-h2') },
   offerGrid: { display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: '2rem', marginTop: '2rem' },
   offerItem: { borderTop: '3px solid #e8e4df', paddingTop: '1.25rem' },
   offerTitle: { fontSize: '0.85rem', fontWeight: 700, marginBottom: '0.5rem', letterSpacing: '0.02em' },
@@ -41,7 +42,7 @@ const S: Record<string, React.CSSProperties> = {
   pathwaySection: { padding: '4rem 3rem', backgroundColor: '#1a1714', color: '#F5EDE4' },
   pathwayInner: { maxWidth: '640px' },
   pathwayLabel: { fontSize: '0.75rem', letterSpacing: '0.1em', textTransform: 'uppercase' as const, color: '#7a7067', marginBottom: '1.5rem' },
-  pathwayTitle: { fontSize: 'clamp(1.5rem, 3vw, 2.25rem)', fontWeight: 500, marginBottom: '1.5rem', lineHeight: 1.2, fontFamily: "'ACFrenchToast', cursive" },
+  pathwayTitle: { fontSize: 'clamp(1.5rem, 3vw, 2.25rem)', fontWeight: 500, marginBottom: '1.5rem', lineHeight: 1.2, fontFamily: pickHeadingFont('ResidencyProgramme-pathwayTitle') },
   pathwayBody: { fontSize: '0.95rem', lineHeight: 1.8, color: '#e8e4df', marginBottom: '1.25rem' },
   cta: { display: 'inline-block', marginTop: '2rem', fontSize: '0.85rem', letterSpacing: '0.05em', textTransform: 'uppercase' as const, color: '#F5EDE4', border: '1px solid #F5EDE4', padding: '0.6rem 1.4rem', textDecoration: 'none' },
   applySection: { padding: '4rem 3rem' },

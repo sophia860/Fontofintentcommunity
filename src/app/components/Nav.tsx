@@ -6,6 +6,7 @@
 import { Link, useLocation } from 'react-router';
 import { useGardenAuth } from '../lib/useGardenAuth';
 import { ADMIN_EMAIL } from '../lib/adminConfig';
+import { pickHeadingFont } from '../lib/fontMapper';
 
 const NAV_LINKS = [
   { href: '/garden',   label: 'The Garden' },
@@ -38,7 +39,7 @@ export function Nav() {
       <Link
         to="/"
         style={{
-          fontFamily: "'ACFrenchToast', cursive",
+          fontFamily: pickHeadingFont('Nav-wordmark'),
           fontSize: '1.4rem',
           fontWeight: 600,
           letterSpacing: '0.02em',
