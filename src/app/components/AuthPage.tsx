@@ -6,6 +6,7 @@
 import { useState } from 'react'
 import { useNavigate, useSearchParams } from 'react-router'
 import { useGardenAuth } from '../lib/useGardenAuth'
+import { pickHeadingFont } from '../lib/fontMapper';
 
 const S: Record<string, React.CSSProperties> = {
   page: {
@@ -36,9 +37,7 @@ const S: Record<string, React.CSSProperties> = {
     fontWeight: 600,
     margin: '0 0 2rem',
     lineHeight: 1.15,
-    fontFamily: "'ACFrenchToast', cursive",
-  },
-  tabs: {
+    fontFamily: pickHeadingFont('AuthPage-h1'),
     display: 'flex',
     gap: '2rem',
     marginBottom: '2rem',
