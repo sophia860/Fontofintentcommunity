@@ -217,9 +217,9 @@ export function GardenLanding() {
         <div style={S.ctaInner}>
           <p style={S.ctaLabel}>Enter The Garden</p>
           <div style={S.ctaLinks}>
-            <Link to="/auth" style={S.ctaLink}>Join as a Writer →</Link>
+            <Link to="/garden" style={S.ctaLink}>Join as a Writer →</Link>
             <span style={S.ctaSeparator}>·</span>
-            <Link to="/auth" style={S.ctaLink}>Open Journal OS →</Link>
+            <Link to="/garden" style={S.ctaLink}>Open Journal OS →</Link>
             <span style={S.ctaSeparator}>·</span>
             <Link to="/apply" style={S.ctaLink}>Contact for Concierge →</Link>
           </div>
