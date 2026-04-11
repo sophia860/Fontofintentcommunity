@@ -20,7 +20,7 @@ import { About } from './components/About';
 import { WritingSurface } from './components/WritingSurface';
 import { PreviewScreen } from './components/PreviewScreen';
 import { ReplayView } from './components/ReplayView';
-import { AuthPage } from './components/AuthPage';
+import Auth from '@/routes/auth';
 import { AuthCallbackPage } from './components/AuthCallbackPage';
 import { AdminDashboard } from './components/AdminDashboard';
 import { Editions } from './components/Editions';
@@ -89,7 +89,7 @@ export const router = createBrowserRouter([
   },
   {
     path: '/auth',
-    Component: AuthPage,
+    Component: Auth,
   },
   {
     path: '/auth/callback',
