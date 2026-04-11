@@ -577,10 +577,45 @@ export function GardenHome() {
         />
       </div>
 
+      
+        {/* How the Garden Works */}
+        <hr style={S.divider} />
+        <div style={S.section}>
+          <p style={S.sectionLabel}>How the Garden works</p>
+          <div style={S.calloutGrid}>
+            <div style={S.calloutItem}>
+              <p style={S.calloutLabel}>For writers</p>
+              <p style={S.calloutTitle}>Write without destination</p>
+              <p style={S.calloutBody}>
+                The Garden is a private space. You write using the writing surface.
+                Pieces grow through states — seed, sprout, bloom — at your pace.
+                Your drafts, fragments, and false starts are treated as the substance of a writing life.
+              </p>
+            </div>
+            <div style={S.calloutItem}>
+              <p style={S.calloutLabel}>For journals</p>
+              <p style={S.calloutTitle}>Discover writers through their work</p>
+              <p style={S.calloutBody}>
+                Journals registered in the Garden can browse the bloom pool — pieces that writers
+                have marked as ready to be seen. Scouting is quiet: no public metrics, no likes.
+                If you're drawn to something, you reach out directly.
+              </p>
+            </div>
+            <div style={S.calloutItem}>
+              <p style={S.calloutLabel}>The connection</p>
+              <p style={S.calloutTitle}>No submissions portal. A community with a sensibility.</p>
+              <p style={S.calloutBody}>
+                Writers don't submit to journals here. They write. Journals don't post calls.
+                They browse. The relationship forms through the work, not through a queue.
+              </p>
+            </div>
+          </div>
+        </div>
       {/* Writers Board */}
       <hr style={S.divider} />
       <div style={S.section}>
         <WritersBoard />
+      
       </div>
 
       {/* Callouts */}
