@@ -1,8 +1,8 @@
 /**
- * WatercolorBackground — decorative SVG watercolour splashes.
+ * WatercolorBackground — bold, lush watercolour washes covering the full page.
  * Positioned absolutely behind page content, pointer-events none.
- * Uses feTurbulence + feDisplacementMap + feGaussianBlur to create
- * the soft, organic look of real watercolour paint on paper.
+ * Uses feTurbulence + feDisplacementMap + feGaussianBlur for organic soft edges.
+ * Inspired by the loose, painterly feel of watercolour paper with ink on top.
  */
 
 interface WatercolorBackgroundProps {
@@ -11,7 +11,6 @@ interface WatercolorBackgroundProps {
 }
 
 export function WatercolorBackground({ seed = 0 }: WatercolorBackgroundProps) {
-  // Each page gets a slightly different arrangement via the seed offset
   const s = seed * 37;
 
   return (
@@ -32,51 +31,73 @@ export function WatercolorBackground({ seed = 0 }: WatercolorBackgroundProps) {
         xmlns="http://www.w3.org/2000/svg"
       >
         <defs>
-          {/* Large blob filter — gentle organic distortion + soft blur */}
-          <filter id={`wc-lg-${seed}`} x="-70%" y="-70%" width="240%" height="240%">
-            <feTurbulence type="turbulence" baseFrequency="0.022 0.038" numOctaves="3" seed={5 + s} result="noise" />
-            <feDisplacementMap in="SourceGraphic" in2="noise" scale="28" xChannelSelector="R" yChannelSelector="G" result="displaced" />
-            <feGaussianBlur in="displaced" stdDeviation="13" />
+          {/* Large loose wash — wide turbulence for big organic shapes */}
+          <filter id={`wc-wash-${seed}`} x="-80%" y="-80%" width="260%" height="260%">
+            <feTurbulence type="turbulence" baseFrequency="0.018 0.030" numOctaves="4" seed={3 + s} result="noise" />
+            <feDisplacementMap in="SourceGraphic" in2="noise" scale="45" xChannelSelector="R" yChannelSelector="G" result="displaced" />
+            <feGaussianBlur in="displaced" stdDeviation="18" />
           </filter>
-          {/* Medium blob filter */}
-          <filter id={`wc-md-${seed}`} x="-70%" y="-70%" width="240%" height="240%">
-            <feTurbulence type="turbulence" baseFrequency="0.03 0.052" numOctaves="3" seed={11 + s} result="noise" />
-            <feDisplacementMap in="SourceGraphic" in2="noise" scale="20" xChannelSelector="R" yChannelSelector="G" result="displaced" />
-            <feGaussianBlur in="displaced" stdDeviation="9" />
+          {/* Medium blob — more pronounced edges */}
+          <filter id={`wc-mid-${seed}`} x="-70%" y="-70%" width="240%" height="240%">
+            <feTurbulence type="turbulence" baseFrequency="0.028 0.048" numOctaves="3" seed={9 + s} result="noise" />
+            <feDisplacementMap in="SourceGraphic" in2="noise" scale="32" xChannelSelector="R" yChannelSelector="G" result="displaced" />
+            <feGaussianBlur in="displaced" stdDeviation="11" />
           </filter>
-          {/* Small blob filter */}
-          <filter id={`wc-sm-${seed}`} x="-80%" y="-80%" width="260%" height="260%">
-            <feTurbulence type="turbulence" baseFrequency="0.04 0.065" numOctaves="2" seed={17 + s} result="noise" />
-            <feDisplacementMap in="SourceGraphic" in2="noise" scale="14" xChannelSelector="R" yChannelSelector="G" result="displaced" />
-            <feGaussianBlur in="displaced" stdDeviation="7" />
+          {/* Small accent — tight, painterly drops */}
+          <filter id={`wc-drop-${seed}`} x="-90%" y="-90%" width="280%" height="280%">
+            <feTurbulence type="turbulence" baseFrequency="0.05 0.08" numOctaves="2" seed={15 + s} result="noise" />
+            <feDisplacementMap in="SourceGraphic" in2="noise" scale="18" xChannelSelector="R" yChannelSelector="G" result="displaced" />
+            <feGaussianBlur in="displaced" stdDeviation="6" />
+          </filter>
+          {/* Splatter — tiny ink-drop feel */}
+          <filter id={`wc-splat-${seed}`} x="-120%" y="-120%" width="340%" height="340%">
+            <feTurbulence type="fractalNoise" baseFrequency="0.09" numOctaves="2" seed={21 + s} result="noise" />
+            <feDisplacementMap in="SourceGraphic" in2="noise" scale="10" xChannelSelector="R" yChannelSelector="G" result="displaced" />
+            <feGaussianBlur in="displaced" stdDeviation="3" />
           </filter>
         </defs>
 
-        {/* ── Upper-left pink cluster ───────────────────────────────────────── */}
-        {/* Primary pink splash */}
-        <ellipse cx="175" cy="155" rx="118" ry="78" fill="#E8A4B8" opacity="0.36" filter={`url(#wc-lg-${seed})`} />
-        {/* Secondary, slightly offset pink */}
-        <ellipse cx="105" cy="220" rx="58" ry="38" fill="#DB90AC" opacity="0.28" filter={`url(#wc-md-${seed})`} />
+        {/* ── Full top-left rose-pink wash ───────────────────────────── */}
+        <ellipse cx="200" cy="120" rx="260" ry="160" fill="#E8A0B8" opacity="0.52" filter={`url(#wc-wash-${seed})`} />
+        <ellipse cx="80"  cy="200" rx="140" ry="90"  fill="#D9789E" opacity="0.38" filter={`url(#wc-mid-${seed})`} />
 
-        {/* ── Lower-left coral / red blob ───────────────────────────────────── */}
-        <ellipse cx="210" cy="660" rx="95" ry="62" fill="#D4605E" opacity="0.33" filter={`url(#wc-lg-${seed})`} />
+        {/* ── Top-right sage-blue pool ────────────────────────────────── */}
+        <ellipse cx="1280" cy="90"  rx="240" ry="140" fill="#88AAB8" opacity="0.44" filter={`url(#wc-wash-${seed})`} />
+        <ellipse cx="1380" cy="200" rx="110" ry="70"  fill="#6E99AC" opacity="0.32" filter={`url(#wc-mid-${seed})`} />
 
-        {/* ── Centre orange ─────────────────────────────────────────────────── */}
-        <ellipse cx="530" cy="445" rx="88" ry="58" fill="#E07840" opacity="0.34" filter={`url(#wc-lg-${seed})`} />
+        {/* ── Centre-left amber-orange sweep ─────────────────────────── */}
+        <ellipse cx="360" cy="480" rx="220" ry="140" fill="#E07030" opacity="0.42" filter={`url(#wc-wash-${seed})`} />
+        <ellipse cx="250" cy="560" rx="100" ry="65"  fill="#C8581C" opacity="0.28" filter={`url(#wc-mid-${seed})`} />
 
-        {/* ── Centre-right yellow ───────────────────────────────────────────── */}
-        <ellipse cx="590" cy="530" rx="64" ry="44" fill="#E8BA50" opacity="0.36" filter={`url(#wc-md-${seed})`} />
+        {/* ── Centre golden-yellow puddle ──────────────────────────────── */}
+        <ellipse cx="680" cy="420" rx="190" ry="115" fill="#E8B840" opacity="0.45" filter={`url(#wc-wash-${seed})`} />
+        <ellipse cx="760" cy="520" rx="90"  ry="58"  fill="#D4A020" opacity="0.30" filter={`url(#wc-mid-${seed})`} />
 
-        {/* ── Right-side pink ───────────────────────────────────────────────── */}
-        <ellipse cx="1060" cy="275" rx="84" ry="56" fill="#DC8090" opacity="0.30" filter={`url(#wc-lg-${seed})`} />
+        {/* ── Right dusty-rose bloom ──────────────────────────────────── */}
+        <ellipse cx="1100" cy="380" rx="210" ry="130" fill="#D07888" opacity="0.46" filter={`url(#wc-wash-${seed})`} />
+        <ellipse cx="1220" cy="460" rx="95"  ry="60"  fill="#BC5C70" opacity="0.28" filter={`url(#wc-mid-${seed})`} />
 
-        {/* ── Lower-right soft pink ─────────────────────────────────────────── */}
-        <ellipse cx="1295" cy="630" rx="52" ry="36" fill="#E8A4B8" opacity="0.28" filter={`url(#wc-md-${seed})`} />
+        {/* ── Bottom-left coral wash ──────────────────────────────────── */}
+        <ellipse cx="180" cy="760" rx="230" ry="145" fill="#C85048" opacity="0.40" filter={`url(#wc-wash-${seed})`} />
 
-        {/* ── Tiny accent blobs for depth ───────────────────────────────────── */}
-        <ellipse cx="330" cy="380" rx="32" ry="22" fill="#D4605E" opacity="0.20" filter={`url(#wc-sm-${seed})`} />
-        <ellipse cx="820" cy="720" rx="40" ry="27" fill="#E8BA50" opacity="0.22" filter={`url(#wc-sm-${seed})`} />
-        <ellipse cx="1180" cy="150" rx="38" ry="25" fill="#E8A4B8" opacity="0.22" filter={`url(#wc-sm-${seed})`} />
+        {/* ── Bottom-right teal pool ──────────────────────────────────── */}
+        <ellipse cx="1320" cy="780" rx="200" ry="120" fill="#5E9090" opacity="0.38" filter={`url(#wc-wash-${seed})`} />
+        <ellipse cx="1400" cy="700" rx="80"  ry="52"  fill="#3E7878" opacity="0.26" filter={`url(#wc-mid-${seed})`} />
+
+        {/* ── Scattered accent drops ──────────────────────────────────── */}
+        <ellipse cx="540"  cy="200" rx="60" ry="38" fill="#E8A0B8" opacity="0.34" filter={`url(#wc-drop-${seed})`} />
+        <ellipse cx="900"  cy="640" rx="70" ry="44" fill="#E8B840" opacity="0.30" filter={`url(#wc-drop-${seed})`} />
+        <ellipse cx="420"  cy="300" rx="44" ry="28" fill="#88AAB8" opacity="0.28" filter={`url(#wc-drop-${seed})`} />
+        <ellipse cx="980"  cy="200" rx="52" ry="32" fill="#E07030" opacity="0.26" filter={`url(#wc-drop-${seed})`} />
+        <ellipse cx="660"  cy="740" rx="48" ry="30" fill="#D07888" opacity="0.30" filter={`url(#wc-drop-${seed})`} />
+
+        {/* ── Tiny ink-splatter dots for texture ─────────────────────── */}
+        <circle cx="310" cy="640" r="9"  fill="#3E7878" opacity="0.40" filter={`url(#wc-splat-${seed})`} />
+        <circle cx="490" cy="580" r="6"  fill="#E8B840" opacity="0.44" filter={`url(#wc-splat-${seed})`} />
+        <circle cx="820" cy="310" r="8"  fill="#D9789E" opacity="0.38" filter={`url(#wc-splat-${seed})`} />
+        <circle cx="1050" cy="660" r="7" fill="#88AAB8" opacity="0.42" filter={`url(#wc-splat-${seed})`} />
+        <circle cx="730" cy="130" r="5"  fill="#C85048" opacity="0.36" filter={`url(#wc-splat-${seed})`} />
+        <circle cx="190" cy="430" r="10" fill="#E07030" opacity="0.34" filter={`url(#wc-splat-${seed})`} />
       </svg>
     </div>
   );

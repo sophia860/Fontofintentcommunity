@@ -58,7 +58,7 @@ export function BurstRenderer({ bursts, fontSize, lineHeight, suffix, inline, da
 }
 
 function BurstSpan({ burst, darkMode }: { burst: Burst; darkMode: boolean }) {
-  const style = getBurstStyle(burst.confidence, burst.hesitation, burst.pauseBefore, darkMode);
+  const style = getBurstStyle(burst.confidence, burst.hesitation, burst.pauseBefore, darkMode, burst.chars);
 
   // Render chars, converting \n to <br>
   const fragments: (string | JSX.Element)[] = [];
