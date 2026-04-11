@@ -5,6 +5,7 @@
  */
 import { Link, useLocation } from 'react-router';
 import { useGardenAuth } from '../lib/useGardenAuth';
+import { ADMIN_EMAIL } from '../lib/adminConfig';
 
 const NAV_LINKS = [
   { href: '/writers',   label: 'Writers'   },
@@ -15,7 +16,7 @@ const NAV_LINKS = [
 
 export function Nav() {
   const { pathname } = useLocation();
-  const { isAuthenticated, signOut } = useGardenAuth();
+  const { isAuthenticated, authUser, signOut } = useGardenAuth();
 
   return (
     <header
@@ -74,7 +75,7 @@ export function Nav() {
         {/* Auth state */}
         {isAuthenticated ? (
           <>
-            {user.email === ADMIN_EMAIL && (
+            {authUser?.email === ADMIN_EMAIL && (
               <Link
                 to="/admin"
                 style={{
