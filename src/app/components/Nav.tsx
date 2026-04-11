@@ -74,6 +74,23 @@ export function Nav() {
         {/* Auth state */}
         {isAuthenticated ? (
           <>
+            {user.email === ADMIN_EMAIL && (
+              <Link
+                to="/admin"
+                style={{
+                  fontFamily: 'Georgia, serif',
+                  fontSize: '0.85rem',
+                  letterSpacing: '0.04em',
+                  color: '#9b2335',
+                  textDecoration: 'none',
+                  borderBottom: pathname.startsWith('/admin') ? '1px solid #9b2335' : '1px solid transparent',
+                  paddingBottom: '2px',
+                  opacity: 0.85,
+                }}
+              >
+                Admin
+              </Link>
+            )}
             <Link
               to="/dashboard/writer"
               style={{
