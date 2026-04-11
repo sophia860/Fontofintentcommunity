@@ -8,7 +8,7 @@
  *
  * Font chaos (fourth axis):
  * - Uppercase-heavy bursts → ACRealAdult (printed caps feel)
- * - ~20% of remaining bursts → BiroScriptPlus (biro scrawl)
+ * - ~20% of remaining bursts → Caveat (loose, margin-note handwriting)
  * - Everything else → ACFrenchToast (flowing lowercase handwriting)
  * Plus random subtle size shifts and slight baseline wobble.
  *
@@ -44,10 +44,10 @@ function pickFontFamily(chars: string[]): string {
     return "'ACRealAdult', cursive";
   }
 
-  // ~20% chance → BiroScriptPlus (deterministic via hash so stable on re-render)
+  // ~20% chance → Caveat (deterministic via hash so stable on re-render)
   const h = hashString(text);
   if (h % 5 === 0) {
-    return "'BiroScriptPlus', cursive";
+    return "'Caveat', cursive";
   }
 
   return "'ACFrenchToast', cursive";
