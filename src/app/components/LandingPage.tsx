@@ -15,6 +15,7 @@ import {
   type BurstBuilderState,
 } from '../lib/burstDetector';
 import { getBurstStyle, getGhostStyle } from '../lib/fontMapper';
+import { WatercolorBackground } from './WatercolorBackground';
 
 interface GhostAnim {
   id: string;
@@ -129,7 +130,8 @@ export function LandingPage() {
   const leftPad = 'max(2rem, 8vw)';
 
   return (
-    <div className="min-h-screen flex flex-col" style={{ background: '#F5EDE4' }}>
+    <div className="min-h-screen flex flex-col" style={{ background: '#F5EDE4', position: 'relative' }}>
+      <WatercolorBackground seed={0} />
       {/* Header — wordmark, intentional weight */}
       <header
         className="relative z-10"

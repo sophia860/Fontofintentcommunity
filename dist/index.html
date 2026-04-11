@@ -1,17 +1,26 @@
 
-  <!DOCTYPE html>
-  <html lang="en">
-    <head>
-      <meta charset="UTF-8" />
-      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-      <title>font-of-intent (Community)</title>
-      <style>html, body { height: 100%; margin: 0; } #root { height: 100%; }</style>
-      <script type="module" crossorigin src="/Fontofintentcommunity/assets/index-BOT1m0-1.js"></script>
-      <link rel="stylesheet" crossorigin href="/Fontofintentcommunity/assets/index-B0x6KDXa.css">
-    </head>
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>The Page Gallery Journal</title>
+    <style>html, body { height: 100%; margin: 0; } #root { height: 100%; }</style>
+    <script>
+      // SPA redirect pickup from 404.html
+      (function() {
+        var redirect = sessionStorage.getItem('spa-redirect');
+        if (redirect) {
+          sessionStorage.removeItem('spa-redirect');
+          window.history.replaceState(null, '', redirect);
+        }
+      })();
+    </script>
+    <script type="module" crossorigin src="/assets/index-DW2iGHpF.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/index-xuNMelSN.css">
+  </head>
 
-    <body>
-      <div id="root"></div>
-    </body>
-  </html>
-  
+  <body>
+    <div id="root"></div>
+  </body>
+</html>

@@ -23,7 +23,7 @@ type Writing = {
 };
 
 const S: Record<string, React.CSSProperties> = {
-  page: { minHeight: '100vh', backgroundColor: '#faf8f5', fontFamily: 'Georgia, serif', color: '#1a1714' },
+  page: { minHeight: '100vh', backgroundColor: '#F5EDE4', fontFamily: 'Georgia, serif', color: '#1a1714' },
   inner: { maxWidth: 760, margin: '0 auto', padding: '4rem 1.5rem' },
   label: { fontSize: '0.75rem', letterSpacing: '0.1em', textTransform: 'uppercase' as const, color: '#7a7067', marginBottom: '1rem', display: 'block' },
   h1: { fontWeight: 400, fontSize: '2.25rem', marginBottom: '0.5rem' },
@@ -43,7 +43,7 @@ const S: Record<string, React.CSSProperties> = {
   howItemTitle: { fontSize: '0.82rem', fontWeight: 700, marginBottom: '0.5rem', letterSpacing: '0.02em' },
   howItemBody: { fontSize: '0.85rem', lineHeight: 1.6, color: '#7a7067' },
   ctaBlock: { padding: '3rem 0', borderTop: '1px solid #e8e4df', display: 'flex', gap: '2rem', alignItems: 'baseline', flexWrap: 'wrap' as const },
-  ctaPrimary: { fontSize: '0.85rem', letterSpacing: '0.05em', textTransform: 'uppercase' as const, color: '#faf8f5', backgroundColor: '#1a1714', padding: '0.6rem 1.4rem', textDecoration: 'none' },
+  ctaPrimary: { fontSize: '0.85rem', letterSpacing: '0.05em', textTransform: 'uppercase' as const, color: '#F5EDE4', backgroundColor: '#1a1714', padding: '0.6rem 1.4rem', textDecoration: 'none' },
   ctaSecondary: { fontSize: '0.85rem', color: '#7a7067', textDecoration: 'none', borderBottom: '1px solid #c5bdb4' },
 };
 

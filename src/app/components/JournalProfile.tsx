@@ -48,7 +48,7 @@ export function JournalProfile() {
   }, [id]);
 
   const S: Record<string, React.CSSProperties> = {
-    page: { minHeight: '100vh', backgroundColor: '#faf8f5', fontFamily: 'Georgia, serif', color: '#1a1714' },
+    page: { minHeight: '100vh', backgroundColor: '#F5EDE4', fontFamily: 'Georgia, serif', color: '#1a1714' },
     inner: { maxWidth: 760, margin: '0 auto', padding: '4rem 1.5rem' },
     label: { fontSize: '0.75rem', letterSpacing: '0.1em', textTransform: 'uppercase' as const, color: '#7a7067', marginBottom: '1rem', display: 'block' },
     h1: { fontWeight: 400, fontSize: '2.25rem', marginBottom: '0.5rem' },

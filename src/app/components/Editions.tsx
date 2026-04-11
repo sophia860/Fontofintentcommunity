@@ -30,14 +30,14 @@ const MOCK_EDITIONS = [
 ];
 
 const S: Record<string, React.CSSProperties> = {
-  page: { minHeight: '100vh', backgroundColor: '#faf8f5', fontFamily: 'Georgia, serif', color: '#1a1714' },
+  page: { minHeight: '100vh', backgroundColor: '#F5EDE4', fontFamily: 'Georgia, serif', color: '#1a1714' },
   hero: { padding: '5rem 3rem 4rem', borderBottom: '1px solid #e8e4df' },
   label: { fontSize: '0.75rem', letterSpacing: '0.1em', textTransform: 'uppercase' as const, color: '#7a7067', marginBottom: '1rem' },
   h1: { fontSize: '2.5rem', fontWeight: 400, margin: '0 0 1.5rem', lineHeight: 1.15, maxWidth: '600px' },
   heroBody: { fontSize: '0.95rem', lineHeight: 1.75, color: '#3d3830', maxWidth: '520px', marginBottom: '1rem' },
   argument: {
     padding: '3rem',
-    backgroundColor: '#f2ede8',
+    backgroundColor: '#EDE1D5',
     margin: '0',
     borderBottom: '1px solid #e8e4df',
   },
@@ -62,7 +62,7 @@ const S: Record<string, React.CSSProperties> = {
     flexShrink: 0,
   },
   spineText: {
-    color: '#faf8f5',
+    color: '#F5EDE4',
     fontSize: '0.65rem',
     letterSpacing: '0.15em',
     textTransform: 'uppercase' as const,
@@ -76,7 +76,7 @@ const S: Record<string, React.CSSProperties> = {
   editionMeta: { fontSize: '0.78rem', color: '#7a7067', marginBottom: '1.25rem', lineHeight: 1.6 },
   editionDescription: { fontSize: '0.9rem', lineHeight: 1.7, color: '#3d3830', maxWidth: '520px', marginBottom: '1.5rem' },
   editionLinks: { display: 'flex', gap: '1.5rem', alignItems: 'baseline' },
-  linkPrimary: { fontSize: '0.82rem', letterSpacing: '0.05em', textTransform: 'uppercase' as const, color: '#faf8f5', backgroundColor: '#1a1714', padding: '0.5rem 1.1rem', textDecoration: 'none' },
+  linkPrimary: { fontSize: '0.82rem', letterSpacing: '0.05em', textTransform: 'uppercase' as const, color: '#F5EDE4', backgroundColor: '#1a1714', padding: '0.5rem 1.1rem', textDecoration: 'none' },
   linkSecondary: { fontSize: '0.82rem', color: '#7a7067', textDecoration: 'none', borderBottom: '1px solid #c5bdb4', paddingBottom: '1px' },
   editionSidebar: { textAlign: 'right' as const },
   priceMain: { fontSize: '1.2rem', fontWeight: 400, marginBottom: '0.25rem' },
@@ -85,7 +85,7 @@ const S: Record<string, React.CSSProperties> = {
   empty: { padding: '5rem 3rem', textAlign: 'center' as const },
   emptyTitle: { fontSize: '1.2rem', fontWeight: 400, marginBottom: '1rem' },
   emptyBody: { fontSize: '0.9rem', color: '#7a7067', lineHeight: 1.65, maxWidth: '420px', margin: '0 auto 2rem' },
-  about: { padding: '4rem 3rem', backgroundColor: '#1a1714', color: '#faf8f5' },
+  about: { padding: '4rem 3rem', backgroundColor: '#1a1714', color: '#F5EDE4' },
   aboutInner: { maxWidth: '640px' },
   aboutLabel: { fontSize: '0.75rem', letterSpacing: '0.1em', textTransform: 'uppercase' as const, color: '#7a7067', marginBottom: '1.5rem' },
   aboutBody: { fontSize: '0.95rem', lineHeight: 1.8, color: '#e8e4df', marginBottom: '1.25rem' },
