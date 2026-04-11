@@ -5,8 +5,6 @@ import { WritersPage } from './components/WritersPage';
 import { JournalDirectory } from './components/JournalDirectory';
 import { JournalProfile } from './components/JournalProfile';
 import { ResidencyProgramme } from './components/ResidencyProgramme';
-import { Editions } from './components/Editions';
-import { EditionDetail } from './components/EditionDetail';
 import { WriterDashboard } from './components/WriterDashboard';
 import { JournalDashboard } from './components/JournalDashboard';
 import { Apply } from './components/Apply';
@@ -64,14 +62,6 @@ export const router = createBrowserRouter([
   {
     path: '/residency',
     Component: ResidencyProgramme,
-  },
-  {
-    path: '/editions',
-    Component: Editions,
-  },
-  {
-    path: '/editions/:id',
-    Component: EditionDetail,
   },
   {
     path: '/dashboard/writer',
