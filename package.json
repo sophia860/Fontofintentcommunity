@@ -1,5 +1,6 @@
 {
-  "name": "@figma/my-make-file",
+  "name": "the-page-gallery",
+  "description": "A living digital garden for literary editions, submissions, and collector communities.",
   "private": true,
   "version": "0.0.1",
   "type": "module",
