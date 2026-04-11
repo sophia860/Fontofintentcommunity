@@ -65,7 +65,19 @@ const S: Record<string, React.CSSProperties> = {
   },
   hero: {
     padding: '6rem 3rem 5rem',
-    maxWidth: '680px',
+    maxWidth: '960px',
+    display: 'grid',
+    gridTemplateColumns: '1fr auto',
+    gap: '4rem',
+    alignItems: 'start',
+  },
+  heroText: {
+    maxWidth: '520px',
+  },
+  heroDrawing: {
+    width: '260px',
+    flexShrink: 0,
+    opacity: 0.9,
   },
   heroEpigraph: {
     fontSize: '0.8rem',
@@ -540,22 +552,29 @@ export function GardenHome() {
 
       {/* Hero */}
       <div style={S.hero}>
-        <p style={S.heroEpigraph}>Page Gallery Editions — The Garden</p>
-        <h1 style={S.heroTitle}>
-          The place where{' '}<br />
-          writing lives before{' '}<br />
-          it becomes anything else.
-        </h1>
-        <p style={S.heroBody}>
-          A literary institution operating between London and New York.
-          The Garden connects writers and journals.
-          The Residency develops what is exceptional.
-          Chapbooks are published when the work demands it and not before.
-        </p>
-        <div style={S.heroCta}>
-          <Link to="/journals" style={S.ctaPrimary}>Enter the Garden</Link>
-          <Link to="/editions" style={S.ctaSecondary}>Chapbooks &amp; Editions</Link>
+        <div style={S.heroText}>
+          <p style={S.heroEpigraph}>Page Gallery Editions — The Garden</p>
+          <h1 style={S.heroTitle}>
+            The place where{' '}<br />
+            writing lives before{' '}<br />
+            it becomes anything else.
+          </h1>
+          <p style={S.heroBody}>
+            A literary institution operating between London and New York.
+            The Garden connects writers and journals.
+            The Residency develops what is exceptional.
+            Chapbooks are published when the work demands it and not before.
+          </p>
+          <div style={S.heroCta}>
+            <Link to="/journals" style={S.ctaPrimary}>Enter the Garden</Link>
+            <Link to="/editions" style={S.ctaSecondary}>Chapbooks &amp; Editions</Link>
+          </div>
         </div>
+        <img
+          src="https://github.com/user-attachments/assets/4c23e424-70f2-4a8e-97d5-3c664eee8bf4"
+          alt="A hand-drawn sketch of figures gathered around artwork — a scene from the Garden"
+          style={S.heroDrawing}
+        />
       </div>
 
       {/* Writers Board */}
