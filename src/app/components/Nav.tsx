@@ -38,13 +38,12 @@ export function Nav() {
       <Link
         to="/"
         style={{
-          fontFamily: 'Georgia, serif',
-          fontSize: '1rem',
-          fontWeight: 400,
-          letterSpacing: '0.05em',
+          fontFamily: "'Caveat', cursive",
+          fontSize: '1.4rem',
+          fontWeight: 600,
+          letterSpacing: '0.02em',
           color: '#1a1714',
           textDecoration: 'none',
-          textTransform: 'uppercase',
         }}
       >
         The Page Gallery
