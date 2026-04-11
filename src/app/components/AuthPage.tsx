@@ -157,7 +157,7 @@ export function AuthPage() {
       email,
       password,
       options: {
-        emailRedirectTo: `${window.location.origin}/Fontofintentcommunity${returnTo}`,
+        emailRedirectTo: `${window.location.origin}${returnTo}`,
       },
     });
     setLoading(false);
