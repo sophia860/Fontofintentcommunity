@@ -1,351 +1,241 @@
-/**
- * WriterDashboard — Page Gallery Garden
- *
- * Authenticated view: sign in, view your profile, and edit it.
- * Reads from and upserts to public.profiles in Supabase.
- */
-import { useEffect, useState } from 'react';
-import { Link } from 'react-router';
-import { Nav } from './Nav';
+import React, { useEffect, useState } from 'react';
+import { Link, useNavigate } from 'react-router';
 import { supabase } from '../lib/supabase';
-import { useAuth } from '../lib/useAuth';
-import type { Profile } from '../lib/types';
 
-type ProfileDraft = Omit<Profile, 'id' | 'created_at' | 'updated_at'>;
+type GardenState = 'seed' | 'sprout' | 'bloom';
 
-const BLANK_DRAFT: ProfileDraft = {
-  display_name: null,
-  slug: null,
-  avatar_url: null,
-  short_bio: null,
-  full_bio: null,
-  location: null,
-  website: null,
-  instagram: null,
-  genres: [],
-  themes: [],
-  publication_history: null,
-  is_public: true,
-  role: 'writer',
+type Piece = {
+  id: string;
+  title: string;
+  state: GardenState;
+  tags: string[] | null;
+  word_count: number | null;
+  in_bloom_pool: boolean | null;
+  created_at: string;
+  updated_at: string;
 };
 
-const GENRE_OPTIONS = ['poetry', 'fiction', 'essay', 'prose poem', 'hybrid', 'lyric essay', 'nonfiction', 'criticism'];
+type TagPattern = { tag: string; count: number };
 
-const S: Record<string, React.CSSProperties> = {
-  page: { minHeight: '100vh', backgroundColor: '#faf8f5', fontFamily: 'Georgia, serif', color: '#1a1714' },
-  body: { maxWidth: '640px', margin: '0 auto', padding: '4rem 3rem' },
-  heading: { fontSize: '2rem', fontWeight: 400, margin: '0 0 0.5rem' },
-  sub: { fontSize: '0.88rem', color: '#7a7067', marginBottom: '3rem' },
-  label: { display: 'block', fontSize: '0.75rem', letterSpacing: '0.08em', textTransform: 'uppercase' as const, color: '#7a7067', marginBottom: '0.4rem' },
-  input: { width: '100%', padding: '0.5rem 0', border: 'none', borderBottom: '1px solid #c5bdb4', backgroundColor: 'transparent', fontFamily: 'Georgia, serif', fontSize: '0.95rem', color: '#1a1714', outline: 'none', boxSizing: 'border-box' as const },
-  textarea: { width: '100%', padding: '0.5rem 0', border: 'none', borderBottom: '1px solid #c5bdb4', backgroundColor: 'transparent', fontFamily: 'Georgia, serif', fontSize: '0.95rem', color: '#1a1714', outline: 'none', resize: 'vertical' as const, boxSizing: 'border-box' as const, minHeight: '80px' },
-  field: { marginBottom: '2rem' },
-  tagRow: { display: 'flex', flexWrap: 'wrap' as const, gap: '0.5rem', marginTop: '0.5rem' },
-  chip: { fontSize: '0.78rem', padding: '0.25rem 0.7rem', border: '1px solid #c5bdb4', backgroundColor: 'transparent', color: '#3d3830', cursor: 'pointer', fontFamily: 'Georgia, serif' },
-  chipActive: { fontSize: '0.78rem', padding: '0.25rem 0.7rem', border: '1px solid #1a1714', backgroundColor: '#1a1714', color: '#faf8f5', cursor: 'pointer', fontFamily: 'Georgia, serif' },
-  toggleRow: { display: 'flex', alignItems: 'center', gap: '1rem' },
-  toggle: { cursor: 'pointer' },
-  submit: { padding: '0.7rem 2rem', backgroundColor: '#1a1714', color: '#faf8f5', border: 'none', fontFamily: 'Georgia, serif', fontSize: '0.88rem', letterSpacing: '0.05em', cursor: 'pointer', marginTop: '1rem' },
-  divider: { borderTop: '1px solid #e8e4df', margin: '2.5rem 0' },
-  status: { fontSize: '0.85rem', color: '#7a7067', marginTop: '1rem', fontStyle: 'italic' },
-  signInSection: { textAlign: 'center' as const },
-  signInHeading: { fontSize: '1.4rem', fontWeight: 400, marginBottom: '1rem' },
-  signInBody: { fontSize: '0.9rem', color: '#3d3830', marginBottom: '2rem', lineHeight: 1.65 },
-  emailInput: { width: '100%', padding: '0.6rem 0.8rem', border: '1px solid #c5bdb4', backgroundColor: '#fff', fontFamily: 'Georgia, serif', fontSize: '0.95rem', color: '#1a1714', outline: 'none', boxSizing: 'border-box' as const, marginBottom: '1rem' },
-  ctaLink: { fontSize: '0.85rem', color: '#7a7067', borderBottom: '1px solid #c5bdb4', textDecoration: 'none' },
+const STATE_COLOR: Record<GardenState, string> = {
+  seed: '#C4B5A6',
+  sprout: '#8BA67A',
+  bloom: '#6B8E6B',
 };
 
-// ─── Sign-in form (magic link) ────────────────────────────────────────────────
+const STATE_NEXT: Record<GardenState, GardenState | null> = {
+  seed: 'sprout',
+  sprout: 'bloom',
+  bloom: null,
+};
 
-function SignInForm() {
-  const [email, setEmail] = useState('');
-  const [sent, setSent] = useState(false);
-  const [error, setError] = useState('');
-
-  async function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
-    setError('');
-    const { error: err } = await supabase.auth.signInWithOtp({ email });
-    if (err) setError(err.message);
-    else setSent(true);
-  }
-
-  if (sent) {
-    return (
-      <p style={S.status}>
-        Check your inbox — a sign-in link has been sent to <strong>{email}</strong>.
-      </p>
-    );
-  }
-
-  return (
-    <form onSubmit={handleSubmit}>
-      <input
-        type="email"
-        required
-        placeholder="your@email.com"
-        value={email}
-        onChange={e => setEmail(e.target.value)}
-        style={S.emailInput}
-      />
-      {error && <p style={{ ...S.status, color: '#b04040' }}>{error}</p>}
-      <button type="submit" style={S.submit}>Send sign-in link</button>
-    </form>
-  );
-}
-
-// ─── Profile edit form ────────────────────────────────────────────────────────
-
-function ProfileForm({ userId }: { userId: string }) {
-  const [draft, setDraft] = useState<ProfileDraft>(BLANK_DRAFT);
-  const [loading, setLoading] = useState(true);
-  const [saving, setSaving] = useState(false);
-  const [saveStatus, setSaveStatus] = useState('');
-
-  useEffect(() => {
-    async function loadProfile() {
-      const { data } = await supabase
-        .from('profiles')
-        .select('*')
-        .eq('id', userId)
-        .maybeSingle();
-
-      if (data) {
-        const { id: _id, created_at: _c, updated_at: _u, ...rest } = data as Profile;
-        setDraft({ ...BLANK_DRAFT, ...rest });
-      }
-      setLoading(false);
-    }
-    loadProfile();
-  }, [userId]);
-
-  function set<K extends keyof ProfileDraft>(key: K, value: ProfileDraft[K]) {
-    setDraft(d => ({ ...d, [key]: value }));
-  }
-
-  function toggleGenre(g: string) {
-    setDraft(d => ({
-      ...d,
-      genres: d.genres.includes(g) ? d.genres.filter(x => x !== g) : [...d.genres, g],
-    }));
-  }
-
-  async function handleSave(e: React.FormEvent) {
-    e.preventDefault();
-    setSaving(true);
-    setSaveStatus('');
-
-    const { error } = await supabase
-      .from('profiles')
-      .upsert({ id: userId, ...draft }, { onConflict: 'id' });
-
-    setSaving(false);
-    if (error) {
-      setSaveStatus(`Error: ${error.message}`);
-    } else {
-      setSaveStatus('Profile saved.');
-    }
-  }
-
-  if (loading) return <p style={S.status}>Loading your profile…</p>;
-
-  return (
-    <form onSubmit={handleSave}>
-      <div style={S.field}>
-        <label style={S.label}>Display name</label>
-        <input
-          style={S.input}
-          value={draft.display_name ?? ''}
-          onChange={e => set('display_name', e.target.value || null)}
-          placeholder="Your name as it appears in the directory"
-        />
-      </div>
-
-      <div style={S.field}>
-        <label style={S.label}>Slug (URL handle)</label>
-        <input
-          style={S.input}
-          value={draft.slug ?? ''}
-          onChange={e => set('slug', e.target.value
-            .toLowerCase()
-            .replace(/[^a-z0-9\s-]/g, '')
-            .trim()
-            .replace(/[\s]+/g, '-')
-            .replace(/-{2,}/g, '-')
-            || null
-          )}
-          placeholder="e.g. ada-lovelace → /writers/ada-lovelace"
-        />
-      </div>
-
-      <div style={S.field}>
-        <label style={S.label}>Location</label>
-        <input
-          style={S.input}
-          value={draft.location ?? ''}
-          onChange={e => set('location', e.target.value || null)}
-          placeholder="City, country"
-        />
-      </div>
-
-      <div style={S.field}>
-        <label style={S.label}>Short bio <span style={{ textTransform: 'none', letterSpacing: 0 }}>(appears in directory listings)</span></label>
-        <textarea
-          style={S.textarea}
-          value={draft.short_bio ?? ''}
-          onChange={e => set('short_bio', e.target.value || null)}
-          placeholder="One or two sentences"
-          rows={3}
-        />
-      </div>
-
-      <div style={S.field}>
-        <label style={S.label}>Full statement</label>
-        <textarea
-          style={S.textarea}
-          value={draft.full_bio ?? ''}
-          onChange={e => set('full_bio', e.target.value || null)}
-          placeholder="A longer artist statement or bio"
-          rows={6}
-        />
-      </div>
-
-      <div style={S.field}>
-        <label style={S.label}>Genres & forms</label>
-        <div style={S.tagRow}>
-          {GENRE_OPTIONS.map(g => (
-            <button
-              key={g}
-              type="button"
-              style={draft.genres.includes(g) ? S.chipActive : S.chip}
-              onClick={() => toggleGenre(g)}
-            >
-              {g}
-            </button>
-          ))}
-        </div>
-      </div>
-
-      <div style={S.field}>
-        <label style={S.label}>Themes <span style={{ textTransform: 'none', letterSpacing: 0 }}>(comma-separated)</span></label>
-        <input
-          style={S.input}
-          value={draft.themes.join(', ')}
-          onChange={e => set('themes', e.target.value.split(',').map(s => s.trim()).filter(Boolean))}
-          placeholder="e.g. grief, migration, queerness"
-        />
-      </div>
-
-      <div style={S.field}>
-        <label style={S.label}>Publication history</label>
-        <textarea
-          style={S.textarea}
-          value={draft.publication_history ?? ''}
-          onChange={e => set('publication_history', e.target.value || null)}
-          placeholder="Where your work has appeared"
-          rows={4}
-        />
-      </div>
-
-      <div style={S.field}>
-        <label style={S.label}>Website</label>
-        <input
-          style={S.input}
-          type="url"
-          value={draft.website ?? ''}
-          onChange={e => set('website', e.target.value || null)}
-          placeholder="https://yoursite.com"
-        />
-      </div>
-
-      <div style={S.field}>
-        <label style={S.label}>Instagram handle</label>
-        <input
-          style={S.input}
-          value={draft.instagram ?? ''}
-          onChange={e => set('instagram', e.target.value || null)}
-          placeholder="@handle"
-        />
-      </div>
-
-      <div style={S.field}>
-        <label style={S.label}>Profile visibility</label>
-        <div style={S.toggleRow}>
-          <input
-            type="checkbox"
-            id="is_public"
-            checked={draft.is_public}
-            onChange={e => set('is_public', e.target.checked)}
-            style={S.toggle}
-          />
-          <label htmlFor="is_public" style={{ fontSize: '0.9rem', color: '#3d3830', cursor: 'pointer' }}>
-            {draft.is_public ? 'Public — visible in the writer directory' : 'Private — hidden from the directory'}
-          </label>
-        </div>
-      </div>
-
-      <hr style={S.divider} />
-
-      <button type="submit" style={S.submit} disabled={saving}>
-        {saving ? 'Saving…' : 'Save profile'}
-      </button>
-
-      {saveStatus && <p style={S.status}>{saveStatus}</p>}
-
-      {draft.slug && (
-        <p style={{ ...S.status, marginTop: '0.75rem' }}>
-          <Link to={`/writers/${draft.slug}`} style={S.ctaLink}>
-            View your public profile →
-          </Link>
-        </p>
-      )}
-    </form>
-  );
-}
-
-// ─── Dashboard shell ──────────────────────────────────────────────────────────
+const STATE_LABEL: Record<GardenState, string> = {
+  seed: 'Seed',
+  sprout: 'Sprout',
+  bloom: 'Bloom',
+};
 
 export function WriterDashboard() {
-  const { user, loading, signOut } = useAuth();
+  const [pieces, setPieces] = useState<Piece[]>([]);
+  const [patterns, setPatterns] = useState<TagPattern[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [promoting, setPromoting] = useState<string | null>(null);
+  const navigate = useNavigate();
+
+  useEffect(() => { loadPieces(); }, []);
+
+  async function loadPieces() {
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) { setLoading(false); return; }
+
+    const [piecesRes, patternRes] = await Promise.all([
+      supabase
+        .from('writings')
+        .select('id, title, state, tags, word_count, in_bloom_pool, created_at, updated_at')
+        .eq('author_id', user.id)
+        .order('updated_at', { ascending: false }),
+      supabase.rpc('get_tag_patterns', { uid: user.id }).select('*'),
+    ]);
+
+    setPieces((piecesRes.data as Piece[]) || []);
+
+    // Compute patterns client-side if RPC not available
+    if (patternRes.error || !patternRes.data) {
+      const allTags: string[] = [];
+      for (const p of (piecesRes.data as Piece[]) || []) {
+        for (const t of p.tags ?? []) allTags.push(t);
+      }
+      const freq: Record<string, number> = {};
+      for (const t of allTags) freq[t] = (freq[t] ?? 0) + 1;
+      const sorted = Object.entries(freq)
+        .sort((a, b) => b[1] - a[1])
+        .slice(0, 6)
+        .map(([tag, count]) => ({ tag, count }));
+      setPatterns(sorted);
+    } else {
+      setPatterns(patternRes.data as TagPattern[]);
+    }
+
+    setLoading(false);
+  }
+
+  async function createNew() {
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) { navigate('/auth?returnTo=/dashboard/writer'); return; }
+    const { data } = await supabase
+      .from('writings')
+      .insert({ title: 'Untitled', body: '', state: 'seed', author_id: user.id, word_count: 0, in_bloom_pool: false })
+      .select('id')
+      .single();
+    if (data) navigate('/piece/' + data.id);
+  }
+
+  async function promoteState(piece: Piece) {
+    const next = STATE_NEXT[piece.state];
+    if (!next) return;
+    setPromoting(piece.id);
+    await supabase
+      .from('writings')
+      .update({
+        state: next,
+        in_bloom_pool: next === 'bloom' ? true : piece.in_bloom_pool,
+        updated_at: new Date().toISOString(),
+      })
+      .eq('id', piece.id);
+    setPieces(prev => prev.map(p =>
+      p.id === piece.id
+        ? { ...p, state: next, in_bloom_pool: next === 'bloom' ? true : p.in_bloom_pool }
+        : p
+    ));
+    setPromoting(null);
+  }
+
+  if (loading) return (
+    <main style={{ maxWidth: 760, margin: '3rem auto', padding: '0 1.5rem' }}>
+      <p style={{ fontFamily: 'Georgia, serif', color: '#7a7067' }}>Loading your Garden…</p>
+    </main>
+  );
+
+  const noUser = !loading && pieces.length === 0;
 
   return (
-    <div style={S.page}>
-      <Nav />
-      <div style={S.body}>
-        <h1 style={S.heading}>Writer Dashboard</h1>
+    <main style={{ maxWidth: 760, margin: '3rem auto', padding: '0 1.5rem', fontFamily: 'Georgia, serif' }}>
+      <h1 style={{ fontWeight: 400, fontSize: '2rem', marginBottom: '0.25rem' }}>Your Garden</h1>
+      <p style={{ color: '#666', fontStyle: 'italic', marginBottom: '2rem' }}>Writing in progress</p>
 
-        {loading && <p style={S.sub}>Loading…</p>}
-
-        {!loading && !user && (
-          <>
-            <p style={S.sub}>
-              Sign in to create or edit your Garden profile.
-            </p>
-            <div style={S.signInSection}>
-              <p style={S.signInBody}>
-                We use passwordless magic links — enter your email and we'll send you a sign-in link.
-              </p>
-              <SignInForm />
-            </div>
-          </>
-        )}
-
-        {!loading && user && (
-          <>
-            <p style={S.sub}>
-              Signed in as {user.email}.{' '}
-              <button
-                onClick={signOut}
-                style={{ background: 'none', border: 'none', fontFamily: 'Georgia, serif', fontSize: '0.88rem', color: '#7a7067', cursor: 'pointer', textDecoration: 'underline', padding: 0 }}
+      {/* Pattern surfacing */}
+      {patterns.length > 0 && (
+        <div style={{ marginBottom: '2rem', padding: '1rem 1.25rem', backgroundColor: '#f5f0eb', borderLeft: '3px solid #c5bdb4' }}>
+          <p style={{ fontSize: '0.75rem', letterSpacing: '0.08em', textTransform: 'uppercase', color: '#7a7067', marginBottom: '0.75rem' }}>
+            Your obsessions
+          </p>
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
+            {patterns.map(({ tag, count }) => (
+              <span
+                key={tag}
+                style={{
+                  fontSize: '0.8rem',
+                  color: '#3d3830',
+                  border: '1px solid #c5bdb4',
+                  padding: '0.2rem 0.6rem',
+                  borderRadius: '2px',
+                }}
               >
-                Sign out
-              </button>
-            </p>
-            <ProfileForm userId={user.id} />
-          </>
-        )}
-      </div>
-    </div>
+                {tag} <span style={{ color: '#7a7067', fontSize: '0.72rem' }}>×{count}</span>
+              </span>
+            ))}
+          </div>
+        </div>
+      )}
+
+      <button
+        style={{ display: 'inline-block', padding: '0.6rem 1.4rem', background: '#1a1714', color: '#fff', border: 'none', cursor: 'pointer', fontSize: '0.85rem', letterSpacing: '0.04em', marginBottom: '2rem', fontFamily: 'Georgia, serif' }}
+        onClick={createNew}
+      >
+        + New Piece
+      </button>
+
+      {noUser && (
+        <div style={{ textAlign: 'center', padding: '4rem 0', color: '#999' }}>
+          <p style={{ marginBottom: '1rem' }}>Sign in to see your Garden.</p>
+          <Link to="/auth?returnTo=/dashboard/writer" style={{ color: '#1a1714', fontSize: '0.9rem' }}>Sign in →</Link>
+        </div>
+      )}
+
+      {!noUser && pieces.length === 0 && (
+        <div style={{ textAlign: 'center', padding: '4rem 0', color: '#999' }}>
+          <p>No pieces yet. Plant your first seed.</p>
+        </div>
+      )}
+
+      {pieces.length > 0 && (
+        <ul style={{ listStyle: 'none', padding: 0 }}>
+          {pieces.map((p) => {
+            const stateColor = STATE_COLOR[p.state] || STATE_COLOR.seed;
+            const nextState = STATE_NEXT[p.state];
+            return (
+              <li key={p.id} style={{ padding: '1.25rem 0', borderBottom: '1px solid #e8e4df' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '1rem' }}>
+                  <div style={{ flex: 1 }}>
+                    <Link
+                      to={'/piece/' + p.id}
+                      style={{ fontStyle: 'italic', fontSize: '1.05rem', color: '#1a1714', textDecoration: 'none', display: 'block', marginBottom: '0.3rem' }}
+                    >
+                      {p.title || 'Untitled'}
+                    </Link>
+                    {p.tags && p.tags.length > 0 && (
+                      <div style={{ display: 'flex', gap: '0.4rem', flexWrap: 'wrap', marginBottom: '0.4rem' }}>
+                        {p.tags.map(tag => (
+                          <span key={tag} style={{ fontSize: '0.7rem', color: '#7a7067', border: '1px solid #dcd9d5', padding: '0.1rem 0.4rem', borderRadius: '2px' }}>
+                            {tag}
+                          </span>
+                        ))}
+                      </div>
+                    )}
+                    <div style={{ fontSize: '0.8rem', color: '#999' }}>
+                      {p.word_count ? `${p.word_count.toLocaleString()} words · ` : ''}
+                      {new Date(p.updated_at).toLocaleDateString()}
+                      {p.in_bloom_pool && <span style={{ marginLeft: '0.5rem', color: '#6B8E6B' }}>· in Bloom Pool</span>}
+                    </div>
+                  </div>
+                  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '0.5rem', flexShrink: 0 }}>
+                    <span style={{
+                      fontSize: '0.68rem',
+                      letterSpacing: '0.08em',
+                      textTransform: 'uppercase',
+                      padding: '0.2rem 0.6rem',
+                      border: `1px solid ${stateColor}`,
+                      color: stateColor,
+                    }}>
+                      {STATE_LABEL[p.state]}
+                    </span>
+                    {nextState && (
+                      <button
+                        disabled={promoting === p.id}
+                        onClick={() => promoteState(p)}
+                        style={{
+                          fontSize: '0.7rem',
+                          letterSpacing: '0.05em',
+                          background: 'none',
+                          border: '1px solid #c5bdb4',
+                          padding: '0.15rem 0.5rem',
+                          cursor: 'pointer',
+                          color: '#7a7067',
+                          fontFamily: 'Georgia, serif',
+                          opacity: promoting === p.id ? 0.5 : 1,
+                        }}
+                      >
+                        → {STATE_LABEL[nextState]}
+                      </button>
+                    )}
+                  </div>
+                </div>
+              </li>
+            );
+          })}
+        </ul>
+      )}
+    </main>
   );
 }
 

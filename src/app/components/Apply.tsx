@@ -5,6 +5,7 @@
  */
 import { useState } from 'react';
 import { Nav } from './Nav';
+import { supabase } from '../lib/supabase';
 
 type ApplyType = 'writer' | 'journal' | 'residency' | 'tilth';
 
@@ -28,176 +29,165 @@ const S: Record<string, React.CSSProperties> = {
 };
 
 function WriterForm() {
-  return (
+  const [form, setForm] = useState({ name: '', email: '', location: '', forms: '', bio: '', website: '' });
+  const [submitted, setSubmitted] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+  const handle = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
+    setForm(f => ({ ...f, [e.target.name]: e.target.value }));
+  async function handleSubmit(ev: React.FormEvent) {
+    ev.preventDefault(); setLoading(true); setError('');
+    const { error: err } = await supabase.from('writer_applications').insert({
+      name: form.name, email: form.email, bio: form.bio, forms: form.forms, sample: form.website, statement: '', status: 'pending',
+    });
+    setLoading(false);
+    if (err) { setError(err.message); return; }
+    setSubmitted(true);
+  }
+  if (submitted) return (
     <div style={S.form}>
-      <div style={S.fieldGroup}>
-        <label style={S.fieldLabel}>Name</label>
-        <input style={S.input} type="text" placeholder="Your name" />
-      </div>
-      <div style={S.fieldGroup}>
-        <label style={S.fieldLabel}>Email</label>
-        <input style={S.input} type="email" placeholder="hello@example.com" />
-      </div>
-      <div style={S.fieldGroup}>
-        <label style={S.fieldLabel}>Location</label>
-        <input style={S.input} type="text" placeholder="City, Country" />
-      </div>
-      <div style={S.fieldGroup}>
-        <label style={S.fieldLabel}>Forms you work in</label>
-        <p style={S.fieldNote}>e.g. poetry, fiction, lyric essay, hybrid, translation</p>
-        <input style={S.input} type="text" placeholder="poetry, essay" />
-      </div>
-      <div style={S.fieldGroup}>
-        <label style={S.fieldLabel}>Short bio</label>
-        <p style={S.fieldNote}>Two or three sentences. Tell us what you’re working on right now.</p>
-        <textarea style={S.textarea} placeholder="I am currently working on..." />
-      </div>
-      <div style={S.fieldGroup}>
-        <label style={S.fieldLabel}>Website or sample work (optional)</label>
-        <input style={S.input} type="url" placeholder="https://" />
-      </div>
-      <button style={S.submit}>Enter the Garden</button>
-      <p style={S.note}>
-        The Garden is free for writers. Your profile will be visible to journals registered
-        in the ecosystem. You can update or remove it at any time.
+      <p style={{ ...S.body, backgroundColor: '#f2ede8', padding: '1rem 1.25rem', borderLeft: '3px solid #c5bdb4' }}>
+        <strong>Application received.</strong> Thank you for entering the Garden. We read every application and will be in touch.
       </p>
     </div>
+  );
+  return (
+    <form style={S.form} onSubmit={handleSubmit}>
+      {error && <p style={{ color: '#9b2335', fontSize: '0.85rem', marginBottom: '1rem' }}>{error}</p>}
+      <div style={S.fieldGroup}><label style={S.fieldLabel}>Name</label><input style={S.input} name="name" type="text" placeholder="Your name" value={form.name} onChange={handle} required /></div>
+      <div style={S.fieldGroup}><label style={S.fieldLabel}>Email</label><input style={S.input} name="email" type="email" placeholder="hello@example.com" value={form.email} onChange={handle} required /></div>
+      <div style={S.fieldGroup}><label style={S.fieldLabel}>Location</label><input style={S.input} name="location" type="text" placeholder="City, Country" value={form.location} onChange={handle} /></div>
+      <div style={S.fieldGroup}><label style={S.fieldLabel}>Forms you work in</label><p style={S.fieldNote}>e.g. poetry, fiction, lyric essay, hybrid, translation</p><input style={S.input} name="forms" type="text" placeholder="poetry, essay" value={form.forms} onChange={handle} /></div>
+      <div style={S.fieldGroup}><label style={S.fieldLabel}>Short bio</label><p style={S.fieldNote}>Two or three sentences. Tell us what you are working on right now.</p><textarea style={S.textarea} name="bio" placeholder="I am currently working on..." value={form.bio} onChange={handle} /></div>
+      <div style={S.fieldGroup}><label style={S.fieldLabel}>Website or sample work (optional)</label><input style={S.input} name="website" type="url" placeholder="https://" value={form.website} onChange={handle} /></div>
+      <button style={S.submit} type="submit" disabled={loading}>{loading ? 'Submitting...' : 'Enter the Garden'}</button>
+      <p style={S.note}>The Garden is free for writers. Your profile will be visible to journals registered in the ecosystem. You can update or remove it at any time.</p>
+    </form>
   );
 }
 
 function JournalForm() {
-  return (
+  const [form, setForm] = useState({ journal_name: '', contact_name: '', email: '', location: '', website: '', mission_statement: '', pays: '', reading_status: '' });
+  const [submitted, setSubmitted] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+  const handle = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
+    setForm(f => ({ ...f, [e.target.name]: e.target.value }));
+  async function handleSubmit(ev: React.FormEvent) {
+    ev.preventDefault(); setLoading(true); setError('');
+    const { error: err } = await supabase.from('journal_applications').insert({
+      journal_name: form.journal_name, contact_name: form.contact_name, email: form.email, mission_statement: form.mission_statement, status: 'pending',
+    });
+    setLoading(false);
+    if (err) { setError(err.message); return; }
+    setSubmitted(true);
+  }
+  if (submitted) return (
     <div style={S.form}>
-      <div style={S.fieldGroup}>
-        <label style={S.fieldLabel}>Journal name</label>
-        <input style={S.input} type="text" placeholder="Journal name" />
-      </div>
-      <div style={S.fieldGroup}>
-        <label style={S.fieldLabel}>Primary editor / contact</label>
-        <input style={S.input} type="text" placeholder="Name" />
-      </div>
-      <div style={S.fieldGroup}>
-        <label style={S.fieldLabel}>Email</label>
-        <input style={S.input} type="email" placeholder="hello@example.com" />
-      </div>
-      <div style={S.fieldGroup}>
-        <label style={S.fieldLabel}>Location</label>
-        <input style={S.input} type="text" placeholder="City, Country" />
-      </div>
-      <div style={S.fieldGroup}>
-        <label style={S.fieldLabel}>Website</label>
-        <input style={S.input} type="url" placeholder="https://" />
-      </div>
-      <div style={S.fieldGroup}>
-        <label style={S.fieldLabel}>Mission statement</label>
-        <p style={S.fieldNote}>What does your journal publish? What is its sensibility? Be specific.</p>
-        <textarea style={S.textarea} placeholder="We publish..." />
-      </div>
-      <div style={S.fieldGroup}>
-        <label style={S.fieldLabel}>Do you pay contributors?</label>
-        <input style={S.input} type="text" placeholder="Yes / No / Sometimes — and at what rate" />
-      </div>
-      <div style={S.fieldGroup}>
-        <label style={S.fieldLabel}>Current reading status</label>
-        <input style={S.input} type="text" placeholder="Open / Closed / Rolling" />
-      </div>
-      <button style={S.submit}>Register journal</button>
-      <p style={S.note}>
-        Journal registration is free. Registered journals appear in the Garden directory
-        and can discover writers through the platform. Registration does not constitute
-        endorsement or guarantee of residency consideration.
+      <p style={{ ...S.body, backgroundColor: '#f2ede8', padding: '1rem 1.25rem', borderLeft: '3px solid #c5bdb4' }}>
+        <strong>Registration received.</strong> Thank you for registering your journal. We will review and follow up shortly.
       </p>
     </div>
+  );
+  return (
+    <form style={S.form} onSubmit={handleSubmit}>
+      {error && <p style={{ color: '#9b2335', fontSize: '0.85rem', marginBottom: '1rem' }}>{error}</p>}
+      <div style={S.fieldGroup}><label style={S.fieldLabel}>Journal name</label><input style={S.input} name="journal_name" type="text" placeholder="Journal name" value={form.journal_name} onChange={handle} required /></div>
+      <div style={S.fieldGroup}><label style={S.fieldLabel}>Primary editor / contact</label><input style={S.input} name="contact_name" type="text" placeholder="Name" value={form.contact_name} onChange={handle} required /></div>
+      <div style={S.fieldGroup}><label style={S.fieldLabel}>Email</label><input style={S.input} name="email" type="email" placeholder="hello@example.com" value={form.email} onChange={handle} required /></div>
+      <div style={S.fieldGroup}><label style={S.fieldLabel}>Location</label><input style={S.input} name="location" type="text" placeholder="City, Country" value={form.location} onChange={handle} /></div>
+      <div style={S.fieldGroup}><label style={S.fieldLabel}>Website</label><input style={S.input} name="website" type="url" placeholder="https://" value={form.website} onChange={handle} /></div>
+      <div style={S.fieldGroup}><label style={S.fieldLabel}>Mission statement</label><p style={S.fieldNote}>What does your journal publish? What is its sensibility? Be specific.</p><textarea style={S.textarea} name="mission_statement" placeholder="We publish..." value={form.mission_statement} onChange={handle} required /></div>
+      <div style={S.fieldGroup}><label style={S.fieldLabel}>Do you pay contributors?</label><input style={S.input} name="pays" type="text" placeholder="Yes / No / Sometimes" value={form.pays} onChange={handle} /></div>
+      <div style={S.fieldGroup}><label style={S.fieldLabel}>Current reading status</label><input style={S.input} name="reading_status" type="text" placeholder="Open / Closed / Rolling" value={form.reading_status} onChange={handle} /></div>
+      <button style={S.submit} type="submit" disabled={loading}>{loading ? 'Submitting...' : 'Register journal'}</button>
+      <p style={S.note}>Journal registration is free. Registered journals appear in the Garden directory and can discover writers through the platform.</p>
+    </form>
   );
 }
 
 function ResidencyForm() {
-  return (
+  const [form, setForm] = useState({ name: '', contact_name: '', contact_email: '', bio: '', project: '', duration: '', needs: '', statement: '' });
+  const [submitted, setSubmitted] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+  const handle = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
+    setForm(f => ({ ...f, [e.target.name]: e.target.value }));
+  async function handleSubmit(ev: React.FormEvent) {
+    ev.preventDefault(); setLoading(true); setError('');
+    const { error: err } = await supabase.from('residency_applications').insert({
+      name: form.name,
+      email: form.contact_email,
+      bio: form.bio,
+      project: form.project,
+      duration: form.duration,
+      needs: form.needs,
+      statement: form.statement,
+      status: 'pending',
+    });
+    setLoading(false);
+    if (err) { setError(err.message); return; }
+    setSubmitted(true);
+  }
+  if (submitted) return (
     <div style={S.form}>
       <p style={{ ...S.body, backgroundColor: '#f2ede8', padding: '1rem 1.25rem', borderLeft: '3px solid #c5bdb4' }}>
-        The 2025–26 Residency Programme is now open for applications.
-        Two to three journals will be selected. Selection is based solely on quality.
-        There is no application fee.
-      </p>
-      <div style={S.fieldGroup}>
-        <label style={S.fieldLabel}>Journal name</label>
-        <input style={S.input} type="text" placeholder="Journal name" />
-      </div>
-      <div style={S.fieldGroup}>
-        <label style={S.fieldLabel}>Contact name and email</label>
-        <input style={S.input} type="text" placeholder="Name — email@example.com" />
-      </div>
-      <div style={S.fieldGroup}>
-        <label style={S.fieldLabel}>Link to a recent issue</label>
-        <p style={S.fieldNote}>Digital or physical. A PDF is fine.</p>
-        <input style={S.input} type="url" placeholder="https://" />
-      </div>
-      <div style={S.fieldGroup}>
-        <label style={S.fieldLabel}>Mission statement</label>
-        <p style={S.fieldNote}>What is your journal for? What does it believe about writing?</p>
-        <textarea style={S.textarea} placeholder="" />
-      </div>
-      <div style={S.fieldGroup}>
-        <label style={S.fieldLabel}>Why now?</label>
-        <p style={S.fieldNote}>
-          What is your journal trying to do that it doesn’t yet have the infrastructure for?
-          What would a year in residence with Page Gallery Editions make possible?
-        </p>
-        <textarea style={{ ...S.textarea, minHeight: '160px' }} placeholder="" />
-      </div>
-      <button style={S.submit}>Submit application</button>
-      <p style={S.note}>
-        Applications are reviewed by the Page Gallery Editions editorial team.
-        We aim to respond within eight weeks. All applications are read in full.
+        <strong>Application received.</strong> Thank you for applying to the Residency Programme. We aim to respond within eight weeks.
       </p>
     </div>
+  );
+  return (
+    <form style={S.form} onSubmit={handleSubmit}>
+      {error && <p style={{ color: '#9b2335', fontSize: '0.85rem', marginBottom: '1rem' }}>{error}</p>}
+      <p style={{ ...S.body, backgroundColor: '#f2ede8', padding: '1rem 1.25rem', borderLeft: '3px solid #c5bdb4' }}>The 2025-26 Residency Programme is now open for applications. Two to three journals will be selected. Selection is based solely on quality. There is no application fee.</p>
+      <div style={S.fieldGroup}><label style={S.fieldLabel}>Journal name</label><input style={S.input} name="name" type="text" placeholder="Journal name" value={form.name} onChange={handle} required /></div>
+      <div style={S.fieldGroup}><label style={S.fieldLabel}>Contact name</label><input style={S.input} name="contact_name" type="text" placeholder="Editor or contact name" value={form.contact_name} onChange={handle} required /></div>
+      <div style={S.fieldGroup}><label style={S.fieldLabel}>Contact email</label><input style={S.input} name="contact_email" type="email" placeholder="hello@example.com" value={form.contact_email} onChange={handle} required /></div>
+      <div style={S.fieldGroup}><label style={S.fieldLabel}>Link to a recent issue</label><p style={S.fieldNote}>Digital or physical. A PDF is fine.</p><input style={S.input} name="bio" type="url" placeholder="https://" value={form.bio} onChange={handle} /></div>
+      <div style={S.fieldGroup}><label style={S.fieldLabel}>Mission statement</label><p style={S.fieldNote}>What is your journal for? What does it believe about writing?</p><textarea style={S.textarea} name="project" placeholder="" value={form.project} onChange={handle} required /></div>
+      <div style={S.fieldGroup}><label style={S.fieldLabel}>Why now?</label><p style={S.fieldNote}>What is your journal trying to do that it does not yet have the infrastructure for?</p><textarea style={{ ...S.textarea, minHeight: '160px' }} name="statement" placeholder="" value={form.statement} onChange={handle} required /></div>
+      <button style={S.submit} type="submit" disabled={loading}>{loading ? 'Submitting...' : 'Submit application'}</button>
+      <p style={S.note}>Applications are reviewed by the Page Gallery Editions editorial team. We aim to respond within eight weeks. All applications are read in full.</p>
+    </form>
   );
 }
 
 function TilthForm() {
-  return (
+  const [form, setForm] = useState({ name: '', email: '', genre: '', dates: '', context: '', sample: '', why_tilth: '' });
+  const [submitted, setSubmitted] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+  const handle = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
+    setForm(f => ({ ...f, [e.target.name]: e.target.value }));
+  async function handleSubmit(ev: React.FormEvent) {
+    ev.preventDefault(); setLoading(true); setError('');
+    const { error: err } = await supabase.from('tilth_submissions').insert({
+      name: form.name, email: form.email, bio: form.context, genre: form.genre, sample: form.sample, why_tilth: form.why_tilth, dates: form.dates, status: 'pending',
+    });
+    setLoading(false);
+    if (err) { setError(err.message); return; }
+    setSubmitted(true);
+  }
+  if (submitted) return (
     <div style={S.form}>
       <p style={{ ...S.body, backgroundColor: '#f2ede8', padding: '1rem 1.25rem', borderLeft: '3px solid #c5bdb4' }}>
-        Tilth publishes when the work demands it. We do not maintain a reading queue.
-        We accept unsolicited submissions and review them when we can.
-        All work must be previously unpublished.
-      </p>
-      <div style={S.fieldGroup}>
-        <label style={S.fieldLabel}>Name</label>
-        <input style={S.input} type="text" placeholder="Your name" />
-      </div>
-      <div style={S.fieldGroup}>
-        <label style={S.fieldLabel}>Email</label>
-        <input style={S.input} type="email" placeholder="hello@example.com" />
-      </div>
-      <div style={S.fieldGroup}>
-        <label style={S.fieldLabel}>Title of the work</label>
-        <input style={S.input} type="text" placeholder="" />
-      </div>
-      <div style={S.fieldGroup}>
-        <label style={S.fieldLabel}>When was the work written?</label>
-        <p style={S.fieldNote}>Start date and finish date. All Tilth submissions must include dates.</p>
-        <input style={S.input} type="text" placeholder="e.g. October 2024 – February 2025" />
-      </div>
-      <div style={S.fieldGroup}>
-        <label style={S.fieldLabel}>Context account (half a page)</label>
-        <p style={S.fieldNote}>
-          What were you doing as you wrote this? What led you to write it?
-          What was happening around you? This is a co-equal text, not a cover letter.
-        </p>
-        <textarea style={{ ...S.textarea, minHeight: '200px' }} placeholder="" />
-      </div>
-      <div style={S.fieldGroup}>
-        <label style={S.fieldLabel}>The work</label>
-        <p style={S.fieldNote}>Paste the full text below, or include a link to a PDF.</p>
-        <textarea style={{ ...S.textarea, minHeight: '300px' }} placeholder="" />
-      </div>
-      <button style={S.submit}>Submit to Tilth</button>
-      <p style={S.note}>
-        We read everything. We respond to everything, though response times vary.
-        We pay contributors at rates informed by ALCS and established journal standards.
+        <strong>Submission received.</strong> We read everything. We respond to everything, though response times vary.
       </p>
     </div>
+  );
+  return (
+    <form style={S.form} onSubmit={handleSubmit}>
+      {error && <p style={{ color: '#9b2335', fontSize: '0.85rem', marginBottom: '1rem' }}>{error}</p>}
+      <p style={{ ...S.body, backgroundColor: '#f2ede8', padding: '1rem 1.25rem', borderLeft: '3px solid #c5bdb4' }}>Tilth publishes when the work demands it. We do not maintain a reading queue. We accept unsolicited submissions. All work must be previously unpublished.</p>
+      <div style={S.fieldGroup}><label style={S.fieldLabel}>Name</label><input style={S.input} name="name" type="text" placeholder="Your name" value={form.name} onChange={handle} required /></div>
+      <div style={S.fieldGroup}><label style={S.fieldLabel}>Email</label><input style={S.input} name="email" type="email" placeholder="hello@example.com" value={form.email} onChange={handle} required /></div>
+      <div style={S.fieldGroup}><label style={S.fieldLabel}>Title of the work</label><input style={S.input} name="genre" type="text" placeholder="" value={form.genre} onChange={handle} required /></div>
+      <div style={S.fieldGroup}><label style={S.fieldLabel}>When was the work written?</label><p style={S.fieldNote}>Start date and finish date. All Tilth submissions must include dates.</p><input style={S.input} name="dates" type="text" placeholder="e.g. October 2024 - February 2025" value={form.dates} onChange={handle} /></div>
+      <div style={S.fieldGroup}><label style={S.fieldLabel}>Context account (half a page)</label><p style={S.fieldNote}>What were you doing as you wrote this? What were the circumstances? This is a co-equal text, not a cover letter.</p><textarea style={{ ...S.textarea, minHeight: '200px' }} name="context" placeholder="" value={form.context} onChange={handle} required /></div>
+      <div style={S.fieldGroup}><label style={S.fieldLabel}>The work</label><p style={S.fieldNote}>Paste the full text below, or include a link to a PDF.</p><textarea style={{ ...S.textarea, minHeight: '300px' }} name="sample" placeholder="" value={form.sample} onChange={handle} required /></div>
+      <button style={S.submit} type="submit" disabled={loading}>{loading ? 'Submitting...' : 'Submit to Tilth'}</button>
+      <p style={S.note}>We read everything. We respond to everything, though response times vary. We pay contributors at rates informed by ALCS and established journal standards.</p>
+    </form>
   );
 }
 

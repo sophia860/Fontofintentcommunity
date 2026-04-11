@@ -13,13 +13,14 @@ const MOCK_EDITIONS = [
     id: '1',
     title: 'All the Ordinary Hours',
     author: 'Céline Marti',
-    authorLocation: 'Marseille / London',
+    authorLocation: 'Marseille',
     illustrator: 'Rosa Schäfer',
     dateWrittenStart: 'October 2024',
     dateWrittenEnd: 'February 2025',
     published: 'April 2026',
     status: 'available',
-    description: 'Poems written across the autumn and winter of 2024, in the weeks following a bereavement and during the coverage of a large-scale humanitarian crisis. The context layer documents what the news cycle looked like from a flat in Peckham.',
+    description:
+      'Poems written across the autumn and winter of 2024, in the weeks following a bereavement and during the coverage of a large-scale humanitarian crisis. The context layer documents what the news cycle looked like from the room where the poems were written.',
     pages: 32,
     printRun: 300,
     priceChapbook: 16,
@@ -101,17 +102,17 @@ export function Editions() {
       <Nav />
 
       <div style={S.hero}>
-        <p style={S.label}>Page Gallery Editions — Tilth</p>
+        <p style={S.label}>Page Gallery — Tilth</p>
         <h1 style={S.h1}>Tilth</h1>
         <p style={S.heroBody}>
           Fully illustrated chapbooks, published when a piece of writing demands
-          to exist as a physical object under this imprint. There is no schedule.
-          There is no list. There is only the rare, deliberate act of publishing
-          something that the institution cannot not publish.
+          to exist as a physical object. There is no schedule. There is no list.
+          There is only the rare, deliberate act of publishing something
+          the institution cannot not publish.
         </p>
         <p style={S.heroBody}>
-          To be a Tilth edition is a serious credential.
-          The bar is the institution’s only editorial statement.
+          To hold a Tilth edition is to hold a serious credential.
+          The bar is the institution's only editorial statement.
         </p>
       </div>
 
@@ -139,7 +140,7 @@ export function Editions() {
               {/* Main */}
               <div style={S.editionMain}>
                 <h2 style={S.editionTitle}>{e.title}</h2>
-                <p style={S.editionAuthor}>{e.author} — {e.authorLocation}</p>
+                <p style={S.editionAuthor}>{e.author}{e.authorLocation ? ` — ${e.authorLocation}` : ''}</p>
                 <p style={S.editionMeta}>
                   Written {e.dateWrittenStart}–{e.dateWrittenEnd}
                   {e.illustrator && ` · Illustrated by ${e.illustrator}`}
@@ -194,12 +195,14 @@ export function Editions() {
           <p style={S.aboutLabel}>How Tilth Works</p>
           <p style={S.aboutBody}>
             Each Tilth edition is a fully illustrated chapbook produced with a commissioned
-            illustrator who responds to both the writing and the documented context of its making.
-            The illustration is not decorative. It is a response to a specific human moment.
+            illustrator who responds to the writing and the documented context of its making.
+            The illustration is not decoration. It is a response to a specific human moment
+            — the weather of thought in which a piece was written.
           </p>
           <p style={S.aboutBody}>
             The original artwork is sold separately at three tiers.
-            Across the series, the originals accumulate into an exhibition-ready archive.
+            Across the series, the originals accumulate into an exhibition-ready archive
+            of how writing actually happens: slowly, in private, under conditions no poem ever admits to.
           </p>
           <div style={S.tiers}>
             {[

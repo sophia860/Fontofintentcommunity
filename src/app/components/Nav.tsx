@@ -4,19 +4,18 @@
  * No hamburger menus. The identity is in the restraint.
  */
 import { Link, useLocation } from 'react-router';
-import { useAuth } from '../lib/useAuth';
+import { useGardenAuth } from '../lib/useGardenAuth';
 
 const NAV_LINKS = [
   { href: '/writers',   label: 'Writers'   },
   { href: '/journals',  label: 'Journals'  },
   { href: '/residency', label: 'Residency' },
-  { href: '/editions',  label: 'Editions'  },
   { href: '/about',     label: 'About'     },
 ];
 
 export function Nav() {
   const { pathname } = useLocation();
-  const { user, loading, signOut } = useAuth();
+  const { isAuthenticated, signOut } = useGardenAuth();
 
   return (
     <header
@@ -72,74 +71,88 @@ export function Nav() {
           );
         })}
 
-        {/* Auth / dashboard */}
-        {!loading && (
-          user ? (
-            <>
+        {/* Auth state */}
+        {isAuthenticated ? (
+          <>
+            {user.email === ADMIN_EMAIL && (
               <Link
-                to="/dashboard/writer"
+                to="/admin"
                 style={{
                   fontFamily: 'Georgia, serif',
                   fontSize: '0.85rem',
                   letterSpacing: '0.04em',
-                  color: pathname.startsWith('/dashboard') ? '#1a1714' : '#7a7067',
+                  color: '#9b2335',
                   textDecoration: 'none',
-                  borderBottom: pathname.startsWith('/dashboard') ? '1px solid #1a1714' : '1px solid transparent',
+                  borderBottom: pathname.startsWith('/admin') ? '1px solid #9b2335' : '1px solid transparent',
                   paddingBottom: '2px',
+                  opacity: 0.85,
                 }}
               >
-                Dashboard
+                Admin
               </Link>
-              <button
-                onClick={signOut}
-                style={{
-                  fontFamily: 'Georgia, serif',
-                  fontSize: '0.85rem',
-                  letterSpacing: '0.04em',
-                  color: '#7a7067',
-                  background: 'none',
-                  border: 'none',
-                  cursor: 'pointer',
-                  padding: 0,
-                }}
-              >
-                Sign out
-              </button>
-            </>
-          ) : (
+            )}
             <Link
               to="/dashboard/writer"
               style={{
                 fontFamily: 'Georgia, serif',
                 fontSize: '0.85rem',
                 letterSpacing: '0.04em',
-                color: '#faf8f5',
-                backgroundColor: '#1a1714',
-                padding: '0.3rem 0.9rem',
+                color: '#7a7067',
                 textDecoration: 'none',
+                borderBottom: pathname.startsWith('/dashboard') ? '1px solid #1a1714' : '1px solid transparent',
+                paddingBottom: '2px',
               }}
             >
-              Sign in
+              Garden
             </Link>
-          )
-        )}
-
-        {/* Apply CTA — only shown when not signed in, to avoid overcrowding */}
-        {!loading && !user && (
+            <button
+              onClick={signOut}
+              style={{
+                background: 'none',
+                border: 'none',
+                padding: 0,
+                fontFamily: 'Georgia, serif',
+                fontSize: '0.85rem',
+                letterSpacing: '0.04em',
+                color: '#7a7067',
+                cursor: 'pointer',
+              }}
+            >
+              Sign out
+            </button>
+          </>
+        ) : (
           <Link
-            to="/apply"
+            to="/auth"
             style={{
               fontFamily: 'Georgia, serif',
               fontSize: '0.85rem',
               letterSpacing: '0.04em',
               color: '#7a7067',
               textDecoration: 'none',
-              borderBottom: '1px solid #c5bdb4',
+              borderBottom: '1px solid transparent',
+              paddingBottom: '2px',
             }}
           >
-            Apply
+            Sign in
           </Link>
         )}
+
+        {/* Apply CTA */}
+        <Link
+          to="/apply"
+          style={{
+            fontFamily: 'Georgia, serif',
+            fontSize: '0.85rem',
+            letterSpacing: '0.04em',
+            color: '#faf8f5',
+            backgroundColor: '#1a1714',
+            padding: '0.3rem 0.9rem',
+            textDecoration: 'none',
+          }}
+        >
+          Apply
+        </Link>
       </nav>
     </header>
   );

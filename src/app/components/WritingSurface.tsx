@@ -9,9 +9,12 @@
  * at consistent rhythm — and each burst is styled uniformly.
  * This produces readable emotional variation without the "ransom note"
  * effect of per-character styling.
+ *
+ * At /write: blank new piece.
+ * At /piece/:id: loads existing piece body; doFinish() updates it.
  */
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { useLocation, useNavigate } from 'react-router';
+import { useLocation, useNavigate, useParams } from 'react-router';
 import type { Burst, Session, TypingEvent } from '../lib/types';
 import {
   createSignalState,
@@ -26,6 +29,7 @@ import {
   type BurstBuilderState,
 } from '../lib/burstDetector';
 import { BurstRenderer } from './BurstRenderer';
+import { supabase } from '../lib/supabase';
 
 /** State passed back from PreviewScreen when user chooses "Keep Writing" */
 export interface WritingSurfaceResumeState {
@@ -61,6 +65,7 @@ function getIsMobile(): boolean {
 export function WritingSurface() {
   const navigate = useNavigate();
   const location = useLocation();
+  const { id: pieceId } = useParams<{ id: string }>();
 
   const resumeState = location.state?.resume as WritingSurfaceResumeState | undefined;
 
@@ -70,6 +75,12 @@ export function WritingSurface() {
   const [isMobile, setIsMobile] = useState(false);
   const [theme, setTheme] = useState<FoiTheme>(getStoredTheme);
   const [firstCharAnim, setFirstCharAnim] = useState(false);
+  const [saving, setSaving] = useState(false);
+  const [pieceTitle, setPieceTitle] = useState('Untitled');
+  const [tags, setTags] = useState<string[]>([]);
+  const [tagInput, setTagInput] = useState('');
+  const [showTagInput, setShowTagInput] = useState(false);
+  const [loadError, setLoadError] = useState('');
 
   const signalStateRef = useRef<SignalState>(resumeState?.signalState ?? createSignalState());
   const sessionStartRef = useRef<number>(resumeState?.sessionStart ?? 0);
@@ -82,9 +93,41 @@ export function WritingSurface() {
 
   const isDark = theme === 'dark';
 
+  // Load existing piece when editing /piece/:id
+  useEffect(() => {
+    if (!pieceId || resumeState) return;
+    async function loadPiece() {
+      const { data, error } = await supabase
+        .from('writings')
+        .select('title, body, tags, state')
+        .eq('id', pieceId)
+        .single();
+      if (error || !data) {
+        setLoadError('Piece not found.');
+        return;
+      }
+      setTags((data as { tags?: string[] }).tags ?? []);
+      setPieceTitle((data as { title?: string }).title || 'Untitled');
+      // Populate text buffer and bursts from existing body
+      if ((data as { body?: string }).body) {
+        sessionStartRef.current = performance.now();
+        const body = (data as { body: string }).body;
+        for (const ch of body) {
+          const now = performance.now();
+          const signal = processKeystroke(signalStateRef.current, now, false);
+          textBufferRef.current.push(ch);
+          addCharToBursts(burstBuilderRef.current, ch, signal.iki, signal.confidence, signal.hesitation, signal.pause);
+        }
+        setBursts(getAllBursts(burstBuilderRef.current));
+        setEvents([]);
+      }
+    }
+    loadPiece();
+  }, [pieceId, resumeState]);
+
   useEffect(() => {
     inputRef.current?.focus();
-    if (!resumeState) {
+    if (!resumeState && !pieceId) {
       sessionStartRef.current = performance.now();
     }
     document.title = 'Font of Intent';
@@ -153,11 +196,9 @@ export function WritingSurface() {
   /** Delete word backward (iOS swipe-delete) */
   const deleteWordBackward = useCallback(() => {
     if (textBufferRef.current.length === 0) return;
-    // Delete trailing spaces first
     while (textBufferRef.current.length > 0 && textBufferRef.current[textBufferRef.current.length - 1] === ' ') {
       deleteChar();
     }
-    // Delete until next space or start
     while (textBufferRef.current.length > 0 && textBufferRef.current[textBufferRef.current.length - 1] !== ' ') {
       deleteChar();
     }
@@ -182,7 +223,6 @@ export function WritingSurface() {
     [insertChar, deleteChar]
   );
 
-  /** Handle beforeinput for mobile — catches soft-keyboard events */
   const handleBeforeInput = useCallback(
     (e: React.FormEvent<HTMLTextAreaElement>) => {
       const ie = e.nativeEvent as InputEvent;
@@ -209,78 +249,110 @@ export function WritingSurface() {
     eventsRef.current = events;
   }, [events]);
 
-  const doFinish = useCallback(() => {
+  const doFinish = useCallback(async () => {
+    const finalText = textBufferRef.current.join('');
+    const wordCount = finalText.trim().split(/\s+/).filter(Boolean).length;
+
+    const session: Session = {
+      startedAt: sessionStartRef.current,
+      events: eventsRef.current,
+      finalText,
+    };
+
+    const currentBursts = getAllBursts(burstBuilderRef.current);
+    const copiedBursts = currentBursts.map((b) => ({
+      ...b,
+      chars: [...b.chars],
+      ikis: [...b.ikis],
+    }));
+
+    const bbs = burstBuilderRef.current;
+    const copiedBuilderState: BurstBuilderState = {
+      bursts: bbs.bursts.map((b) => ({
+        ...b,
+        chars: [...b.chars],
+        ikis: [...b.ikis],
+      })),
+      currentBurst: bbs.currentBurst
+        ? {
+            ...bbs.currentBurst,
+            chars: [...bbs.currentBurst.chars],
+            ikis: [...bbs.currentBurst.ikis],
+          }
+        : null,
+    };
+
+    const resume: WritingSurfaceResumeState = {
+      bursts: copiedBursts,
+      burstBuilderState: copiedBuilderState,
+      events: [...eventsRef.current],
+      textBuffer: [...textBufferRef.current],
+      signalState: {
+        ...signalStateRef.current,
+        recentIKIs: [...signalStateRef.current.recentIKIs],
+      },
+      sessionStart: sessionStartRef.current,
+    };
+
+    setSaving(true);
     try {
-      const session: Session = {
-        startedAt: sessionStartRef.current,
-        events: eventsRef.current,
-        finalText: textBufferRef.current.join(''),
-      };
+      const { data: { user } } = await supabase.auth.getUser();
 
-      const currentBursts = getAllBursts(burstBuilderRef.current);
-      const copiedBursts = currentBursts.map((b) => ({
-        ...b,
-        chars: [...b.chars],
-        ikis: [...b.ikis],
-      }));
+      if (user) {
+        if (pieceId) {
+          await supabase
+            .from('writings')
+            .update({
+              body: finalText,
+              word_count: wordCount,
+              tags,
+              updated_at: new Date().toISOString(),
+            })
+            .eq('id', pieceId)
+            .eq('author_id', user.id);
 
-      const bbs = burstBuilderRef.current;
-      const copiedBuilderState: BurstBuilderState = {
-        bursts: bbs.bursts.map((b) => ({
-          ...b,
-          chars: [...b.chars],
-          ikis: [...b.ikis],
-        })),
-        currentBurst: bbs.currentBurst
-          ? {
-              ...bbs.currentBurst,
-              chars: [...bbs.currentBurst.chars],
-              ikis: [...bbs.currentBurst.ikis],
-            }
-          : null,
-      };
+          setSaving(false);
+          navigate('/preview', { state: { session, resumeState: resume, theme, pieceId, savedToGarden: true } });
+          return;
+        } else {
+          const { data: newPiece } = await supabase
+            .from('writings')
+            .insert({
+              title: pieceTitle || 'Untitled',
+              body: finalText,
+              state: 'seed',
+              author_id: user.id,
+              word_count: wordCount,
+              tags,
+              in_bloom_pool: false,
+            })
+            .select('id')
+            .single();
 
-      const resume: WritingSurfaceResumeState = {
-        bursts: copiedBursts,
-        burstBuilderState: copiedBuilderState,
-        events: [...eventsRef.current],
-        textBuffer: [...textBufferRef.current],
-        signalState: {
-          ...signalStateRef.current,
-          recentIKIs: [...signalStateRef.current.recentIKIs],
-        },
-        sessionStart: sessionStartRef.current,
-      };
-
-      navigate('/preview', { state: { session, resumeState: resume, theme } });
+          setSaving(false);
+          navigate('/preview', { state: { session, resumeState: resume, theme, pieceId: newPiece?.id, savedToGarden: true } });
+          return;
+        }
+      }
     } catch (err) {
-      console.error('doFinish error, navigating with minimal state:', err);
-      const fallbackSession: Session = {
-        startedAt: sessionStartRef.current,
-        events: eventsRef.current,
-        finalText: textBufferRef.current.join(''),
-      };
-      const fallbackBursts = getAllBursts(burstBuilderRef.current).map((b) => ({
-        ...b,
-        chars: [...b.chars],
-        ikis: [...b.ikis],
-      }));
-      navigate('/preview', {
-        state: {
-          session: fallbackSession,
-          resumeState: {
-            bursts: fallbackBursts,
-            burstBuilderState: createBurstBuilderState(),
-            events: eventsRef.current,
-            textBuffer: [...textBufferRef.current],
-            signalState: createSignalState(),
-            sessionStart: sessionStartRef.current,
-          },
-          theme,
-        },
-      });
+      console.error('Save error:', err);
     }
-  }, [navigate, theme]);
+
+    setSaving(false);
+    navigate('/preview', { state: { session, resumeState: resume, theme, savedToGarden: false } });
+  }, [navigate, theme, pieceId, pieceTitle, tags]);
+
+  function addTag() {
+    const trimmed = tagInput.trim().toLowerCase().replace(/[^a-z0-9\s-]/g, '');
+    if (trimmed && !tags.includes(trimmed)) {
+      setTags(prev => [...prev, trimmed]);
+    }
+    setTagInput('');
+  }
+
+  function removeTag(tag: string) {
+    setTags(prev => prev.filter(t => t !== tag));
+  }
 
   const hasContent = bursts.length > 0;
 
@@ -297,6 +369,23 @@ export function WritingSurface() {
   const finishUnderlineHover = isDark ? '#F0E8DE' : '#2C2824';
   const dotColor = isDark ? '#5C5347' : '#C4B5A6';
   const doneBorderColor = isDark ? '#8B7E74' : '#8B7E74';
+  const tagBg = isDark ? '#2A2520' : '#FFFDF8';
+  const tagBorder = isDark ? '#5C5347' : '#C4B5A6';
+  const tagText = isDark ? '#A89B8E' : '#7a7067';
+
+  if (loadError) {
+    return (
+      <div className="min-h-screen flex flex-col justify-center items-center" style={{ background: bg }}>
+        <p style={{ fontFamily: 'Georgia, serif', color: hintColor, marginBottom: '1rem' }}>{loadError}</p>
+        <button
+          onClick={() => navigate('/')}
+          style={{ background: 'none', border: 'none', cursor: 'pointer', fontFamily: 'Georgia, serif', color: finishColor, fontSize: '0.9rem' }}
+        >
+          Back to Garden
+        </button>
+      </div>
+    );
+  }
 
   return (
     <div
@@ -308,7 +397,7 @@ export function WritingSurface() {
       <div className="relative z-10 flex items-center justify-between px-4 py-4 sm:px-6 sm:py-5 md:px-10 md:py-6">
         {/* Back — top-left */}
         <button
-          onClick={(e) => { e.stopPropagation(); navigate('/'); }}
+          onClick={(e) => { e.stopPropagation(); navigate(-1); }}
           className="cursor-pointer"
           style={{
             background: 'none',
@@ -333,7 +422,7 @@ export function WritingSurface() {
           back
         </button>
 
-        {/* Right side — toggle · finish (desktop) */}
+        {/* Right side — toggle · tags · finish (desktop) */}
         {!isMobile && (
           <div className="flex items-center">
             <button
@@ -360,7 +449,25 @@ export function WritingSurface() {
               <>
                 <span className="mx-3" style={{ fontSize: '0.65rem', color: dotColor }}>{'\u00b7'}</span>
                 <button
+                  onClick={(e) => { e.stopPropagation(); setShowTagInput(v => !v); }}
+                  className="cursor-pointer"
+                  style={{
+                    background: 'none',
+                    border: 'none',
+                    padding: 0,
+                    color: showTagInput ? finishColor : toggleColor,
+                    fontFamily: "'Inter', sans-serif",
+                    fontVariationSettings: "'wght' 400",
+                    fontSize: '0.7rem',
+                    letterSpacing: '0.1em',
+                  }}
+                >
+                  tags{tags.length > 0 ? ` (${tags.length})` : ''}
+                </button>
+                <span className="mx-3" style={{ fontSize: '0.65rem', color: dotColor }}>{'\u00b7'}</span>
+                <button
                   onClick={(e) => { e.stopPropagation(); doFinish(); }}
+                  disabled={saving}
                   className="cursor-pointer"
                   style={{
                     background: 'none',
@@ -371,6 +478,7 @@ export function WritingSurface() {
                     fontStyle: 'italic',
                     fontWeight: 400,
                     fontSize: '0.85rem',
+                    opacity: saving ? 0.6 : 1,
                   }}
                 >
                   <span
@@ -382,7 +490,7 @@ export function WritingSurface() {
                     onMouseEnter={(e) => { (e.target as HTMLElement).style.borderBottomColor = finishUnderlineHover; }}
                     onMouseLeave={(e) => { (e.target as HTMLElement).style.borderBottomColor = finishUnderline; }}
                   >
-                    Finish Letter {'\u2192'}
+                    {saving ? 'Saving\u2026' : (pieceId ? 'Save' : 'Add to the Garden')} {saving ? '' : '\u2192'}
                   </span>
                 </button>
               </>
@@ -414,7 +522,64 @@ export function WritingSurface() {
         )}
       </div>
 
-      {/* Mobile: Finish Letter bar — full-width, always visible when content exists */}
+      {/* Tag input panel */}
+      {showTagInput && (
+        <div
+          className="relative z-10"
+          style={{
+            padding: '0.75rem max(1rem, 2.5rem)',
+            borderBottom: `1px solid ${tagBorder}`,
+            backgroundColor: tagBg,
+          }}
+          onClick={e => e.stopPropagation()}
+        >
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flexWrap: 'wrap' }}>
+            {tags.map(tag => (
+              <span
+                key={tag}
+                style={{
+                  fontSize: '0.72rem',
+                  letterSpacing: '0.06em',
+                  color: tagText,
+                  border: `1px solid ${tagBorder}`,
+                  padding: '0.15rem 0.5rem',
+                  borderRadius: '2px',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '0.3rem',
+                }}
+              >
+                {tag}
+                <button
+                  onClick={() => removeTag(tag)}
+                  style={{ background: 'none', border: 'none', cursor: 'pointer', padding: '0 0 0 2px', color: tagText, fontSize: '0.75rem', lineHeight: 1 }}
+                >
+                  ×
+                </button>
+              </span>
+            ))}
+            <input
+              value={tagInput}
+              onChange={e => setTagInput(e.target.value)}
+              onKeyDown={e => {
+                if (e.key === 'Enter' || e.key === ',') { e.preventDefault(); addTag(); }
+              }}
+              placeholder="Add tag…"
+              style={{
+                background: 'none',
+                border: 'none',
+                outline: 'none',
+                fontFamily: "'Inter', sans-serif",
+                fontSize: '0.78rem',
+                color: finishColor,
+                width: '120px',
+              }}
+            />
+          </div>
+        </div>
+      )}
+
+      {/* Mobile: Add to the Garden bar */}
       {isMobile && hasContent && (
         <div
           className="relative z-10"
@@ -425,6 +590,7 @@ export function WritingSurface() {
         >
           <button
             onClick={(e) => { e.stopPropagation(); doFinish(); }}
+            disabled={saving}
             className="cursor-pointer w-full"
             style={{
               background: 'none',
@@ -439,6 +605,7 @@ export function WritingSurface() {
               minHeight: '44px',
               display: 'block',
               transition: 'color 0.2s',
+              opacity: saving ? 0.6 : 1,
             }}
           >
             <span
@@ -447,7 +614,7 @@ export function WritingSurface() {
                 borderBottom: `1px solid ${finishUnderline}`,
               }}
             >
-              Finish Letter {'\u2192'}
+              {saving ? 'Saving\u2026' : (pieceId ? 'Save' : 'Add to the Garden')} {saving ? '' : '\u2192'}
             </span>
           </button>
         </div>
@@ -523,16 +690,16 @@ export function WritingSurface() {
           autoCapitalize="off"
           autoComplete="off"
           spellCheck={false}
-          aria-label="Type your letter here"
+          aria-label="Write a piece for the Garden"
         />
       </div>
 
       {/* Bottom bar */}
       <div className="relative z-10 flex items-end justify-center px-4 pb-4 sm:px-6 sm:pb-6 md:px-10 md:pb-8">
         {isMobile ? (
-          /* Mobile: "Done" button instead of keyboard shortcut hint */
           <button
             onClick={(e) => { e.stopPropagation(); doFinish(); }}
+            disabled={saving}
             className="cursor-pointer"
             style={{
               background: 'none',
@@ -545,12 +712,12 @@ export function WritingSurface() {
               color: finishColor,
               minHeight: '44px',
               transition: 'border-color 0.3s ease, color 0.3s ease',
+              opacity: saving ? 0.6 : 1,
             }}
           >
-            Done
+            {saving ? 'Saving\u2026' : 'Done'}
           </button>
         ) : (
-          /* Desktop: keyboard shortcut hint */
           <p
             style={{
               fontFamily: "'Inter', sans-serif",
@@ -561,7 +728,7 @@ export function WritingSurface() {
               transition: 'color 0.3s ease',
             }}
           >
-            {isMac ? '\u2318' : 'Ctrl'}+Enter to finish
+            {isMac ? '\u2318' : 'Ctrl'}+Enter to add to the Garden
           </p>
         )}
       </div>

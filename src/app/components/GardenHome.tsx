@@ -3,7 +3,7 @@
  *
  * The Garden is not trying to publish you.
  * It is the place where writing lives before it becomes anything else.
- * Tilth is what the Garden occasionally produces as a verdict.
+ * Chapbooks are what the Garden occasionally produces as a verdict.
  */
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router';
@@ -26,6 +26,36 @@ type Journal = {
   status: string;
 };
 
+// Writers Board: a piece of writing growing in the Garden
+type GardenPiece = {
+  id: string;
+  title: string;
+  excerpt: string;
+  state: 'seed' | 'sprout' | 'bloom';
+  tags: string[];
+  wordCount: number;
+  lastVisited: string; // ISO date string
+  pattern?: string;   // surfaced insight
+  scouted?: boolean;  // flagged by a journal editor
+};
+
+// State label copy
+const STATE_LABEL: Record<GardenPiece['state'], string> = {
+  seed: 'Seed',
+  sprout: 'Sprout',
+  bloom: 'Bloom',
+};
+
+// Dot color per state
+const STATE_COLOR: Record<GardenPiece['state'], string> = {
+  seed: '#C4B5A6',
+  sprout: '#8BA67A',
+  bloom: '#6B8E6B',
+};
+
+// Filter types for the Writers Board
+type BoardFilter = 'all' | 'seed' | 'sprout' | 'bloom' | 'scouted';
+
 const S: Record<string, React.CSSProperties> = {
   page: {
     minHeight: '100vh',
@@ -35,7 +65,19 @@ const S: Record<string, React.CSSProperties> = {
   },
   hero: {
     padding: '6rem 3rem 5rem',
-    maxWidth: '680px',
+    maxWidth: '960px',
+    display: 'grid',
+    gridTemplateColumns: '1fr auto',
+    gap: '4rem',
+    alignItems: 'start',
+  },
+  heroText: {
+    maxWidth: '520px',
+  },
+  heroDrawing: {
+    width: '260px',
+    flexShrink: 0,
+    opacity: 0.9,
   },
   heroEpigraph: {
     fontSize: '0.8rem',
@@ -179,7 +221,303 @@ const S: Record<string, React.CSSProperties> = {
     fontSize: '0.8rem',
     color: '#7a7067',
   },
+  // Writers Board styles
+  boardHeader: {
+    display: 'flex',
+    alignItems: 'baseline',
+    justifyContent: 'space-between',
+    marginBottom: '1.75rem',
+    flexWrap: 'wrap' as const,
+    gap: '1rem',
+  },
+  boardFilters: {
+    display: 'flex',
+    gap: '1rem',
+    alignItems: 'baseline',
+  },
+  filterBtn: {
+    background: 'none',
+    border: 'none',
+    padding: '0',
+    fontSize: '0.75rem',
+    letterSpacing: '0.07em',
+    textTransform: 'uppercase' as const,
+    cursor: 'pointer',
+    transition: 'color 0.15s',
+  },
+  pieceRow: {
+    borderTop: '1px solid #e8e4df',
+    padding: '1.5rem 0',
+    display: 'grid',
+    gridTemplateColumns: '1fr auto',
+    gap: '1.5rem',
+    alignItems: 'start',
+  },
+  pieceTitle: {
+    fontSize: '0.98rem',
+    fontWeight: 400,
+    color: '#1a1714',
+    marginBottom: '0.3rem',
+    fontFamily: 'Georgia, serif',
+    fontStyle: 'italic',
+  },
+  pieceExcerpt: {
+    fontSize: '0.85rem',
+    color: '#7a7067',
+    lineHeight: 1.55,
+    marginBottom: '0.6rem',
+    maxWidth: '52ch',
+  },
+  piecePattern: {
+    fontSize: '0.78rem',
+    color: '#9c8f83',
+    lineHeight: 1.5,
+    marginBottom: '0.6rem',
+    fontStyle: 'italic',
+  },
+  pieceMeta: {
+    display: 'flex',
+    gap: '1rem',
+    alignItems: 'center',
+    flexWrap: 'wrap' as const,
+  },
+  pieceWords: {
+    fontSize: '0.75rem',
+    color: '#a09486',
+    letterSpacing: '0.04em',
+  },
+  pieceDate: {
+    fontSize: '0.75rem',
+    color: '#a09486',
+  },
+  tagPill: {
+    fontSize: '0.7rem',
+    letterSpacing: '0.06em',
+    color: '#7a7067',
+    border: '1px solid #dcd9d5',
+    padding: '0.15rem 0.5rem',
+    borderRadius: '2px',
+    textTransform: 'lowercase' as const,
+  },
+  stateChip: {
+    fontSize: '0.68rem',
+    letterSpacing: '0.08em',
+    textTransform: 'uppercase' as const,
+    padding: '0.2rem 0.6rem',
+    border: '1px solid currentColor',
+  },
+  scoutedBadge: {
+    fontSize: '0.68rem',
+    letterSpacing: '0.08em',
+    textTransform: 'uppercase' as const,
+    padding: '0.2rem 0.6rem',
+    backgroundColor: '#1a1714',
+    color: '#faf8f5',
+  },
+  boardEmpty: {
+    padding: '3rem 0',
+    color: '#a09486',
+    fontSize: '0.9rem',
+    fontStyle: 'italic',
+  },
+  boardNewBtn: {
+    fontSize: '0.8rem',
+    letterSpacing: '0.06em',
+    textTransform: 'uppercase' as const,
+    color: '#faf8f5',
+    backgroundColor: '#1a1714',
+    padding: '0.5rem 1.2rem',
+    textDecoration: 'none',
+    display: 'inline-block',
+  },
 };
+
+function formatLastVisited(iso: string): string {
+  const d = new Date(iso);
+  const now = new Date();
+  const diffDays = Math.floor((now.getTime() - d.getTime()) / 86400000);
+  if (diffDays === 0) return 'today';
+  if (diffDays === 1) return 'yesterday';
+  if (diffDays < 7) return `${diffDays} days ago`;
+  if (diffDays < 30) return `${Math.floor(diffDays / 7)}w ago`;
+  return d.toLocaleDateString('en-GB', { month: 'short', year: 'numeric' });
+}
+
+function WritersBoard() {
+  const [filter, setFilter] = useState<BoardFilter>('all');
+  const [pieces, setPieces] = useState<GardenPiece[]>([]);
+  const [tagPatterns, setTagPatterns] = useState<{ tag: string; count: number }[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [userId, setUserId] = useState<string | null>(null);
+
+  useEffect(() => {
+    async function loadData() {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) { setLoading(false); return; }
+      setUserId(user.id);
+
+      const { data } = await supabase
+        .from('writings')
+        .select('id, title, body, state, tags, word_count, updated_at, scouted')
+        .eq('author_id', user.id)
+        .order('updated_at', { ascending: false });
+
+      if (data) {
+        const mapped: GardenPiece[] = (data as any[]).map(row => ({
+          id: row.id,
+          title: row.title || '',
+          excerpt: (row.body || '').slice(0, 120),
+          state: row.state ?? 'seed',
+          tags: row.tags ?? [],
+          wordCount: row.word_count ?? 0,
+          lastVisited: row.updated_at,
+          scouted: row.scouted ?? false,
+        }));
+        setPieces(mapped);
+
+        // Compute tag patterns
+        const freq: Record<string, number> = {};
+        for (const p of mapped) {
+          for (const t of p.tags) freq[t] = (freq[t] ?? 0) + 1;
+        }
+        const top = Object.entries(freq)
+          .sort((a, b) => b[1] - a[1])
+          .slice(0, 5)
+          .map(([tag, count]) => ({ tag, count }));
+        setTagPatterns(top);
+      }
+      setLoading(false);
+    }
+    loadData();
+  }, []);
+
+  const filtered = pieces.filter(p => {
+    if (filter === 'all') return true;
+    if (filter === 'scouted') return p.scouted;
+    return p.state === filter;
+  });
+
+  const filterLabel = (f: BoardFilter, label: string) => (
+    <button
+      key={f}
+      style={{
+        ...S.filterBtn,
+        color: filter === f ? '#1a1714' : '#a09486',
+        borderBottom: filter === f ? '1px solid #1a1714' : '1px solid transparent',
+      }}
+      onClick={() => setFilter(f)}
+    >
+      {label}
+    </button>
+  );
+
+  // Not signed in
+  if (!loading && !userId) {
+    return (
+      <div>
+        <div style={S.boardHeader}>
+          <p style={S.sectionLabel}>Your Garden</p>
+          <Link to="/write" style={S.boardNewBtn}>+ New piece</Link>
+        </div>
+        <p style={{ ...S.boardEmpty, fontStyle: 'normal' }}>
+          <Link to="/auth?returnTo=/" style={{ color: '#1a1714', borderBottom: '1px solid #c5bdb4' }}>Sign in</Link>
+          {' '}to see your Garden.
+        </p>
+      </div>
+    );
+  }
+
+  if (loading) {
+    return (
+      <div>
+        <div style={S.boardHeader}>
+          <p style={S.sectionLabel}>Your Garden</p>
+        </div>
+        <p style={S.boardEmpty}>Loading your Garden…</p>
+      </div>
+    );
+  }
+
+  return (
+    <div>
+      <div style={S.boardHeader}>
+        <p style={S.sectionLabel}>Your Garden</p>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem' }}>
+          <div style={S.boardFilters}>
+            {filterLabel('all', 'All')}
+            {filterLabel('seed', 'Seeds')}
+            {filterLabel('sprout', 'Sprouts')}
+            {filterLabel('bloom', 'Blooms')}
+            {filterLabel('scouted', 'Scouted')}
+          </div>
+          <Link to="/write" style={S.boardNewBtn}>+ New piece</Link>
+        </div>
+      </div>
+
+      {/* Pattern insights */}
+      {tagPatterns.length > 0 && (
+        <div style={{ marginBottom: '1.5rem', padding: '0.75rem 1rem', backgroundColor: '#f5f0eb', borderLeft: '3px solid #dcd9d5' }}>
+          <p style={{ fontSize: '0.72rem', letterSpacing: '0.08em', textTransform: 'uppercase', color: '#7a7067', marginBottom: '0.5rem' }}>
+            Your obsessions
+          </p>
+          <p style={{ fontSize: '0.83rem', color: '#3d3830', lineHeight: 1.5 }}>
+            {tagPatterns.map(({ tag, count }, i) => (
+              <span key={tag}>
+                <em>{tag}</em> ({count})
+                {i < tagPatterns.length - 1 ? ' · ' : ''}
+              </span>
+            ))}
+          </p>
+        </div>
+      )}
+
+      {filtered.length === 0 && (
+        <p style={S.boardEmpty}>
+          {filter === 'scouted'
+            ? 'No pieces have been scouted yet. Journals find what they need; it takes time.'
+            : pieces.length === 0
+              ? 'Nothing planted yet. Write your first piece.'
+              : 'Nothing here yet.'}
+        </p>
+      )}
+
+      {filtered.map(piece => (
+        <div key={piece.id} style={S.pieceRow}>
+          <div>
+            <Link to={`/piece/${piece.id}`} style={{ textDecoration: 'none' }}>
+              <p style={S.pieceTitle}>{piece.title || <em style={{ color: '#a09486' }}>untitled</em>}</p>
+            </Link>
+            {piece.excerpt && <p style={S.pieceExcerpt}>{piece.excerpt}</p>}
+            {piece.pattern && (
+              <p style={S.piecePattern}>↳ {piece.pattern}</p>
+            )}
+            <div style={S.pieceMeta}>
+              {piece.tags.map(tag => (
+                <span key={tag} style={S.tagPill}>{tag}</span>
+              ))}
+              <span style={S.pieceWords}>{piece.wordCount.toLocaleString()} words</span>
+              <span style={S.pieceDate}>{formatLastVisited(piece.lastVisited)}</span>
+            </div>
+          </div>
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '0.5rem', paddingTop: '0.1rem' }}>
+            <span
+              style={{
+                ...S.stateChip,
+                color: STATE_COLOR[piece.state],
+                borderColor: STATE_COLOR[piece.state],
+              }}
+            >
+              {STATE_LABEL[piece.state]}
+            </span>
+            {piece.scouted && (
+              <span style={S.scoutedBadge}>Scouted</span>
+            )}
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
 
 export function GardenHome() {
   const [callouts, setCallouts] = useState<Callout[]>([]);
@@ -214,22 +552,70 @@ export function GardenHome() {
 
       {/* Hero */}
       <div style={S.hero}>
-        <p style={S.heroEpigraph}>Page Gallery Editions — The Garden</p>
-        <h1 style={S.heroTitle}>
-          The place where{' '}<br />
-          writing lives before{' '}<br />
-          it becomes anything else.
-        </h1>
-        <p style={S.heroBody}>
-          A literary institution operating between London and New York.
-          The Garden connects writers and journals.
-          The Residency develops what is exceptional.
-          Tilth publishes what cannot be ignored.
-        </p>
-        <div style={S.heroCta}>
-          <Link to="/journals" style={S.ctaPrimary}>Enter the Garden</Link>
-          <Link to="/editions" style={S.ctaSecondary}>Read Tilth</Link>
+        <div style={S.heroText}>
+          <p style={S.heroEpigraph}>Page Gallery — The Garden</p>
+          <h1 style={S.heroTitle}>
+            The place where{' '}<br />
+            writing lives before{' '}<br />
+            it becomes anything else.
+          </h1>
+          <p style={S.heroBody}>
+            A literary institution for writers, journals, and the work
+            that happens before publication. The Garden holds the fragments,
+            the drafts, the obsessive returns. Journals come here to scout.
+            Chapbooks are published when the work demands it — not before.
+          </p>
+          <div style={S.heroCta}>
+            <Link to="/journals" style={S.ctaPrimary}>Enter the Garden</Link>
+            <Link to="/editions" style={S.ctaSecondary}>Chapbooks &amp; Editions</Link>
+          </div>
         </div>
+        <img
+          src="https://github.com/user-attachments/assets/4c23e424-70f2-4a8e-97d5-3c664eee8bf4"
+          alt="A hand-drawn sketch of figures gathered around artwork — a scene from the Garden"
+          style={S.heroDrawing}
+        />
+      </div>
+
+      
+        {/* How the Garden Works */}
+        <hr style={S.divider} />
+        <div style={S.section}>
+          <p style={S.sectionLabel}>How the Garden works</p>
+          <div style={S.calloutGrid}>
+            <div style={S.calloutItem}>
+              <p style={S.calloutLabel}>For writers</p>
+              <p style={S.calloutTitle}>Write without destination</p>
+              <p style={S.calloutBody}>
+                The Garden is a private space. You write using the writing surface.
+                Pieces grow through states — seed, sprout, bloom — at your pace.
+                Your drafts, fragments, and false starts are treated as the substance of a writing life.
+              </p>
+            </div>
+            <div style={S.calloutItem}>
+              <p style={S.calloutLabel}>For journals</p>
+              <p style={S.calloutTitle}>Discover writers through their work</p>
+              <p style={S.calloutBody}>
+                Journals registered in the Garden can browse the bloom pool — pieces that writers
+                have marked as ready to be seen. Scouting is quiet: no public metrics, no likes.
+                If you're drawn to something, you reach out directly.
+              </p>
+            </div>
+            <div style={S.calloutItem}>
+              <p style={S.calloutLabel}>The connection</p>
+              <p style={S.calloutTitle}>No submissions portal. A community with a sensibility.</p>
+              <p style={S.calloutBody}>
+                Writers don't submit to journals here. They write. Journals don't post calls.
+                They browse. The relationship forms through the work, not through a queue.
+              </p>
+            </div>
+          </div>
+        </div>
+      {/* Writers Board */}
+      <hr style={S.divider} />
+      <div style={S.section}>
+        <WritersBoard />
+      
       </div>
 
       {/* Callouts */}
@@ -282,16 +668,17 @@ export function GardenHome() {
           <p style={S.manifestoParagraph}>
             When a writer dies, the rough drafts go first — the note that trails off,
             the notebook with three pages and then nothing.
-            This is not metaphorical but literal: the rough draft is the actual person.
+            The rough draft is the actual person: contradictory, unfinished, mid-thought.
           </p>
           <p style={S.manifestoParagraph}>
             Literary culture has always published the poem and discarded the rest.
-            The Garden treats the rest as the substance. Not as backstory. As text.
+            The Garden treats the rest as the substance — not as backstory, not as process notes,
+            but as text. As a private landscape of thinking that deserves to be held.
           </p>
           <p style={S.manifestoParagraph}>
-            Tilth is what the Garden occasionally produces as a verdict: fully illustrated,
+            Chapbooks are what the Garden occasionally produces as a verdict: fully illustrated,
             competitive to enter, published when the work demands it and not before.
-            The bar is the institution’s only editorial statement.
+            The bar is the institution's only editorial statement.
           </p>
           <div style={{ display: 'flex', gap: '2rem', marginTop: '2rem' }}>
             <Link to="/about" style={{ ...S.ctaSecondary, color: '#e8e4df', borderBottomColor: '#7a7067' }}>
@@ -306,8 +693,8 @@ export function GardenHome() {
 
       {/* Footer */}
       <div style={S.footer}>
-        <span style={S.footerNote}>Page Gallery Editions — London / New York</span>
-        <span style={S.footerNote}>The Garden · Tilth · Residency · Editions</span>
+        <span style={S.footerNote}>Page Gallery</span>
+        <span style={S.footerNote}>The Garden · Chapbooks · Residency · Editions</span>
       </div>
     </div>
   );
