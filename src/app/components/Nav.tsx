@@ -4,17 +4,18 @@
  * No hamburger menus. The identity is in the restraint.
  */
 import { Link, useLocation } from 'react-router';
+import { useGardenAuth } from '../lib/useGardenAuth';
 
 const NAV_LINKS = [
   { href: '/writers',   label: 'Writers'   },
   { href: '/journals',  label: 'Journals'  },
   { href: '/residency', label: 'Residency' },
-  { href: '/editions',  label: 'Editions'  },
   { href: '/about',     label: 'About'     },
 ];
 
 export function Nav() {
   const { pathname } = useLocation();
+  const { isAuthenticated, signOut } = useGardenAuth();
 
   return (
     <header
@@ -47,7 +48,7 @@ export function Nav() {
       </Link>
 
       {/* Navigation */}
-      <nav style={{ display: 'flex', gap: '2.5rem' }}>
+      <nav style={{ display: 'flex', gap: '2.5rem', alignItems: 'baseline' }}>
         {NAV_LINKS.map(({ href, label }) => {
           const active = pathname.startsWith(href);
           return (
@@ -69,6 +70,73 @@ export function Nav() {
             </Link>
           );
         })}
+
+        {/* Auth state */}
+        {isAuthenticated ? (
+          <>
+            {user.email === ADMIN_EMAIL && (
+              <Link
+                to="/admin"
+                style={{
+                  fontFamily: 'Georgia, serif',
+                  fontSize: '0.85rem',
+                  letterSpacing: '0.04em',
+                  color: '#9b2335',
+                  textDecoration: 'none',
+                  borderBottom: pathname.startsWith('/admin') ? '1px solid #9b2335' : '1px solid transparent',
+                  paddingBottom: '2px',
+                  opacity: 0.85,
+                }}
+              >
+                Admin
+              </Link>
+            )}
+            <Link
+              to="/dashboard/writer"
+              style={{
+                fontFamily: 'Georgia, serif',
+                fontSize: '0.85rem',
+                letterSpacing: '0.04em',
+                color: '#7a7067',
+                textDecoration: 'none',
+                borderBottom: pathname.startsWith('/dashboard') ? '1px solid #1a1714' : '1px solid transparent',
+                paddingBottom: '2px',
+              }}
+            >
+              Garden
+            </Link>
+            <button
+              onClick={signOut}
+              style={{
+                background: 'none',
+                border: 'none',
+                padding: 0,
+                fontFamily: 'Georgia, serif',
+                fontSize: '0.85rem',
+                letterSpacing: '0.04em',
+                color: '#7a7067',
+                cursor: 'pointer',
+              }}
+            >
+              Sign out
+            </button>
+          </>
+        ) : (
+          <Link
+            to="/auth"
+            style={{
+              fontFamily: 'Georgia, serif',
+              fontSize: '0.85rem',
+              letterSpacing: '0.04em',
+              color: '#7a7067',
+              textDecoration: 'none',
+              borderBottom: '1px solid transparent',
+              paddingBottom: '2px',
+            }}
+          >
+            Sign in
+          </Link>
+        )}
 
         {/* Apply CTA */}
         <Link

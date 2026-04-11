@@ -1,26 +1,29 @@
 'use client';
 import React, { useState } from 'react';
 import S from './figma/ResidencyForm.module.css';
+import { supabase } from '../lib/supabase';
 
 export default function ResidencyForm() {
   const [form, setForm] = useState({
-    name: '',
-    email: '',
-    location: '',
-    bio: '',
-    project: '',
-    duration: '',
-    needs: '',
-    statement: '',
+    name: '', email: '', location: '', bio: '', project: '', duration: '', needs: '', statement: '',
   });
   const [submitted, setSubmitted] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setLoading(true); setError('');
+    const { error: err } = await supabase.from('residency_applications').insert({
+      name: form.name, email: form.email, bio: form.bio, project: form.project,
+      duration: form.duration, needs: form.needs, statement: form.statement, status: 'pending',
+    });
+    setLoading(false);
+    if (err) { setError(err.message); return; }
     setSubmitted(true);
   };
 
@@ -39,6 +42,8 @@ export default function ResidencyForm() {
         <h2>Residency Pathway</h2>
         <p>For writers, editors, and artists seeking dedicated time and community within the Garden. Residents contribute to the ecosystem while pursuing their own work.</p>
       </div>
+
+      {error && <p style={{ color: '#9b2335', marginBottom: '1rem', fontSize: '0.85rem' }}>{error}</p>}
 
       <div className={S.field}>
         <label htmlFor="name">Full Name</label>
@@ -86,7 +91,9 @@ export default function ResidencyForm() {
         <textarea id="statement" name="statement" value={form.statement} onChange={handleChange} required rows={4} placeholder="What you hope to give and receive" />
       </div>
 
-      <button type="submit" className={S.submit}>Submit Application</button>
+      <button type="submit" className={S.submit} disabled={loading}>
+        {loading ? 'Submitting...' : 'Submit Application'}
+      </button>
     </form>
   );
 }

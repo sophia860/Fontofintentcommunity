@@ -1,6 +1,7 @@
 'use client';
 import React, { useState } from 'react';
 import S from './figma/WriterForm.module.css';
+import { supabase } from '../lib/supabase';
 
 export default function WriterForm() {
   const [form, setForm] = useState({
@@ -12,13 +13,27 @@ export default function WriterForm() {
     statement: '',
   });
   const [submitted, setSubmitted] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setLoading(true);
+    setError('');
+    const { error: err } = await supabase.from('writer_applications').insert({
+      name: form.name,
+      email: form.email,
+      bio: form.bio,
+      sample: form.sample,
+      statement: form.statement,
+      status: 'pending',
+    });
+    setLoading(false);
+    if (err) { setError(err.message); return; }
     setSubmitted(true);
   };
 
@@ -37,6 +52,8 @@ export default function WriterForm() {
         <h2>Writer Pathway</h2>
         <p>For prose writers, essayists, and critics seeking publication in Tilth or placement within the Page Gallery ecosystem.</p>
       </div>
+
+      {error && <p style={{ color: '#9b2335', marginBottom: '1rem', fontSize: '0.85rem' }}>{error}</p>}
 
       <div className={S.field}>
         <label htmlFor="name">Full Name</label>
@@ -68,7 +85,9 @@ export default function WriterForm() {
         <textarea id="statement" name="statement" value={form.statement} onChange={handleChange} required rows={5} placeholder="What draws you to this community" />
       </div>
 
-      <button type="submit" className={S.submit}>Submit Application</button>
+      <button type="submit" className={S.submit} disabled={loading}>
+        {loading ? 'Submitting...' : 'Submit Application'}
+      </button>
     </form>
   );
 }

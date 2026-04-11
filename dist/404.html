@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>The Page Gallery Journal</title>
+  <script>
+    // SPA redirect for GitHub Pages
+    // Stores the route in sessionStorage and redirects to /
+    // index.html then picks it up and navigates via the router
+    sessionStorage.setItem('spa-redirect', window.location.pathname + window.location.search + window.location.hash);
+    window.location.replace('/');
+  </script>
+</head>
+<body>
+</body>
+</html>

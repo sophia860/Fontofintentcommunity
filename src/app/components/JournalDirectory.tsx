@@ -22,6 +22,40 @@ type Journal = {
 
 const ALL_FORMS = ['poetry', 'fiction', 'essay', 'prose poem', 'hybrid', 'lyric essay', 'nonfiction', 'art'];
 
+// Featured journals shown when the database is empty or as a highlight
+const FEATURED_JOURNALS: Journal[] = [
+  {
+    id: 'featured-1',
+    name: 'The Scores',
+    slug: 'the-scores',
+    description: 'A journal of poetry, prose, and hybrid work rooted in Scottish landscape and contemporary form. Current resident of Page Gallery Editions.',
+    looking_for: 'poetry,prose poem,hybrid|landscape,form,attention',
+    publish_frequency: 'Biannual',
+    status: 'active',
+    is_public: true,
+  },
+  {
+    id: 'featured-2',
+    name: 'Tender Machines',
+    slug: 'tender-machines',
+    description: 'New writing at the intersection of technology, care, and the body. Accepting submissions for Issue 3.',
+    looking_for: 'essay,lyric essay,fiction|technology,care,embodiment',
+    publish_frequency: 'Annual',
+    status: 'active',
+    is_public: true,
+  },
+  {
+    id: 'featured-3',
+    name: 'Understory',
+    slug: 'understory',
+    description: 'Poetry and nonfiction concerned with ecology, place, and quiet attention. Based in Bristol.',
+    looking_for: 'poetry,nonfiction,essay|ecology,place,attention',
+    publish_frequency: 'Biannual',
+    status: 'pre_launch',
+    is_public: true,
+  },
+];
+
 function parseForms(looking_for: string | null): string[] {
   if (!looking_for) return [];
   const parts = looking_for.split('|');
@@ -62,7 +96,41 @@ const S: Record<string, React.CSSProperties> = {
   statusDot: { width: '6px', height: '6px', borderRadius: '50%', backgroundColor: '#6b9e6b', display: 'inline-block' },
   loading: { padding: '4rem 3rem', color: '#7a7067', fontSize: '0.9rem' },
   cta: { padding: '3rem', borderTop: '1px solid #e8e4df', textAlign: 'center' as const },
+  residentBadge: { fontSize: '0.66rem', letterSpacing: '0.09em', textTransform: 'uppercase' as const, padding: '0.2rem 0.55rem', backgroundColor: '#1a1714', color: '#faf8f5', whiteSpace: 'nowrap' as const, fontFamily: 'system-ui, sans-serif' },
 };
+
+function JournalCard({ j }: { j: Journal }) {
+  const forms = parseForms(j.looking_for);
+  const themes = parseThemes(j.looking_for);
+  const ds = displayStatus(j.status);
+  const isResident = j.id === 'featured-1';
+  return (
+    <div style={S.journalCard}>
+      <div style={S.journalTop}>
+        <div style={{ display: 'flex', alignItems: 'baseline', gap: '0.75rem' }}>
+          <Link to={`/journals/${j.slug}`} style={S.journalName}>{j.name}</Link>
+          {isResident && <span style={S.residentBadge}>Resident 2024–25</span>}
+        </div>
+        <div style={S.journalMeta}>
+          {j.publish_frequency && <span>{j.publish_frequency}</span>}
+          {ds === 'open' && (
+            <span style={S.statusOpen}>
+              <span style={S.statusDot} />
+              Open
+            </span>
+          )}
+          {ds === 'rolling' && <span style={{ fontSize: '0.78rem', color: '#7a7067' }}>Rolling</span>}
+          {ds === 'closed' && <span style={{ fontSize: '0.78rem', color: '#7a7067' }}>Coming soon</span>}
+        </div>
+      </div>
+      {j.description && <p style={S.journalMission}>{j.description}</p>}
+      <div style={S.journalTags}>
+        {forms.map(f => <span key={f} style={S.tag}>{f}</span>)}
+        {themes.map(t => <span key={t} style={{ ...S.tag, color: '#9a9088', borderColor: '#f0ece7' }}>{t}</span>)}
+      </div>
+    </div>
+  );
+}
 
 export function JournalDirectory() {
   const [journals, setJournals] = useState<Journal[]>([]);
@@ -77,7 +145,6 @@ export function JournalDirectory() {
         .select('id, name, slug, description, looking_for, publish_frequency, status, is_public')
         .eq('is_public', true)
         .order('name');
-
       if (!error && data) {
         setJournals(data);
       }
@@ -86,7 +153,11 @@ export function JournalDirectory() {
     fetchJournals();
   }, []);
 
-  const filtered = journals.filter(j => {
+  // Use database journals if available, otherwise show featured examples
+  const displayJournals = journals.length > 0 ? journals : FEATURED_JOURNALS;
+  const usingFeatured = journals.length === 0 && !loading;
+
+  const filtered = displayJournals.filter(j => {
     const forms = parseForms(j.looking_for);
     const ds = displayStatus(j.status);
     if (activeForm && !forms.includes(activeForm)) return false;
@@ -97,13 +168,15 @@ export function JournalDirectory() {
   return (
     <div style={S.page}>
       <Nav />
+
       <div style={S.header}>
         <p style={S.headerLabel}>The Garden — Journals</p>
         <h1 style={S.headerTitle}>Journal Directory</h1>
         <p style={S.headerBody}>
-          Independent literary journals in the Garden ecosystem. Registered journals can discover writers,
+          Independent literary journals registered in the Garden. Journals here can discover writers,
           access print partnerships, and apply for the annual Residency Programme.
           Any journal may register. Not every journal will be invited to residency.
+          The distinction matters.
         </p>
       </div>
 
@@ -130,42 +203,23 @@ export function JournalDirectory() {
       {/* Journal list */}
       <div style={S.list}>
         {loading && <p style={S.loading}>Loading journals…</p>}
+
+        {usingFeatured && (
+          <p style={{ padding: '1.5rem 0 0', fontSize: '0.82rem', color: '#7a7067', fontStyle: 'italic' }}>
+            Featured journals and current residents. More journals will appear here as they register.
+          </p>
+        )}
+
         {!loading && filtered.length === 0 && (
           <p style={S.loading}>No journals match these filters.</p>
         )}
-        {filtered.map(j => {
-          const forms = parseForms(j.looking_for);
-          const themes = parseThemes(j.looking_for);
-          const ds = displayStatus(j.status);
-          return (
-            <div key={j.id} style={S.journalCard}>
-              <div style={S.journalTop}>
-                <Link to={`/journals/${j.slug}`} style={S.journalName}>{j.name}</Link>
-                <div style={S.journalMeta}>
-                  {j.publish_frequency && <span>{j.publish_frequency}</span>}
-                  {ds === 'open' && (
-                    <span style={S.statusOpen}>
-                      <span style={S.statusDot} />
-                      Open
-                    </span>
-                  )}
-                  {ds === 'rolling' && <span style={{ fontSize: '0.78rem', color: '#7a7067' }}>Rolling</span>}
-                  {ds === 'closed' && <span style={{ fontSize: '0.78rem', color: '#7a7067' }}>Closed</span>}
-                </div>
-              </div>
-              {j.description && <p style={S.journalMission}>{j.description}</p>}
-              <div style={S.journalTags}>
-                {forms.map(f => <span key={f} style={S.tag}>{f}</span>)}
-                {themes.map(t => <span key={t} style={{ ...S.tag, color: '#9a9088', borderColor: '#f0ece7' }}>{t}</span>)}
-              </div>
-            </div>
-          );
-        })}
+
+        {!loading && filtered.map(j => <JournalCard key={j.id} j={j} />)}
       </div>
 
       <div style={S.cta}>
         <p style={{ fontSize: '0.88rem', color: '#3d3830', marginBottom: '1rem' }}>
-          Are you a journal? Register in the Garden.
+          Running a journal? Bring it into the Garden.
         </p>
         <Link to="/apply" style={{ fontSize: '0.85rem', color: '#1a1714', borderBottom: '1px solid #1a1714', textDecoration: 'none' }}>
           Register your journal

@@ -1,6 +1,7 @@
 'use client';
 import React, { useState } from 'react';
 import S from './figma/JournalForm.module.css';
+import { supabase } from '../lib/supabase';
 
 export default function JournalForm() {
   const [form, setForm] = useState({
@@ -14,13 +15,26 @@ export default function JournalForm() {
     proposal: '',
   });
   const [submitted, setSubmitted] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setLoading(true);
+    setError('');
+    const { error: err } = await supabase.from('journal_applications').insert({
+      journal_name: form.journalName,
+      contact_name: form.contactName,
+      email: form.email,
+      mission_statement: form.focus + '\n\n' + form.proposal,
+      status: 'pending',
+    });
+    setLoading(false);
+    if (err) { setError(err.message); return; }
     setSubmitted(true);
   };
 
@@ -39,6 +53,8 @@ export default function JournalForm() {
         <h2>Journal Pathway</h2>
         <p>Journals and literary magazines use the Page Gallery to sell editions, fund operations, and reach new readers. This pathway is for editors seeking to join the ecosystem.</p>
       </div>
+
+      {error && <p style={{ color: '#9b2335', marginBottom: '1rem', fontSize: '0.85rem' }}>{error}</p>}
 
       <div className={S.field}>
         <label htmlFor="journalName">Journal Name</label>
@@ -66,7 +82,7 @@ export default function JournalForm() {
       </div>
 
       <div className={S.field}>
-        <label htmlFor="audience">Readership & Reach</label>
+        <label htmlFor="audience">Readership &amp; Reach</label>
         <textarea id="audience" name="audience" value={form.audience} onChange={handleChange} required rows={3} placeholder="Who reads your journal and how you distribute" />
       </div>
 
@@ -80,7 +96,9 @@ export default function JournalForm() {
         <textarea id="proposal" name="proposal" value={form.proposal} onChange={handleChange} required rows={5} placeholder="Your vision for collaboration" />
       </div>
 
-      <button type="submit" className={S.submit}>Submit Proposal</button>
+      <button type="submit" className={S.submit} disabled={loading}>
+        {loading ? 'Submitting...' : 'Submit Proposal'}
+      </button>
     </form>
   );
 }
