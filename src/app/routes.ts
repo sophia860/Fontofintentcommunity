@@ -24,6 +24,7 @@ import { AuthPage } from './components/AuthPage';
 import { AuthCallbackPage } from './components/AuthCallbackPage';
 import { AdminDashboard } from './components/AdminDashboard';
 import { Editions } from './components/Editions';
+import { EditionDetail } from './components/EditionDetail';
 
 export const router = createBrowserRouter([
   {
@@ -57,6 +58,10 @@ export const router = createBrowserRouter([
   {
     path: '/editions',
     Component: Editions,
+  },
+  {
+    path: '/editions/:id',
+    Component: EditionDetail,
   },
   {
     path: '/commissions',

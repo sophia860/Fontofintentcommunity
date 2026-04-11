@@ -4,28 +4,51 @@
  * Published when the work demands it. Not before.
  * Fully illustrated. Competitive to enter. Rare by design.
  */
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router';
 import { Nav } from './Nav';
 import { pickHeadingFont } from '../lib/fontMapper';
+import { supabase } from '../lib/supabase';
 
-const MOCK_EDITIONS = [
+interface Variant {
+  label: string;
+  price_cents: number;
+  sort_order: number;
+}
+
+interface Edition {
+  id: string;
+  title: string;
+  author: string;
+  author_location: string | null;
+  illustrator: string | null;
+  date_written_start: string | null;
+  date_written_end: string | null;
+  pages: number | null;
+  print_run: number | null;
+  description: string;
+  status: 'available' | 'sold_out' | 'forthcoming' | 'pre_order';
+  edition_variants: Variant[];
+}
+
+const MOCK_EDITIONS: Edition[] = [
   {
     id: '1',
     title: 'All the Ordinary Hours',
     author: 'Céline Marti',
-    authorLocation: 'Marseille',
+    author_location: 'Marseille',
     illustrator: 'Rosa Schäfer',
-    dateWrittenStart: 'October 2024',
-    dateWrittenEnd: 'February 2025',
-    published: 'April 2026',
+    date_written_start: 'October 2024',
+    date_written_end: 'February 2025',
+    pages: 32,
+    print_run: 300,
     status: 'available',
     description:
       'Poems written across the autumn and winter of 2024, in the weeks following a bereavement and during the coverage of a large-scale humanitarian crisis. The context layer documents what the news cycle looked like from the room where the poems were written.',
-    pages: 32,
-    printRun: 300,
-    priceChapbook: 16,
-    priceGiclee: 55,
-    isbn: '978-0-000000-00-0',
+    edition_variants: [
+      { label: 'Chapbook', price_cents: 1600, sort_order: 0 },
+      { label: 'Chapbook + Signed Giclée', price_cents: 5500, sort_order: 1 },
+    ],
   },
 ];
 
@@ -96,7 +119,36 @@ const S: Record<string, React.CSSProperties> = {
   tierNote: { fontSize: '0.78rem', color: '#7a7067', lineHeight: 1.5 },
 };
 
+function statusLabel(status: Edition['status']) {
+  if (status === 'available') return { text: 'Available', color: '#6b9e6b' };
+  if (status === 'sold_out') return { text: 'Sold out', color: '#b0a89e' };
+  if (status === 'pre_order') return { text: 'Pre-order', color: '#8b7355' };
+  return { text: 'Forthcoming', color: '#8b7355' };
+}
+
 export function Editions() {
+  const [editions, setEditions] = useState<Edition[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function fetchEditions() {
+      const { data, error } = await supabase
+        .from('editions')
+        .select('*, edition_variants(*)')
+        .order('sort_order', { ascending: true });
+
+      if (error || !data || data.length === 0) {
+        setEditions(MOCK_EDITIONS);
+      } else {
+        setEditions(data as Edition[]);
+      }
+      setLoading(false);
+    }
+    fetchEditions();
+  }, []);
+
+  const displayEditions = loading ? [] : editions;
+
   return (
     <div style={S.page}>
       <Nav />
@@ -120,59 +172,71 @@ export function Editions() {
       <div style={S.argument}>
         <div style={S.argumentInner}>
           <p style={S.argumentText}>
-            “The proliferation of literary magazines has been, on balance, good for writers
+            "The proliferation of literary magazines has been, on balance, good for writers
             and bad for readers. Being in a journal no longer tells a reader very much.
-            Being here does.”
+            Being here does."
           </p>
         </div>
       </div>
 
       {/* Editions list */}
-      {MOCK_EDITIONS.length > 0 ? (
+      {!loading && displayEditions.length > 0 ? (
         <div style={S.list}>
-          {MOCK_EDITIONS.map(e => (
-            <div key={e.id} style={S.editionCard}>
-              {/* Spine */}
-              <div style={S.spine}>
-                <span style={S.spineText}>Edition — {e.author}</span>
-              </div>
+          {displayEditions.map(e => {
+            const sortedVariants = [...(e.edition_variants ?? [])].sort((a, b) => a.sort_order - b.sort_order);
+            const primaryVariant = sortedVariants[0];
+            const { text: statusText, color: statusColor } = statusLabel(e.status);
 
-              {/* Main */}
-              <div style={S.editionMain}>
-                <h2 style={S.editionTitle}>{e.title}</h2>
-                <p style={S.editionAuthor}>{e.author}{e.authorLocation ? ` — ${e.authorLocation}` : ''}</p>
-                <p style={S.editionMeta}>
-                  Written {e.dateWrittenStart}–{e.dateWrittenEnd}
-                  {e.illustrator && ` · Illustrated by ${e.illustrator}`}
-                  {` · ${e.pages}pp · Ed. of ${e.printRun}`}
-                </p>
-                <p style={S.editionDescription}>{e.description}</p>
-                <div style={S.editionLinks}>
-                  <Link to={`/editions/${e.id}`} style={S.linkPrimary}>Read more</Link>
-                  <a href="#" style={S.linkSecondary}>Order chapbook — £{e.priceChapbook}</a>
-                  {e.priceGiclee && <a href="#" style={S.linkSecondary}>Giclée print — £{e.priceGiclee}</a>}
+            return (
+              <div key={e.id} style={S.editionCard}>
+                {/* Spine */}
+                <div style={S.spine}>
+                  <span style={S.spineText}>Edition — {e.author}</span>
+                </div>
+
+                {/* Main */}
+                <div style={S.editionMain}>
+                  <h2 style={S.editionTitle}>{e.title}</h2>
+                  <p style={S.editionAuthor}>
+                    {e.author}{e.author_location ? ` — ${e.author_location}` : ''}
+                  </p>
+                  <p style={S.editionMeta}>
+                    {e.date_written_start && e.date_written_end && (
+                      <>Written {e.date_written_start}–{e.date_written_end}</>
+                    )}
+                    {e.illustrator && ` · Illustrated by ${e.illustrator}`}
+                    {e.pages && ` · ${e.pages}pp`}
+                    {e.print_run && ` · Ed. of ${e.print_run}`}
+                  </p>
+                  <p style={S.editionDescription}>{e.description}</p>
+                  <div style={S.editionLinks}>
+                    <Link to={`/editions/${e.id}`} style={S.linkPrimary}>Read more</Link>
+                    {sortedVariants.map(v => (
+                      <Link key={v.label} to={`/editions/${e.id}`} style={S.linkSecondary}>
+                        {v.label} — £{(v.price_cents / 100).toFixed(0)}
+                      </Link>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Sidebar */}
+                <div style={S.editionSidebar}>
+                  {primaryVariant && (
+                    <>
+                      <p style={S.priceMain}>£{(primaryVariant.price_cents / 100).toFixed(0)}</p>
+                      <p style={S.priceSub}>{primaryVariant.label}</p>
+                    </>
+                  )}
+                  <p style={{ ...S.printRunNote, color: statusColor }}>{statusText}</p>
+                  {e.print_run && (
+                    <p style={{ ...S.printRunNote, marginTop: '0.5rem' }}>Ed. of {e.print_run}</p>
+                  )}
                 </div>
               </div>
-
-              {/* Sidebar */}
-              <div style={S.editionSidebar}>
-                <p style={S.priceMain}>£{e.priceChapbook}</p>
-                <p style={S.priceSub}>Chapbook</p>
-                {e.status === 'available' && (
-                  <p style={{ ...S.printRunNote, color: '#6b9e6b' }}>Available</p>
-                )}
-                {e.status === 'sold_out' && (
-                  <p style={S.printRunNote}>Sold out</p>
-                )}
-                {e.status === 'forthcoming' && (
-                  <p style={{ ...S.printRunNote, color: '#8b7355' }}>Forthcoming</p>
-                )}
-                <p style={{ ...S.printRunNote, marginTop: '0.5rem' }}>Ed. of {e.printRun}</p>
-              </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
-      ) : (
+      ) : !loading ? (
         <div style={S.empty}>
           <p style={S.emptyTitle}>The first edition is forthcoming.</p>
           <p style={S.emptyBody}>
@@ -187,7 +251,7 @@ export function Editions() {
             paddingBottom: '2px',
           }}>Submit work</Link>
         </div>
-      )}
+      ) : null}
 
       {/* About / tiers */}
       <div style={S.about}>
