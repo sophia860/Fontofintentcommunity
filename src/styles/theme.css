@@ -200,6 +200,21 @@
   }
 }
 
+/* Font family utility classes */
+.font-root { font-family: var(--font-root); }
+.font-breath { font-family: var(--font-breath); }
+.font-ink { font-family: var(--font-ink); }
+
+/* SVG ink line draw animation */
+@keyframes draw {
+  to { stroke-dashoffset: 0; }
+}
+.animate-draw {
+  stroke-dasharray: 800;
+  stroke-dashoffset: 800;
+  animation: draw 2.8s ease-out forwards;
+}
+
 /* Yellow marker / highlighter utility — wrap key phrases with <mark className="mark"> */
 .mark {
   background: linear-gradient(
