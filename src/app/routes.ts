@@ -20,7 +20,7 @@ import { About } from './components/About';
 import { WritingSurface } from './components/WritingSurface';
 import { PreviewScreen } from './components/PreviewScreen';
 import { ReplayView } from './components/ReplayView';
-import Auth from '@/routes/auth';
+import { AuthPage } from './components/AuthPage';
 import { AuthCallbackPage } from './components/AuthCallbackPage';
 import { AdminDashboard } from './components/AdminDashboard';
 import { Editions } from './components/Editions';
@@ -29,8 +29,10 @@ import { CollectorCircle } from './components/CollectorCircle';
 import { GardenDashboard } from '../features/garden/GardenDashboard';
 import { WritingDashboard } from '../features/garden/poets/WritingDashboard';
 
-const baseUrl = import.meta.env.BASE_URL || '/';
-const basename = baseUrl === '/' ? undefined : baseUrl.replace(/\/$/, '');
+// BASE_URL is set by Vite: '/' locally, '/Fontofintentcommunity/' on GitHub Pages.
+// Strip trailing slash so react-router basename works correctly.
+const baseUrl = import.meta.env.BASE_URL ?? '/';
+const basename = baseUrl.replace(/\/$/, '') || undefined;
 
 export const router = createBrowserRouter([
   {
@@ -95,7 +97,7 @@ export const router = createBrowserRouter([
   },
   {
     path: '/auth',
-    Component: Auth,
+    Component: AuthPage,
   },
   {
     path: '/auth/callback',
@@ -157,4 +159,4 @@ export const router = createBrowserRouter([
     path: '/garden/poets',
     Component: WritingDashboard,
   },
-], basename ? { basename } : undefined);
+], { basename });
