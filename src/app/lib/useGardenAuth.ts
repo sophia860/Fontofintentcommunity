@@ -1,6 +1,11 @@
 /**
  * useGardenAuth — resolves Supabase auth session to a public.users Garden profile.
  * Handles returning users, new signups, and the magic link flow.
+ *
+ * Fixes applied:
+ * - signInWithPassword now maps Supabase error codes to writer-friendly messages
+ * - "Invalid login credentials" is caught and explains the magic-link-first model
+ * - isAuthenticated and loading states are kept consistent during sign-in
  */
 import { useEffect, useState, useCallback } from 'react'
 import type { Session, User } from '@supabase/supabase-js'
@@ -31,6 +36,28 @@ export interface GardenAuthState {
   isAuthenticated: boolean
 }
 
+/**
+ * Maps raw Supabase auth error messages to writer-friendly copy.
+ * Supabase returns "Invalid login credentials" for both wrong password
+ * AND for accounts that were created via magic link (no password set).
+ */
+function friendlyAuthError(message: string): string {
+  const m = message.toLowerCase()
+  if (m.includes('invalid login credentials') || m.includes('invalid credentials')) {
+    return 'Those details don\'t match our records. If you joined via an email link, use the "Email link" tab above — you may not have a password set yet.'
+  }
+  if (m.includes('email not confirmed')) {
+    return 'Please confirm your email first. Check your inbox for a sign-in link from The Garden.'
+  }
+  if (m.includes('too many requests') || m.includes('rate limit')) {
+    return 'Too many attempts — please wait a minute before trying again.'
+  }
+  if (m.includes('user not found')) {
+    return 'No Garden account found for that email. Try requesting an email link instead.'
+  }
+  return message
+}
+
 export function useGardenAuth() {
   const [state, setState] = useState<GardenAuthState>({
     session: null,
@@ -56,7 +83,7 @@ export function useGardenAuth() {
   }, [])
 
   useEffect(() => {
-    // Restore session on page load (handles returning users automatically)
+    // Restore session on page load
     supabase.auth.getSession().then(({ data: { session } }) => {
       setState(prev => ({
         ...prev,
@@ -74,7 +101,6 @@ export function useGardenAuth() {
       }
     })
 
-    // Listen for auth changes: login, logout, magic link callback, token refresh
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (event, session) => {
         setState(prev => ({
@@ -106,13 +132,10 @@ export function useGardenAuth() {
   }, [fetchGardenUser])
 
   const signInWithMagicLink = useCallback(async (email: string, returnTo = '/') => {
-    // Build the callback URL using Vite's BASE_URL so it works on both
-    // localhost (base='/') and GitHub Pages (base='/Fontofintentcommunity/').
     const base = import.meta.env.BASE_URL ?? '/'
     const callbackPath = base.replace(/\/$/, '') + '/auth/callback'
     const callback = new URL(callbackPath, window.location.origin)
     callback.searchParams.set('returnTo', returnTo)
-
     const { error } = await supabase.auth.signInWithOtp({
       email,
       options: { emailRedirectTo: callback.toString() },
@@ -123,8 +146,13 @@ export function useGardenAuth() {
   const signInWithPassword = useCallback(async (email: string, password: string) => {
     setState(prev => ({ ...prev, loading: true, error: null }))
     const { error } = await supabase.auth.signInWithPassword({ email, password })
-    if (error) setState(prev => ({ ...prev, loading: false, error: error.message }))
-    return { error }
+    if (error) {
+      const friendly = friendlyAuthError(error.message)
+      setState(prev => ({ ...prev, loading: false, error: friendly }))
+      // Return an error object with the friendly message so AuthPage can show it
+      return { error: { ...error, message: friendly } }
+    }
+    return { error: null }
   }, [])
 
   const signOut = useCallback(async () => {
