@@ -403,7 +403,7 @@ export function WritingSurface() {
             background: 'none',
             border: 'none',
             padding: isMobile ? '0.5rem' : 0,
-            fontFamily: "'Inter', sans-serif",
+            fontFamily: "'Fira Code', monospace",
             fontVariationSettings: "'wght' 400",
             fontSize: isMobile ? '0.85rem' : '0.75rem',
             letterSpacing: '0.04em',
@@ -433,7 +433,7 @@ export function WritingSurface() {
                 border: 'none',
                 padding: 0,
                 color: toggleColor,
-                fontFamily: "'Inter', sans-serif",
+                fontFamily: "'Fira Code', monospace",
                 fontVariationSettings: "'wght' 400",
                 fontSize: '0.7rem',
                 letterSpacing: '0.1em',
@@ -456,7 +456,7 @@ export function WritingSurface() {
                     border: 'none',
                     padding: 0,
                     color: showTagInput ? finishColor : toggleColor,
-                    fontFamily: "'Inter', sans-serif",
+                    fontFamily: "'Fira Code', monospace",
                     fontVariationSettings: "'wght' 400",
                     fontSize: '0.7rem',
                     letterSpacing: '0.1em',
@@ -474,7 +474,7 @@ export function WritingSurface() {
                     border: 'none',
                     padding: 0,
                     color: finishColor,
-                    fontFamily: "'Playfair Display', serif",
+                    fontFamily: "'Fira Code', monospace",
                     fontStyle: 'italic',
                     fontWeight: 400,
                     fontSize: '0.85rem',
@@ -508,7 +508,7 @@ export function WritingSurface() {
               border: 'none',
               padding: '0.5rem',
               color: toggleColor,
-              fontFamily: "'Inter', sans-serif",
+              fontFamily: "'Fira Code', monospace",
               fontVariationSettings: "'wght' 400",
               fontSize: '0.7rem',
               letterSpacing: '0.1em',
@@ -569,7 +569,7 @@ export function WritingSurface() {
                 background: 'none',
                 border: 'none',
                 outline: 'none',
-                fontFamily: "'Inter', sans-serif",
+                fontFamily: "'Fira Code', monospace",
                 fontSize: '0.78rem',
                 color: finishColor,
                 width: '120px',
@@ -598,7 +598,7 @@ export function WritingSurface() {
               padding: '0.75rem 1rem',
               textAlign: 'right',
               color: finishColor,
-              fontFamily: "'Playfair Display', serif",
+              fontFamily: "'Fira Code', monospace",
               fontStyle: 'italic',
               fontWeight: 400,
               fontSize: '1rem',
@@ -631,7 +631,7 @@ export function WritingSurface() {
           <div
             className="whitespace-pre-wrap break-words"
             style={{
-              fontFamily: "'DM Sans', sans-serif",
+              fontFamily: "'Fira Code', monospace",
             }}
           >
             {bursts.length === 0 && (
@@ -639,7 +639,7 @@ export function WritingSurface() {
                 className="select-none"
                 style={{
                   color: placeholderColor,
-                  fontFamily: "'DM Sans', sans-serif",
+                  fontFamily: "'Fira Code', monospace",
                   fontVariationSettings: "'wght' 350",
                   fontSize: '1.05rem',
                   transition: 'color 0.3s ease',
@@ -703,7 +703,7 @@ export function WritingSurface() {
               background: 'none',
               border: `1px solid ${doneBorderColor}`,
               padding: '0.75rem 2rem',
-              fontFamily: "'Playfair Display', serif",
+              fontFamily: "'Fira Code', monospace",
               fontStyle: 'italic',
               fontWeight: 400,
               fontSize: '1rem',
@@ -718,7 +718,7 @@ export function WritingSurface() {
         ) : (
           <p
             style={{
-              fontFamily: "'Inter', sans-serif",
+              fontFamily: "'Fira Code', monospace",
               fontVariationSettings: "'wght' 400",
               fontSize: '0.85rem',
               letterSpacing: '0.1em',

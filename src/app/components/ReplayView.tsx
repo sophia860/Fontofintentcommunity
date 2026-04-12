@@ -291,7 +291,7 @@ export function ReplayView() {
     background: 'none',
     border: 'none',
     padding: isMobile ? '0.75rem 0' : '0.5rem 0',
-    fontFamily: "'Inter', sans-serif",
+    fontFamily: "'Fira Code', monospace",
     fontVariationSettings: "'wght' 400",
     fontSize: isMobile ? '0.85rem' : '0.75rem',
     letterSpacing: '0.1em',
@@ -351,7 +351,7 @@ export function ReplayView() {
               <p
                 className="text-[#F0E8DE]"
                 style={{
-                  fontFamily: "'Inter', sans-serif",
+                  fontFamily: "'Fira Code', monospace",
                   fontVariationSettings: "'wght' 350",
                   fontSize: isMobile ? '1rem' : '0.9rem',
                   lineHeight: 1.8,
@@ -369,7 +369,7 @@ export function ReplayView() {
                   border: 'none',
                   padding: '0.5rem 0',
                   color: '#E5DCD2',
-                  fontFamily: "'Playfair Display', serif",
+                  fontFamily: "'Fira Code', monospace",
                   fontStyle: 'italic',
                   fontWeight: 400,
                   fontSize: isMobile ? '1.1rem' : '1rem',
@@ -395,7 +395,7 @@ export function ReplayView() {
               <div
                 className="whitespace-pre-wrap break-words"
                 style={{
-                  fontFamily: "'Inter', sans-serif",
+                  fontFamily: "'Fira Code', monospace",
                   fontSize: isMobile ? '1.1rem' : 'clamp(1rem, 2vw, 1.25rem)',
                   lineHeight: 1.8,
                 }}
@@ -442,7 +442,7 @@ export function ReplayView() {
                   <p
                     className="mt-14"
                     style={{
-                      fontFamily: "'Playfair Display', serif",
+                      fontFamily: "'Fira Code', monospace",
                       fontStyle: 'italic',
                       fontWeight: 400,
                       fontSize: '0.85rem',
@@ -462,7 +462,7 @@ export function ReplayView() {
                       border: 'none',
                       padding: 0,
                       color: '#D4C9BC',
-                      fontFamily: "'Playfair Display', serif",
+                      fontFamily: "'Fira Code', monospace",
                       fontStyle: 'italic',
                       fontWeight: 400,
                       fontSize: isMobile ? '1rem' : '0.85rem',

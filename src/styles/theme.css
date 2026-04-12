@@ -2,12 +2,13 @@
 
 :root {
   --font-size: 16px;
-  --font-handwritten: 'ACFrenchToast', cursive;
+  --font-handwritten: 'TaktukBrush', cursive;
+  --font-body: 'Fira Code', monospace;
   --font-capitals: 'ACRealAdult', cursive;
-  --font-biro: 'Caveat', cursive;
-  --font-root: "Instrument Serif", serif;
-  --font-breath: "DM Sans", system-ui, sans-serif;
-  --font-ink: "Caveat", cursive;
+  --font-biro: 'Fira Code', monospace;
+  --font-root: 'Fira Code', monospace;
+  --font-breath: 'Fira Code', monospace;
+  --font-ink: 'Fira Code', monospace;
   --ink-red: #B71C1C;
   --highlighter: rgba(255, 244, 0, 0.45);
   --background: #ffffff;
@@ -138,6 +139,7 @@
   body {
     @apply bg-background text-foreground;
     background: #F9F6F2;
+    font-family: var(--font-body);
   }
 
   /**
@@ -217,8 +219,7 @@
   text-decoration: none;
 }
 
-/* Serif display heading utility */
+/* Handwritten heading utility */
 .serif-heading {
-  font-family: 'Playfair Display', 'Instrument Serif', serif;
-  font-feature-settings: "liga" 1, "kern" 1;
+  font-family: 'TaktukBrush', cursive;
 }

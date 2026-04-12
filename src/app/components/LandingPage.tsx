@@ -180,7 +180,7 @@ export function LandingPage() {
         <p
           className="text-[#8B7E74]"
           style={{
-            fontFamily: "'Inter', sans-serif",
+            fontFamily: "'Fira Code', monospace",
             fontVariationSettings: "'wght' 350",
             fontSize: '0.9rem',
             lineHeight: 1.8,
@@ -225,7 +225,7 @@ export function LandingPage() {
               <div
                 className="whitespace-pre-wrap break-words"
                 style={{
-                  fontFamily: "'Inter', sans-serif",
+                  fontFamily: "'Fira Code', monospace",
                   fontSize: 'clamp(1rem, 2vw, 1.25rem)',
                   lineHeight: 1.8,
                 }}
@@ -274,7 +274,7 @@ export function LandingPage() {
               <p
                 className="text-[#C4B5A6]"
                 style={{
-                  fontFamily: "'Inter', sans-serif",
+                  fontFamily: "'Fira Code', monospace",
                   fontVariationSettings: "'wght' 300",
                   fontSize: '0.9rem',
                 }}
@@ -345,7 +345,7 @@ export function LandingPage() {
         </p>
         <p
           style={{
-            fontFamily: "'Inter', sans-serif",
+            fontFamily: "'Fira Code', monospace",
             fontVariationSettings: "'wght' 400",
             fontSize: '0.6rem',
             letterSpacing: '0.1em',

@@ -19,7 +19,7 @@ export function PageGalleryHome() {
           <div className="lg:col-span-7">
             <h1
               className="text-[clamp(3rem,8vw,92px)] leading-[1.05] tracking-[-2px] mb-8 font-bold"
-              style={{ fontFamily: "'Playfair Display', 'Instrument Serif', serif" }}
+              style={{ fontFamily: "'Fira Code', monospace" }}
             >
               Once an<br />
               ENTREPRENEUR,<br />
@@ -27,7 +27,7 @@ export function PageGalleryHome() {
               ENTREPRENEUR.
             </h1>
 
-            <div className="max-w-md text-lg leading-[1.85] text-black/75" style={{ fontFamily: "'DM Sans', 'Inter', system-ui, sans-serif" }}>
+            <div className="max-w-md text-lg leading-[1.85] text-black/75" style={{ fontFamily: "'Fira Code', monospace" }}>
               <p>
                 Picture two primary school girls, circa 1992, prancing from door to door of their tiny rural German village. In their hands, they are holding batches of A4 papers, each sheet filled with neatly aligned rows of the same hand-drawn motif — a different motif per page. Their product: one of a kind wrapping papers. Their objective: sell said wrapping paper to the neighbours to make the money needed to pay for a pony ride at the nearby stable.
               </p>
@@ -44,7 +44,7 @@ export function PageGalleryHome() {
               <Link
                 to="/editions"
                 className="inline-block px-10 py-4 border-2 border-black rounded-full text-lg font-medium tracking-wide hover:bg-black hover:text-white transition-all"
-                style={{ fontFamily: "'DM Sans', system-ui, sans-serif" }}
+                style={{ fontFamily: "'Fira Code', monospace" }}
               >
                 Shop Limited Editions →
               </Link>
@@ -86,13 +86,13 @@ export function PageGalleryHome() {
           >
             <div
               className="text-[clamp(2.5rem,6vw,80px)] leading-tight tracking-tight"
-              style={{ fontFamily: "'Playfair Display', 'Instrument Serif', serif" }}
+              style={{ fontFamily: "'Fira Code', monospace" }}
             >
               Making
             </div>
             <div
               className="text-[clamp(4rem,14vw,160px)] leading-none font-black tracking-[-4px] lg:tracking-[-8px]"
-              style={{ fontFamily: "'Playfair Display', 'Instrument Serif', serif" }}
+              style={{ fontFamily: "'Fira Code', monospace" }}
             >
               SOMETHING
             </div>
@@ -115,7 +115,7 @@ export function PageGalleryHome() {
       </main>
 
       <footer className="border-t border-black/10 py-12 px-6 lg:px-12">
-        <div className="max-w-7xl mx-auto flex justify-between items-center text-sm text-black/50" style={{ fontFamily: "'DM Sans', system-ui, sans-serif" }}>
+        <div className="max-w-7xl mx-auto flex justify-between items-center text-sm text-black/50" style={{ fontFamily: "'Fira Code', monospace" }}>
           <span>The Page Gallery</span>
           <span>© {new Date().getFullYear()}</span>
         </div>

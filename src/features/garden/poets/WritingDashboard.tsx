@@ -382,12 +382,12 @@ export function WritingDashboard() {
   return (
     <div
       className="fixed inset-0 flex flex-col bg-[#faf8f5] overflow-hidden"
-      style={{ fontFamily: "'DM Sans Variable', 'DM Sans', sans-serif" }}
+      style={{ fontFamily: "'DM Sans Variable', 'Fira Code', monospace" }}
     >
       {/* ── Poem editor styles (font loaded globally in fonts.css) ── */}
       <style>{`
         .poem-editor {
-          font-family: 'DM Sans Variable', 'DM Sans', sans-serif;
+          font-family: 'DM Sans Variable', 'Fira Code', monospace;
           font-variation-settings: ${fontVariationSettings};
           transition: font-variation-settings ${FONT_WEIGHT_TRANSITION_MS}ms cubic-bezier(0.4, 0, 0.2, 1);
           outline: none;
