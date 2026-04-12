@@ -426,8 +426,8 @@ export function WritingDashboard() {
           onChange={handleTitleChange}
           placeholder="untitled poem"
           maxLength={120}
-          className="title-input flex-1 mx-6 text-center text-sm tracking-wide bg-transparent border-none outline-none text-stone-600 font-normal placeholder:text-stone-300"
-          style={{ fontFamily: 'inherit' }}
+          className="title-input flex-1 mx-6 text-center text-xl tracking-wide bg-transparent border-none outline-none text-stone-600 font-normal placeholder:text-stone-300 font-ink"
+          style={{ fontFamily: 'var(--font-ink)' }}
           aria-label="Poem title"
         />
 
