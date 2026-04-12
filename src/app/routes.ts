@@ -29,6 +29,9 @@ import { CollectorCircle } from './components/CollectorCircle';
 import { GardenDashboard } from '../features/garden/GardenDashboard';
 import { WritingDashboard } from '../features/garden/poets/WritingDashboard';
 
+const baseUrl = import.meta.env.BASE_URL || '/';
+const basename = baseUrl === '/' ? undefined : baseUrl.replace(/\/$/, '');
+
 export const router = createBrowserRouter([
   {
     path: '/',
@@ -154,4 +157,4 @@ export const router = createBrowserRouter([
     path: '/garden/poets',
     Component: WritingDashboard,
   },
-]);
+], basename ? { basename } : undefined);

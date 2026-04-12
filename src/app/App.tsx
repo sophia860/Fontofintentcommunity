@@ -1,6 +1,7 @@
 import { RouterProvider } from 'react-router';
 import { router } from './routes';
 import { useDocumentHead } from './lib/useDocumentHead';
+import { isSupabaseConfigured } from './lib/supabase';
 
 /**
  * Fixed, full-viewport paper grain overlay.
@@ -30,10 +31,34 @@ function PaperGrainOverlay() {
   );
 }
 
+function ConfigurationWarning() {
+  if (isSupabaseConfigured) return null;
+  return (
+    <div
+      role="alert"
+      style={{
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        right: 0,
+        zIndex: 10000,
+        padding: '0.65rem 1rem',
+        background: '#6B2A2A',
+        color: '#fff',
+        fontSize: '0.85rem',
+        textAlign: 'center',
+      }}
+    >
+      Supabase is not configured. Set VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY to enable auth and data features.
+    </div>
+  );
+}
+
 export default function App() {
   useDocumentHead();
   return (
     <>
+      <ConfigurationWarning />
       <PaperGrainOverlay />
       <RouterProvider router={router} />
     </>
