@@ -41,7 +41,7 @@ import {
 } from 'react';
 import { Link, useNavigate } from 'react-router';
 import { supabase } from '../../../app/lib/supabase';
-import { useAuth } from '../../../app/lib/useAuth';
+import { useAuth } from '../../../contexts/AuthProvider';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 

@@ -27,6 +27,7 @@ import { Editions } from './components/Editions';
 import { EditionDetail } from './components/EditionDetail';
 import { CollectorCircle } from './components/CollectorCircle';
 import { GardenDashboard } from '../features/garden/GardenDashboard';
+import { WritingDashboard } from '../features/garden/poets/WritingDashboard';
 
 export const router = createBrowserRouter([
   {
@@ -148,5 +149,9 @@ export const router = createBrowserRouter([
   {
     path: '/garden/dashboard',
     Component: GardenDashboard,
+  },
+  {
+    path: '/garden/poets',
+    Component: WritingDashboard,
   },
 ]);
