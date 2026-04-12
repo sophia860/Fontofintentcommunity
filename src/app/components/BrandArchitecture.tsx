@@ -241,7 +241,6 @@ export function BrandArchitecture() {
         <p style={S.sectionLabel}>Explore</p>
         <div style={S.linkRow}>
           <Link to="/garden" style={S.internalLink}>The Garden →</Link>
-          <Link to="/editions" style={S.internalLink}>Editions →</Link>
           <Link to="/programs" style={S.internalLink}>Programs →</Link>
         </div>
       </section>

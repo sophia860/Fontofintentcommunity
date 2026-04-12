@@ -569,11 +569,9 @@ export function GardenHome() {
             A literary institution for writers, journals, and the work
             that happens before publication. The Garden holds the fragments,
             the drafts, the obsessive returns. Journals come here to scout.
-            Chapbooks are published when the work demands it — not before.
           </p>
           <div style={S.heroCta}>
             <Link to="/journals" style={S.ctaPrimary}>Enter the Garden</Link>
-            <Link to="/editions" style={S.ctaSecondary}>Chapbooks &amp; Editions</Link>
           </div>
         </div>
         <img
@@ -703,7 +701,7 @@ export function GardenHome() {
       {/* Footer */}
       <div style={S.footer}>
         <span style={S.footerNote}>Page Gallery</span>
-        <span style={S.footerNote}>The Garden · Chapbooks · Residency · Editions</span>
+        <span style={S.footerNote}>The Garden · Residency</span>
       </div>
     </div>
   );

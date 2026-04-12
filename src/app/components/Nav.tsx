@@ -12,7 +12,6 @@ const NAV_LINKS = [
   { href: '/garden',   label: 'The Garden' },
   { href: '/writers',  label: 'Writers'    },
   { href: '/journals', label: 'Journals'   },
-  { href: '/editions', label: 'Editions'   },
   { href: '/programs', label: 'Programs'   },
   { href: '/about',    label: 'About'      },
 ];

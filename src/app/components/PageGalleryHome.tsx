@@ -224,8 +224,6 @@ export function PageGalleryHome() {
           <p style={S.ctaLabel}>Where to begin</p>
           <Link to="/garden" style={S.ctaLink}>Enter The Garden →</Link>
           <span style={S.ctaSeparator}>·</span>
-          <Link to="/editions" style={S.ctaLink}>View Editions →</Link>
-          <span style={S.ctaSeparator}>·</span>
           <Link to="/apply" style={S.ctaLink}>Apply to Programs →</Link>
         </div>
       </section>
