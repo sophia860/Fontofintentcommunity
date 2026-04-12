@@ -2,21 +2,22 @@
  * Maps burst-level behavioral signals to visual styles.
  *
  * Three axes of expression:
- * 1. Weight: confidence → wght 200 (hesitant) to 800 (confident)
+ * 1. Weight: confidence → wght 200 (hesitant) to 800 (confident/bold)
  * 2. Opacity/Color: hesitant → warm gray, confident → full intensity
  * 3. Spacing: pauses between bursts create visible horizontal gaps
  *
- * Font chaos (fourth axis):
- * All bursts are assigned one of 8 handwritten fonts deterministically from
- * their content hash, producing a lively, chaotic mix across the canvas.
- * Plus random subtle size shifts and slight baseline wobble.
+ * Writing studio text uses DM Sans so that the rhythm-driven weight
+ * variation (thin → bold) reads cleanly on screen.
  *
  * Supports both light mode (writing surface, preview) and dark mode (replay).
  */
 import type { CSSProperties } from 'react';
 
+/** Font used for burst text in the writing studio. */
+const WRITING_FONT = "'DM Sans', sans-serif";
+
 /**
- * Full chaos font pool — 8 handwritten / child-like faces.
+ * Full chaos font pool — kept for heading / UI decoration.
  * Order matters: hash % length maps into this array.
  */
 export const CHAOS_FONTS = [
@@ -43,16 +44,6 @@ function hashString(s: string): number {
 }
 
 /**
- * Pick a font family for a burst based on its character content.
- * Returns the full CSS font-family value.
- */
-function pickFontFamily(chars: string[]): string {
-  const text = chars && chars.length > 0 ? chars.join('') : '';
-  const h = hashString(text || 'default');
-  return CHAOS_FONTS[h % CHAOS_FONTS.length];
-}
-
-/**
  * Pick a font for a heading / UI element using a stable seed string.
  * Pass a unique per-element seed (e.g. component name + element description)
  * so each heading gets a different font but doesn't change on re-render.
@@ -68,7 +59,7 @@ export function pickHeadingFont(seed: string): string {
  * @param hesitation  0–1 hesitation score
  * @param pauseBefore milliseconds of pause before this burst
  * @param darkMode    if true, renders warm light text on dark background
- * @param chars       burst characters — used to select font chaotically
+ * @param chars       burst characters (unused, kept for API compatibility)
  */
 export function getBurstStyle(
   confidence: number,
@@ -77,8 +68,11 @@ export function getBurstStyle(
   darkMode = false,
   chars: string[] = []
 ): CSSProperties {
-  // --- Axis 1: Weight ---
-  const wght = Math.round(200 + confidence * 600);
+  void chars; // reserved for future use
+
+  // --- Axis 1: Weight (DM Sans variable font: 100–900) ---
+  // Slow/hesitant → 300 (light), fast/confident → 700 (bold)
+  const wght = Math.round(300 + confidence * 400);
 
   // --- Axis 2: Color/Opacity ---
   let color: string;
@@ -109,27 +103,14 @@ export function getBurstStyle(
     }
   }
 
-  // --- Axis 4: Chaotic font + subtle size / baseline wobble ---
-  const fontFamily = pickFontFamily(chars);
-  const text = chars.join('');
-  const h = hashString(text || String(pauseBefore));
-  // 37 steps gives a 0.82–1.19em range (±~18% size variation across bursts)
-  const SIZE_VARIATION_STEPS = 37;
-  const sizeScale = 0.82 + (h % SIZE_VARIATION_STEPS) / 100;
-  // 7 steps gives a −3 to +3 px baseline wobble
-  const WOBBLE_STEPS = 7;
-  const verticalShift = ((h % WOBBLE_STEPS) - 3);
-
   const style: CSSProperties = {
-    fontFamily,
+    fontFamily: WRITING_FONT,
     fontVariationSettings: `'wght' ${wght}`,
     color,
     opacity,
     display: 'inline',
     transition: 'opacity 0.3s ease',
     marginLeft,
-    fontSize: `${sizeScale}em`,
-    verticalAlign: `${verticalShift}px`,
   };
 
   return style;

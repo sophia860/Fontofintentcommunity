@@ -631,9 +631,7 @@ export function WritingSurface() {
           <div
             className="whitespace-pre-wrap break-words"
             style={{
-              fontFamily: "'Inter', sans-serif",
-              fontSize: isMobile ? '1.15rem' : 'clamp(1rem, 2vw, 1.25rem)',
-              lineHeight: 1.8,
+              fontFamily: "'DM Sans', sans-serif",
             }}
           >
             {bursts.length === 0 && (
@@ -641,7 +639,7 @@ export function WritingSurface() {
                 className="select-none"
                 style={{
                   color: placeholderColor,
-                  fontFamily: "'Inter', sans-serif",
+                  fontFamily: "'DM Sans', sans-serif",
                   fontVariationSettings: "'wght' 350",
                   fontSize: '1.05rem',
                   transition: 'color 0.3s ease',
