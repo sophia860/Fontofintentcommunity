@@ -58,6 +58,26 @@ npm run dev
 npm run build
 ```
 
+## GitHub Pages deployment
+
+- This repository is deployed as a **project site** at `/Fontofintentcommunity/`.
+- The build base path is set automatically in CI from the repository name.
+- SPA deep-link fallback uses `public/404.html` and redirects back through `/Fontofintentcommunity/`.
+
+### Required repository settings
+
+Set these before deploying:
+
+- Repository variable: `VITE_SUPABASE_URL`
+- Repository secret: `VITE_SUPABASE_ANON_KEY`
+- Repository variable (optional if payments disabled): `VITE_PAYPAL_CLIENT_ID`
+
+### Pre-deploy checklist
+
+- Confirm GitHub Pages source is configured for Actions.
+- Confirm the required `VITE_*` repository variables/secrets are set.
+- Run `npm run build` locally and verify there are no new errors.
+
 ## Stack
 
 React 18 · TypeScript · Vite · Tailwind · Supabase · Radix UI · framer-motion (motion) · zustand

@@ -17,7 +17,10 @@ function figmaAssetResolver() {
 }
 
 export default defineConfig({
-    base: '/',
+  base:
+    process.env.GITHUB_ACTIONS === 'true' && process.env.GITHUB_REPOSITORY
+      ? `/${process.env.GITHUB_REPOSITORY.split('/')[1]}/`
+      : '/',
   plugins: [
     figmaAssetResolver(),
     // The React and Tailwind plugins are both required for Make, even if
