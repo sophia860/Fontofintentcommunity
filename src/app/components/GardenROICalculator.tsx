@@ -71,9 +71,7 @@ export default function GardenROICalculator() {
 
   return (
     <div style={{ fontFamily: 'Georgia, serif', maxWidth: 720, margin: '0 auto', padding: '2rem 1.5rem', color: '#2a2017' }}>
-      <h2 style={{ fontSize: '1.6rem', fontWeight: 400, marginBottom: '0.25rem', letterSpacing: '-0.01em' }}>
-        What is your submissions system really costing you?
-      </h2>
+
       <p style={{ color: '#7a6a52', marginBottom: '2rem', fontSize: '1rem', lineHeight: 1.6 }}>
         Adjust the sliders for your journal. See what you keep when you switch to The Garden.
       </p>
