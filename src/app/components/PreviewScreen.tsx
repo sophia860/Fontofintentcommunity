@@ -87,7 +87,7 @@ export function PreviewScreen() {
     background: 'none',
     border: 'none',
     padding: isMobile ? '0.75rem 0' : '0',
-    fontFamily: "'Inter', sans-serif",
+    fontFamily: "'Fira Code', monospace",
     fontVariationSettings: "'wght' 400",
     fontSize: isMobile ? '1rem' : '0.75rem',
     letterSpacing: '0.08em',
@@ -107,7 +107,7 @@ export function PreviewScreen() {
       >
         <p
           style={{
-            fontFamily: "'Playfair Display', serif",
+            fontFamily: "'Fira Code', monospace",
             fontStyle: 'italic',
             fontWeight: 400,
             fontSize: '1.5rem',
@@ -125,7 +125,7 @@ export function PreviewScreen() {
             border: 'none',
             padding: isMobile ? '0.5rem 0' : 0,
             color: '#2C2824',
-            fontFamily: "'Playfair Display', serif",
+            fontFamily: "'Fira Code', monospace",
             fontStyle: 'italic',
             fontWeight: 400,
             fontSize: '1rem',
@@ -160,7 +160,7 @@ export function PreviewScreen() {
             background: isDark ? '#E5DCD2' : '#2C2824',
             color: isDark ? '#1C1915' : '#F5EDE4',
             border: 'none',
-            fontFamily: "'Inter', sans-serif",
+            fontFamily: "'Fira Code', monospace",
           },
         }}
       />
@@ -177,7 +177,7 @@ export function PreviewScreen() {
         {/* "Your Letter" — Playfair Display italic, typographic anchor */}
         <h2
           style={{
-            fontFamily: "'Playfair Display', serif",
+            fontFamily: "'Fira Code', monospace",
             fontStyle: 'italic',
             fontWeight: 400,
             fontSize: isMobile ? '1.3rem' : '1.8rem',
@@ -244,7 +244,7 @@ export function PreviewScreen() {
         {/* Saved indicator */}
         {savedToGarden && (
           <p style={{
-            fontFamily: "'Inter', sans-serif",
+            fontFamily: "'Fira Code', monospace",
             fontSize: '0.72rem',
             letterSpacing: '0.06em',
             color: '#8BA67A',
@@ -257,7 +257,7 @@ export function PreviewScreen() {
         {/* Typographic bookend — echoes landing page footer */}
         <p
           style={{
-            fontFamily: "'Playfair Display', serif",
+            fontFamily: "'Fira Code', monospace",
             fontStyle: 'italic',
             fontWeight: 400,
             fontSize: '0.85rem',

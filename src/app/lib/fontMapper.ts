@@ -14,21 +14,14 @@
 import type { CSSProperties } from 'react';
 
 /** Font used for burst text in the writing studio. */
-const WRITING_FONT = "'DM Sans', sans-serif";
+const WRITING_FONT = "'Fira Code', monospace";
 
 /**
- * Full chaos font pool — kept for heading / UI decoration.
+ * Full chaos font pool — replaced with TaktukBrush as the single handwritten font.
  * Order matters: hash % length maps into this array.
  */
 export const CHAOS_FONTS = [
-  "'ACFrenchToast', cursive",
-  "'ACRealAdult', cursive",
-  "'BiroScriptPlus', cursive",
-  "'Caveat', cursive",
-  "'Kalam', cursive",
-  "'Indie Flower', cursive",
-  "'Patrick Hand', cursive",
-  "'Short Stack', cursive",
+  "'TaktukBrush', cursive",
 ];
 
 /**
@@ -121,7 +114,7 @@ export function getBurstStyle(
  */
 export function getGhostStyle(): CSSProperties {
   return {
-    fontFamily: "'ACFrenchToast', cursive",
+    fontFamily: "'TaktukBrush', cursive",
     color: '#8A7E72',
     opacity: 0.15,
     display: 'inline',

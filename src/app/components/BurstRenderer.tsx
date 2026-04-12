@@ -47,7 +47,7 @@ export function BurstRenderer({ bursts, fontSize, lineHeight, suffix, inline, da
     <div
       className="whitespace-pre-wrap break-words"
       style={{
-        fontFamily: "'DM Sans', sans-serif",
+        fontFamily: "'Fira Code', monospace",
         fontSize: fontSize || 'clamp(1rem, 2vw, 1.25rem)',
         lineHeight: lineHeight ?? 1.8,
       }}
