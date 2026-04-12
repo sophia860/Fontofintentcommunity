@@ -1,6 +1,5 @@
 {
   "name": "the-page-gallery",
-  "description": "A living digital garden for literary editions, submissions, and collector communities.",
   "description": "The Page Gallery — a cultural company. Publishing house, platform, infrastructure.",
   "private": true,
   "version": "0.0.1",
@@ -8,6 +7,7 @@
   "scripts": {
     "build": "vite build",
     "dev": "vite",
+    "preview": "vite preview",
     "test": "vitest run",
     "test:coverage": "vitest run --coverage"
   },
