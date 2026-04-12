@@ -15,15 +15,8 @@
 import { useRef, useEffect, useState } from 'react';
 import type { CSSProperties } from 'react';
 import { Link } from 'react-router';
-import {
-  motion,
-  useScroll,
-  useTransform,
-  useSpring,
-  useInView,
-  useMotionTemplate,
-} from 'motion/react';
-import { Nav } from './Nav';
+import { motion } from 'motion/react';
+import { useEffect, useState } from 'react';
 
 // ── Design tokens ─────────────────────────────────────────────────────────────
 
@@ -463,265 +456,129 @@ const FEATURES = [
 
 // ── Main ──────────────────────────────────────────────────────────────────────
 export function PageGalleryHome() {
-  const canvasRef = useInkCanvas();
-  const heroRef = useRef<HTMLDivElement>(null);
+  const [loaded, setLoaded] = useState(false);
 
-  const { scrollYProgress: heroProgress } = useScroll({
-    target: heroRef,
-    offset: ['start start', 'end start'],
-  });
-  const heroOpacity = useTransform(heroProgress, [0, 0.7], [1, 0]);
-  const heroYRaw = useTransform(heroProgress, [0, 1], [0, 90]);
-  const heroY = useSpring(heroYRaw, { stiffness: 85, damping: 26 });
+  useEffect(() => {
+    setLoaded(true);
+  }, []);
 
   return (
-    <div style={{ background: '#FAF7F2', minHeight: '100vh', overflowX: 'hidden' }}>
-
-      {/* ── Ink particle canvas — fixed, blend mode multiply ──────────────── */}
-      <canvas
-        ref={canvasRef}
-        aria-hidden="true"
-        style={{
-          position: 'fixed', inset: 0,
-          pointerEvents: 'none', zIndex: 1,
-          mixBlendMode: 'multiply',
-        }}
-      />
-
-      <Nav />
-
-      {/* ── ACT I: HERO ───────────────────────────────────────────────────── */}
-      <motion.section
-        ref={heroRef}
-        style={{ opacity: heroOpacity, y: heroY, position: 'relative', zIndex: 2 }}
-      >
-        <div
-          style={{
-            minHeight: '100vh',
-            display: 'flex', flexDirection: 'column', justifyContent: 'center',
-            padding: 'clamp(4rem,8vh,7rem) clamp(1.5rem,4vw,3rem) 5rem',
-            maxWidth: '1280px', margin: '0 auto',
-          }}
-        >
-          <div
-            style={{
-              display: 'grid',
-              gridTemplateColumns: '1fr auto',
-              gap: '2rem',
-              alignItems: 'start',
-            }}
+    <div className="min-h-screen bg-[var(--bg-paper)] text-[var(--text-black)] overflow-hidden">
+      {/* Minimal header – clean institution feel */}
+      <header className="flex items-center justify-between px-8 py-8 border-b border-black/10">
+        <div className="flex items-center gap-3">
+          <div className="w-5 h-5 rounded-full bg-[var(--accent-red)]" />
+          <span className="font-medium tracking-tight text-xl">Page Gallery</span>
+        </div>
+        <nav className="flex items-center gap-10 text-sm uppercase tracking-[0.5px] font-medium">
+          <Link to="/categories" className="hover:underline">Categories</Link>
+          <Link to="/about" className="hover:underline">About</Link>
+          <Link to="/commissions" className="hover:underline">Contact</Link>
+          <Link
+            to="/apply"
+            className="px-8 py-3 border border-black rounded-full hover:bg-black hover:text-white transition-colors"
           >
-            {/* Left: headline */}
-            <div>
-              <motion.p
-                initial={{ opacity: 0, x: -18 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.85, ease: [0.22, 1, 0.36, 1] }}
-                style={{
-                  fontFamily: FONT_MONO,
-                  fontSize: '0.67rem', letterSpacing: '0.34em',
-                  textTransform: 'uppercase', color: '#9a9085',
-                  marginBottom: '2.5rem',
-                }}
-              >
-                Est 2024 · London / Digital
-              </motion.p>
+            Hire Me
+          </Link>
+        </nav>
+      </header>
 
-              <h1 style={{ margin: 0, fontWeight: 900 }}>
-                <CharReveal
-                  text="Once an"
-                  delay={0.1}
-                  style={{
-                    fontFamily: FONT_MONO,
-                    fontSize: 'clamp(2.2rem,4.5vw,4.5rem)',
-                    letterSpacing: '-1.5px', color: '#2C2824', lineHeight: 1.05,
-                  }}
-                />
-                <CharReveal
-                  text="ENTREPRENEUR,"
-                  delay={0.22}
-                  style={{
-                    fontFamily: FONT_MONO,
-                    fontSize: 'clamp(3rem,7.5vw,7.5rem)',
-                    letterSpacing: '-3px', color: '#2C2824', lineHeight: 0.96,
-                    marginTop: '0.07em',
-                  }}
-                />
-                <CharReveal
-                  text="always an"
-                  delay={0.52}
-                  style={{
-                    fontFamily: FONT_MONO,
-                    fontSize: 'clamp(2.2rem,4.5vw,4.5rem)',
-                    letterSpacing: '-1.5px', color: '#2C2824', lineHeight: 1.05,
-                    marginTop: '0.12em',
-                  }}
-                />
-                <CharReveal
-                  text="ENTREPRENEUR."
-                  delay={0.65}
-                  style={{
-                    fontFamily: FONT_MONO,
-                    fontSize: 'clamp(3rem,7.5vw,7.5rem)',
-                    letterSpacing: '-3px', color: '#2C2824', lineHeight: 0.96,
-                    marginTop: '0.07em',
-                  }}
-                />
-              </h1>
-            </div>
+      <main className="max-w-7xl mx-auto px-8 pt-24 pb-40">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-x-20 items-start">
+          {/* Left column – generous story block */}
+          <div className="lg:col-span-7">
+            <motion.h1
+              initial={{ opacity: 0, y: 32 }}
+              animate={{ opacity: loaded ? 1 : 0, y: loaded ? 0 : 32 }}
+              transition={{ duration: 0.85, ease: 'easeOut' }}
+              className="serif-heading text-[clamp(3.5rem,8vw,108px)] leading-[0.92] mb-14"
+            >
+              Once an<br />
+              ENTREPRENEUR,<br />
+              always an<br />
+              ENTREPRENEUR.
+            </motion.h1>
 
-            {/* Right: rotated stamp — desktop only (hidden on mobile via className) */}
-            <div className="hidden lg:block" style={{ paddingTop: '5rem' }}>
-              <ParallaxStamp />
-            </div>
-          </div>
-
-          {/* Story + CTA row */}
-          <div
-            style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fit, minmax(280px,1fr))',
-              gap: '3rem',
-              marginTop: '5rem',
-            }}
-          >
-            <WordReveal
-              text="Picture two primary school girls, circa 1992, prancing from door to door of their tiny rural German village — hand-drawn wrapping papers in hand. Their product: one of a kind. Their objective: a pony ride. That was my sister and me: creative entrepreneurs since Day 1."
-              style={{
-                fontFamily: FONT_MONO,
-                fontSize: '1rem', lineHeight: 1.92,
-                color: '#5a534c', maxWidth: '46ch',
-              }}
-            />
-            <div style={{ display: 'flex', alignItems: 'flex-end' }}>
-              <motion.div
-                initial={{ opacity: 0, y: 22 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 1.15, duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
-              >
-                <MagneticCTA href="/editions">Shop Limited Editions</MagneticCTA>
-              </motion.div>
-            </div>
-          </div>
-
-          {/* Scroll nudge */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 2.4, duration: 1.4 }}
-            style={{
-              position: 'absolute', bottom: '2.5rem', left: '50%',
-              transform: 'translateX(-50%)',
-              display: 'flex', flexDirection: 'column',
-              alignItems: 'center', gap: '0.5rem',
-              pointerEvents: 'none',
-            }}
-          >
-            <span style={{
-              fontFamily: FONT_MONO,
-              fontSize: '0.58rem', letterSpacing: '0.32em',
-              textTransform: 'uppercase', color: '#b0a8a0',
-            }}>
-              scroll
-            </span>
             <motion.div
-              animate={{ scaleY: [1, 0.28, 1], opacity: [0.35, 1, 0.35] }}
-              transition={{ duration: 2.6, repeat: Infinity, ease: 'easeInOut' }}
-              style={{
-                width: '1px', height: '34px',
-                background: 'linear-gradient(to bottom, #9a9085, transparent)',
-              }}
-            />
-          </motion.div>
-        </div>
-      </motion.section>
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: loaded ? 1 : 0, y: loaded ? 0 : 20 }}
+              transition={{ duration: 0.85, delay: 0.2, ease: 'easeOut' }}
+              className="max-w-prose text-[17px] leading-[1.85] text-black/75"
+            >
+              Picture two primary school girls, circa 1992, prancing from door to door of their tiny
+              rural German village. In their hands, they are holding batches of A4 papers, each sheet
+              filled with neatly aligned rows of the same hand-drawn motif — a different motif per
+              page. Their product: one of a kind wrapping papers. Their objective: sell said wrapping
+              paper to the neighbours to make the money needed to pay for a pony ride at the nearby
+              stable.
+              <br /><br />
+              That was my sister and me: creative entrepreneurs since Day 1.
+            </motion.div>
 
-      {/* ── ACT II: MARQUEE ───────────────────────────────────────────────── */}
-      <div style={{ position: 'relative', zIndex: 2 }}>
-        <Marquee />
-      </div>
-
-      {/* ── ACT III: SOMETHING ────────────────────────────────────────────── */}
-      <div style={{ position: 'relative', zIndex: 2 }}>
-        <SomethingSection />
-      </div>
-
-      {/* ── ACT IV: FEATURES ──────────────────────────────────────────────── */}
-      <section
-        style={{
-          position: 'relative', zIndex: 2, background: '#FAF7F2',
-          padding: 'clamp(4rem,8vh,6rem) clamp(1.5rem,4vw,3rem) clamp(5rem,10vh,8rem)',
-        }}
-      >
-        <div style={{ maxWidth: '1100px', margin: '0 auto' }}>
-          <motion.div
-            initial={{ opacity: 0, y: 28 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.82, ease: [0.22, 1, 0.36, 1] }}
-            style={{ marginBottom: '4rem' }}
-          >
-            <p style={{
-              fontFamily: FONT_MONO,
-              fontSize: '0.67rem', letterSpacing: '0.32em',
-              textTransform: 'uppercase', color: '#9a9085', marginBottom: '1rem',
-            }}>
-              The platform
-            </p>
-            <h2 style={{
-              fontFamily: FONT_MONO,
-              fontSize: 'clamp(2rem,4vw,3.5rem)',
-              fontWeight: 900, letterSpacing: '-2px',
-              lineHeight: 1.05, color: '#2C2824', margin: 0,
-            }}>
-              Built for the<br />long game.
-            </h2>
-          </motion.div>
-
-          <div
-            style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fit, minmax(260px,1fr))',
-              gap: '0 3.5rem',
-            }}
-          >
-            {FEATURES.map((f, i) => (
-              <FeatureCard key={f.href} {...f} index={i} />
-            ))}
+            {/* Direct revenue CTA – editions shop entry */}
+            <motion.div
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: loaded ? 1 : 0, y: loaded ? 0 : 16 }}
+              transition={{ duration: 0.8, delay: 0.4, ease: 'easeOut' }}
+              className="mt-16 inline-block"
+            >
+              <motion.div whileHover={{ scale: 1.015 }}>
+                <Link
+                  to="/editions"
+                  className="inline-flex items-center gap-4 px-12 py-5 border-2 border-black rounded-full text-lg font-medium tracking-wide hover:bg-black hover:text-white transition-all duration-300"
+                >
+                  Shop Limited Editions →
+                </Link>
+              </motion.div>
+            </motion.div>
           </div>
-        </div>
-      </section>
 
-      {/* ── ACT V: FOOTER ─────────────────────────────────────────────────── */}
-      <footer
-        style={{
-          position: 'relative', zIndex: 2,
-          background: '#2C2824', color: '#F5EDE4',
-          padding: 'clamp(2.5rem,5vh,3.5rem) clamp(1.5rem,4vw,3rem)',
-        }}
-      >
-        <div
-          style={{
-            maxWidth: '1100px', margin: '0 auto',
-            display: 'flex', justifyContent: 'space-between',
-            alignItems: 'center', flexWrap: 'wrap', gap: '1rem',
-          }}
+          {/* Right column – floating mark (accent dot cluster) */}
+          <div className="lg:col-span-5 relative h-[540px] hidden lg:flex justify-end items-start pt-8">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.85 }}
+              animate={{ opacity: loaded ? 1 : 0, scale: loaded ? 1 : 0.85 }}
+              transition={{ duration: 1, delay: 0.3, ease: 'easeOut' }}
+              className="relative"
+            >
+              {/* Abstract geometric mark — circles evoking the brand dot */}
+              <div className="w-64 h-64 rounded-full border-2 border-black/8 flex items-center justify-center">
+                <div className="w-44 h-44 rounded-full border border-black/12 flex items-center justify-center">
+                  <div className="w-24 h-24 rounded-full bg-[var(--accent-red)] opacity-90" />
+                </div>
+              </div>
+              <motion.div
+                animate={{ y: [0, -12, 0] }}
+                transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
+                className="absolute -bottom-8 -right-6 w-12 h-12 rounded-full border-2 border-black/20"
+              />
+              <motion.div
+                animate={{ y: [0, 8, 0] }}
+                transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut', delay: 1 }}
+                className="absolute top-4 -left-10 w-7 h-7 rounded-full bg-black/10"
+              />
+            </motion.div>
+          </div>
+
+        {/* Bottom typographic anchor – "Making SOMETHING" energy */}
+        <motion.div
+          initial={{ opacity: 0, y: 40 }}
+          animate={{ opacity: loaded ? 1 : 0, y: loaded ? 0 : 40 }}
+          transition={{ duration: 0.9, delay: 0.5, ease: 'easeOut' }}
+          className="mt-40 flex flex-col items-center text-center"
         >
-          <span style={{
-            fontFamily: FONT_MONO,
-            fontSize: '0.76rem', letterSpacing: '0.22em', textTransform: 'uppercase',
-          }}>
-            The Page Gallery
-          </span>
-          <span style={{
-            fontFamily: FONT_MONO,
-            fontSize: '0.7rem', color: '#9A8F87', letterSpacing: '0.06em',
-          }}>
-            © {new Date().getFullYear()} · London / Digital
-          </span>
-        </div>
+          <p className="handwritten text-6xl tracking-tight mb-3 text-black/90">Making</p>
+          <h2 className="serif-heading text-[clamp(4rem,14vw,168px)] leading-none font-bold tracking-[-8px]">
+            SOMETHING
+          </h2>
+        </motion.div>
+      </main>
+
+      <footer className="border-t border-black/10 py-12 text-center text-sm text-black/60 font-light">
+        © Page Gallery Editions • London / New York • Making something since 1992
       </footer>
 
     </div>
   );
 }
+

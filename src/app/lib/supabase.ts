@@ -7,9 +7,6 @@ export const isSupabaseConfigured = Boolean(
   supabaseUrl?.trim() && supabaseAnonKey?.trim()
 );
 
-// Fail loudly at boot if env vars are missing — no silent placeholder fallback.
-// If this fires on Render, the fix is: set the vars in Environment → save →
-// then trigger a fresh Manual Deploy (Vite bakes import.meta.env at build time).
 if (!isSupabaseConfigured) {
   console.error(
     '[supabase] VITE_SUPABASE_URL or VITE_SUPABASE_ANON_KEY is not set. ' +
@@ -19,9 +16,11 @@ if (!isSupabaseConfigured) {
   );
 }
 
+// Use placeholder values when unconfigured so the module does not throw at
+// import time. The ConfigurationWarning banner in App.tsx surfaces the issue.
 export const supabase = createClient(
-  supabaseUrl as string,
-  supabaseAnonKey as string,
+  supabaseUrl ?? 'https://placeholder.supabase.co',
+  supabaseAnonKey ?? 'placeholder-anon-key',
   {
     auth: {
       autoRefreshToken: true,

@@ -1,6 +1,9 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
+  --bg-paper: #FAF7F2;
+  --text-black: #111111;
+  --accent-red: #E30613;
   --font-size: 16px;
   --font-handwritten: 'TaktukBrush', cursive;
   --font-body: 'Fira Code', monospace;
@@ -138,8 +141,15 @@
 
   body {
     @apply bg-background text-foreground;
-    background: #F9F6F2;
-    font-family: var(--font-body);
+    background-color: var(--bg-paper);
+    background-image:
+      linear-gradient(rgba(250, 247, 242, 0.92), rgba(250, 247, 242, 0.92)),
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='paper'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23paper)' opacity='0.05'/%3E%3C/svg%3E");
+    background-size: cover, 300px 300px;
+    background-attachment: fixed;
+    color: var(--text-black);
+    font-family: 'DM Sans', var(--font-body), system-ui, sans-serif;
+    line-height: 1.85;
   }
 
   /**
@@ -219,7 +229,27 @@
   text-decoration: none;
 }
 
-/* Handwritten heading utility */
+/* Serif/display heading utility — Rock 3D for the homepage overhaul.
+ * letter-spacing: -3.5px is tuned to Rock 3D's wide glyph spacing at display sizes (≥48px).
+ * Individual headings may override via Tailwind tracking-* when they need tighter or looser fit. */
 .serif-heading {
-  font-family: 'TaktukBrush', cursive;
+  font-family: 'Rock 3D', cursive;
+  font-feature-settings: "liga" 1;
+  letter-spacing: -3.5px;
+}
+
+/* Handwritten / script utility — Caveat */
+.handwritten {
+  font-family: 'Caveat', cursive;
+  font-weight: 600;
+  letter-spacing: -0.5px;
+}
+
+/* Global link transitions */
+a {
+  transition: color 0.2s ease;
+}
+
+a:hover {
+  color: var(--accent-red);
 }
