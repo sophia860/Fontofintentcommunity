@@ -8,7 +8,9 @@
     // Stores the route in sessionStorage and redirects to project base path
     // index.html then picks it up and navigates via the router
     sessionStorage.setItem('spa-redirect', window.location.pathname + window.location.search + window.location.hash);
-    window.location.replace('/Fontofintentcommunity/');
+    var pathParts = window.location.pathname.split('/').filter(Boolean);
+    var basePath = pathParts.length > 0 ? '/' + pathParts[0] + '/' : '/';
+    window.location.replace(basePath);
   </script>
 </head>
 <body>
