@@ -216,3 +216,9 @@
   color: inherit;
   text-decoration: none;
 }
+
+/* Serif display heading utility */
+.serif-heading {
+  font-family: 'Playfair Display', 'Instrument Serif', serif;
+  font-feature-settings: "liga" 1, "kern" 1;
+}

@@ -1,264 +1,124 @@
 import { Link } from 'react-router';
+import { motion } from 'motion/react';
+import { useState, useEffect } from 'react';
 import { Nav } from './Nav';
 
-const S: Record<string, React.CSSProperties> = {
-  page: {
-    minHeight: '100vh',
-    backgroundColor: '#faf8f5',
-    fontFamily: 'Georgia, serif',
-    color: '#1a1714',
-  },
-  hero: {
-    padding: '7rem 3rem 5rem',
-    maxWidth: '860px',
-    margin: '0 auto',
-  },
-  heroEyebrow: {
-    fontFamily: 'Georgia, serif',
-    fontSize: '0.75rem',
-    letterSpacing: '0.12em',
-    textTransform: 'uppercase' as const,
-    color: '#7a7067',
-    marginBottom: '1.5rem',
-  },
-  heroHeadline: {
-    fontFamily: 'Georgia, serif',
-    fontSize: 'clamp(2.4rem, 5vw, 4rem)',
-    fontWeight: 400,
-    lineHeight: 1.1,
-    letterSpacing: '-0.01em',
-    color: '#1a1714',
-    marginBottom: '1.5rem',
-  },
-  heroSubtitle: {
-    fontFamily: 'Georgia, serif',
-    fontSize: '1.15rem',
-    fontStyle: 'italic',
-    color: '#7a7067',
-    marginBottom: '2rem',
-    lineHeight: 1.5,
-  },
-  heroBody: {
-    fontFamily: 'Georgia, serif',
-    fontSize: '1rem',
-    color: '#4a4540',
-    lineHeight: 1.7,
-    maxWidth: '560px',
-  },
-  divider: {
-    border: 'none',
-    borderTop: '1px solid #e8e4df',
-    margin: '0',
-  },
-  brandsSection: {
-    padding: '5rem 3rem',
-    maxWidth: '860px',
-    margin: '0 auto',
-  },
-  sectionLabel: {
-    fontFamily: 'Georgia, serif',
-    fontSize: '0.72rem',
-    letterSpacing: '0.12em',
-    textTransform: 'uppercase' as const,
-    color: '#7a7067',
-    marginBottom: '3rem',
-  },
-  brandGrid: {
-    display: 'grid',
-    gridTemplateColumns: 'repeat(auto-fit, minmax(340px, 1fr))',
-    gap: '1.5px',
-    backgroundColor: '#e8e4df',
-  },
-  brandCard: {
-    backgroundColor: '#faf8f5',
-    padding: '2.5rem',
-  },
-  brandCardLinked: {
-    backgroundColor: '#faf8f5',
-    padding: '2.5rem',
-    textDecoration: 'none',
-    color: 'inherit',
-    display: 'block',
-    transition: 'background-color 0.15s',
-  },
-  brandName: {
-    fontFamily: 'Georgia, serif',
-    fontSize: '1.1rem',
-    fontWeight: 400,
-    color: '#1a1714',
-    marginBottom: '0.6rem',
-    letterSpacing: '0.01em',
-  },
-  brandDesc: {
-    fontFamily: 'Georgia, serif',
-    fontSize: '0.9rem',
-    color: '#7a7067',
-    lineHeight: 1.5,
-    fontStyle: 'italic',
-  },
-  brandArrow: {
-    display: 'block',
-    fontFamily: 'Georgia, serif',
-    fontSize: '0.8rem',
-    color: '#1a1714',
-    marginTop: '1.2rem',
-    letterSpacing: '0.04em',
-  },
-  ctaSection: {
-    backgroundColor: '#f2ede8',
-    padding: '4rem 3rem',
-  },
-  ctaInner: {
-    maxWidth: '860px',
-    margin: '0 auto',
-    display: 'flex',
-    gap: '2rem',
-    flexWrap: 'wrap' as const,
-    alignItems: 'center',
-  },
-  ctaLabel: {
-    fontFamily: 'Georgia, serif',
-    fontSize: '0.72rem',
-    letterSpacing: '0.12em',
-    textTransform: 'uppercase' as const,
-    color: '#7a7067',
-    marginBottom: '1.5rem',
-    width: '100%',
-  },
-  ctaLink: {
-    fontFamily: 'Georgia, serif',
-    fontSize: '0.95rem',
-    color: '#1a1714',
-    textDecoration: 'none',
-    borderBottom: '1px solid #1a1714',
-    paddingBottom: '1px',
-    letterSpacing: '0.02em',
-  },
-  ctaSeparator: {
-    color: '#c8c0b8',
-    fontSize: '0.8rem',
-  },
-  footer: {
-    padding: '3rem',
-    borderTop: '1px solid #e8e4df',
-    maxWidth: '860px',
-    margin: '0 auto',
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'baseline',
-    flexWrap: 'wrap' as const,
-    gap: '1rem',
-  },
-  footerWord: {
-    fontFamily: 'Georgia, serif',
-    fontSize: '0.8rem',
-    color: '#7a7067',
-    letterSpacing: '0.04em',
-  },
-};
-
-const BRAND_BLOCKS = [
-  {
-    name: 'The Garden',
-    desc: 'The platform. Create, publish, collaborate, earn.',
-    href: '/garden',
-  },
-  {
-    name: 'Page Gallery Editions',
-    desc: 'The publishing imprint. Chapbooks, poetry, printed works.',
-    href: '/editions',
-  },
-  {
-    name: 'Programs',
-    desc: 'Residencies, workshops, labs, prizes.',
-    href: '/programs',
-  },
-];
-
 export function PageGalleryHome() {
+  const [isLoaded, setIsLoaded] = useState(false);
+  useEffect(() => { setIsLoaded(true); }, []);
+
   return (
-    <div style={S.page}>
+    <div className="min-h-screen bg-[#FAF7F2] text-black overflow-hidden">
       <Nav />
 
-      {/* Hero */}
-      <section style={S.hero}>
-        <p style={S.heroEyebrow}>The Page Gallery</p>
-        <h1 style={S.heroHeadline}>A cultural company.</h1>
-        <p style={S.heroSubtitle}>
-          A publishing house. A platform owner.
-        </p>
-        <p style={S.heroBody}>
-          We publish. We build infrastructure. We create opportunity.
-          We connect writers, artists, journals, and production.
-        </p>
-      </section>
+      <main className="max-w-7xl mx-auto px-6 lg:px-12 pt-20 pb-32">
+        {/* Hero grid: text left, illustrations right */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
 
-      <hr style={S.divider} />
+          {/* Left column — text */}
+          <div className="lg:col-span-7">
+            <h1
+              className="text-[clamp(3rem,8vw,92px)] leading-[1.05] tracking-[-2px] mb-8 font-bold"
+              style={{ fontFamily: "'Playfair Display', 'Instrument Serif', serif" }}
+            >
+              Once an<br />
+              ENTREPRENEUR,<br />
+              always an<br />
+              ENTREPRENEUR.
+            </h1>
 
-      {/* Four brand blocks */}
-      <section style={S.brandsSection}>
-        <p style={S.sectionLabel}>The Company</p>
-        <div style={S.brandGrid}>
-          {BRAND_BLOCKS.map(({ name, desc, href }) =>
-            href ? (
-              <Link key={name} to={href} style={S.brandCardLinked}>
-                <p style={S.brandName}>{name}</p>
-                <p style={S.brandDesc}>{desc}</p>
-                <span style={S.brandArrow}>Explore →</span>
-              </Link>
-            ) : (
-              <div key={name} style={S.brandCard}>
-                <p style={S.brandName}>{name}</p>
-                <p style={S.brandDesc}>{desc}</p>
-              </div>
-            )
-          )}
-        </div>
-      </section>
-
-      <hr style={S.divider} />
-
-      {/* CTA row */}
-      <section style={S.ctaSection}>
-        <div style={S.ctaInner}>
-          <p style={S.ctaLabel}>Where to begin</p>
-          <Link to="/garden" style={S.ctaLink}>Enter The Garden →</Link>
-          <span style={S.ctaSeparator}>·</span>
-          <Link to="/apply" style={S.ctaLink}>Apply to Programs →</Link>
-        </div>
-      </section>
-
-      {/* Hand drawing — final emotional statement */}
-      <section className="relative bg-black text-white py-32 overflow-hidden">
-        <div className="max-w-5xl mx-auto px-8 flex flex-col md:flex-row items-center gap-16">
-          <div className="flex-1 space-y-6">
-            <p className="font-ink text-4xl leading-none tracking-tight max-w-xs">
-              we are<br />
-              interested<br />
-              in<br />
-              the hands
-            </p>
-            <div className="text-zinc-400 text-sm tracking-widest pt-8">
-              the ones that write.<br />
-              the ones that print.<br />
-              the ones that hold the editions.
+            <div className="max-w-md text-lg leading-[1.85] text-black/75" style={{ fontFamily: "'DM Sans', 'Inter', system-ui, sans-serif" }}>
+              <p>
+                Picture two primary school girls, circa 1992, prancing from door to door of their tiny rural German village. In their hands, they are holding batches of A4 papers, each sheet filled with neatly aligned rows of the same hand-drawn motif — a different motif per page. Their product: one of a kind wrapping papers. Their objective: sell said wrapping paper to the neighbours to make the money needed to pay for a pony ride at the nearby stable.
+              </p>
+              <p className="mt-6">
+                That was my sister and me: creative entrepreneurs since Day 1.
+              </p>
             </div>
+
+            {/* Shop CTA — revenue hook */}
+            <motion.div
+              whileHover={{ scale: 1.02 }}
+              className="mt-12 inline-block"
+            >
+              <Link
+                to="/editions"
+                className="inline-block px-10 py-4 border-2 border-black rounded-full text-lg font-medium tracking-wide hover:bg-black hover:text-white transition-all"
+                style={{ fontFamily: "'DM Sans', system-ui, sans-serif" }}
+              >
+                Shop Limited Editions →
+              </Link>
+            </motion.div>
           </div>
-          <div className="flex-1 flex justify-center">
-            <img
-              src="/images/hand-drawing.png"
-              alt="we are interested in the hands"
-              className="w-full max-w-[420px] opacity-90 drop-shadow-2xl"
-            />
+
+          {/* Right column — floating illustrations */}
+          <div className="lg:col-span-5 relative h-[580px] lg:flex hidden justify-end">
+            <motion.div
+              initial={{ opacity: 0, y: 40 }}
+              animate={{ opacity: isLoaded ? 1 : 0, y: isLoaded ? 0 : 40 }}
+              transition={{ duration: 0.8, ease: 'easeOut' }}
+              className="absolute top-12 right-0"
+            >
+              <img
+                src="/illustrations/entrepreneur-girls.png"
+                alt="Two girls selling hand-drawn wrapping papers"
+                className="w-72 xl:w-80 drop-shadow-xl"
+              />
+            </motion.div>
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: isLoaded ? 0.65 : 0 }}
+              transition={{ duration: 1.2, delay: 0.3 }}
+              className="absolute top-80 right-28 w-36"
+            >
+              <img src="/illustrations/scribble.png" alt="" aria-hidden="true" />
+            </motion.div>
           </div>
         </div>
-        <div className="absolute inset-0 bg-[radial-gradient(#ffffff08_1px,transparent_1px)] bg-[length:4px_4px] pointer-events-none" />
-      </section>
 
-      {/* Footer */}
-      <footer style={S.footer}>
-        <span style={S.footerWord}>The Page Gallery</span>
-        <span style={S.footerWord}>© {new Date().getFullYear()}</span>
+        {/* Bottom anchor — "Making SOMETHING" */}
+        <div className="mt-32 lg:mt-48">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: isLoaded ? 1 : 0, y: isLoaded ? 0 : 30 }}
+            transition={{ duration: 0.9, delay: 0.4, ease: 'easeOut' }}
+            className="relative"
+          >
+            <div
+              className="text-[clamp(2.5rem,6vw,80px)] leading-tight tracking-tight"
+              style={{ fontFamily: "'Playfair Display', 'Instrument Serif', serif" }}
+            >
+              Making
+            </div>
+            <div
+              className="text-[clamp(4rem,14vw,160px)] leading-none font-black tracking-[-4px] lg:tracking-[-8px]"
+              style={{ fontFamily: "'Playfair Display', 'Instrument Serif', serif" }}
+            >
+              SOMETHING
+            </div>
+          </motion.div>
+
+          {/* Little character — bottom left float */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: isLoaded ? 1 : 0 }}
+            transition={{ duration: 1, delay: 0.6 }}
+            className="mt-8 -ml-2"
+          >
+            <img
+              src="/illustrations/little-character.png"
+              alt="Little entrepreneur character"
+              className="w-40 lg:w-48"
+            />
+          </motion.div>
+        </div>
+      </main>
+
+      <footer className="border-t border-black/10 py-12 px-6 lg:px-12">
+        <div className="max-w-7xl mx-auto flex justify-between items-center text-sm text-black/50" style={{ fontFamily: "'DM Sans', system-ui, sans-serif" }}>
+          <span>The Page Gallery</span>
+          <span>© {new Date().getFullYear()}</span>
+        </div>
       </footer>
     </div>
   );
