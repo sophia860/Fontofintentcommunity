@@ -5,6 +5,9 @@
   --font-handwritten: 'ACFrenchToast', cursive;
   --font-capitals: 'ACRealAdult', cursive;
   --font-biro: 'Caveat', cursive;
+  --font-root: "Instrument Serif", serif;
+  --font-breath: "DM Sans", system-ui, sans-serif;
+  --font-ink: "Caveat", cursive;
   --ink-red: #B71C1C;
   --highlighter: rgba(255, 244, 0, 0.45);
   --background: #ffffff;
@@ -122,6 +125,9 @@
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
+  --font-root: var(--font-root);
+  --font-breath: var(--font-breath);
+  --font-ink: var(--font-ink);
 }
 
 @layer base {

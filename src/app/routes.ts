@@ -20,11 +20,13 @@ import { About } from './components/About';
 import { WritingSurface } from './components/WritingSurface';
 import { PreviewScreen } from './components/PreviewScreen';
 import { ReplayView } from './components/ReplayView';
-import { AuthPage } from './components/AuthPage';
+import Auth from '@/routes/auth';
 import { AuthCallbackPage } from './components/AuthCallbackPage';
 import { AdminDashboard } from './components/AdminDashboard';
 import { Editions } from './components/Editions';
 import { EditionDetail } from './components/EditionDetail';
+import { CollectorCircle } from './components/CollectorCircle';
+import { GardenDashboard } from '../features/garden/GardenDashboard';
 
 export const router = createBrowserRouter([
   {
@@ -89,7 +91,7 @@ export const router = createBrowserRouter([
   },
   {
     path: '/auth',
-    Component: AuthPage,
+    Component: Auth,
   },
   {
     path: '/auth/callback',
@@ -138,5 +140,13 @@ export const router = createBrowserRouter([
   {
     path: '/admin',
     Component: AdminDashboard,
+  },
+  {
+    path: '/circle',
+    Component: CollectorCircle,
+  },
+  {
+    path: '/garden/dashboard',
+    Component: GardenDashboard,
   },
 ]);
