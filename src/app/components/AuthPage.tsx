@@ -2,6 +2,11 @@
  * AuthPage — sign in to the Garden.
  * Magic link is the default — works for all existing Garden members with no password.
  * Password tab available for users who have set one.
+ *
+ * Fixes applied:
+ * - Error messages now come through as writer-friendly copy (from useGardenAuth)
+ * - Password form shows a persistent soft hint explaining the magic-link-first model
+ * - "Invalid login credentials" no longer shows raw Supabase copy
  */
 import { useState } from 'react'
 import { useNavigate, useSearchParams } from 'react-router'
@@ -100,11 +105,24 @@ const S: Record<string, React.CSSProperties> = {
     fontFamily: 'Georgia, serif',
     marginTop: '0.5rem',
   },
+  submitDisabled: {
+    width: '100%',
+    fontSize: '0.85rem',
+    letterSpacing: '0.05em',
+    textTransform: 'uppercase' as const,
+    color: '#F5EDE4',
+    backgroundColor: '#a09890',
+    padding: '0.75rem',
+    border: 'none',
+    cursor: 'not-allowed',
+    fontFamily: 'Georgia, serif',
+    marginTop: '0.5rem',
+  },
   error: {
     fontSize: '0.85rem',
     color: '#9b2335',
     marginBottom: '1rem',
-    lineHeight: 1.5,
+    lineHeight: 1.6,
   },
   success: {
     fontSize: '0.88rem',
@@ -148,6 +166,16 @@ const S: Record<string, React.CSSProperties> = {
     lineHeight: 1.6,
     marginTop: '1rem',
   },
+  // Soft advisory shown below the password form to explain magic-link-first model
+  passwordHint: {
+    fontSize: '0.78rem',
+    color: '#7a7067',
+    lineHeight: 1.6,
+    marginTop: '1rem',
+    padding: '0.75rem 1rem',
+    backgroundColor: '#EDE1D5',
+    borderLeft: '2px solid #c5bdb4',
+  },
 }
 
 type Mode = 'magic' | 'password'
@@ -156,9 +184,7 @@ export function AuthPage() {
   const navigate = useNavigate()
   const [searchParams] = useSearchParams()
   const returnTo = searchParams.get('returnTo') || '/'
-
   const { signInWithMagicLink, signInWithPassword, loading, error } = useGardenAuth()
-
   const [mode, setMode] = useState<Mode>('magic')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -185,26 +211,32 @@ export function AuthPage() {
     e.preventDefault()
     setLocalError('')
     const { error: err } = await signInWithPassword(email, password)
-    if (!err) navigate(returnTo, { replace: true })
-    else setLocalError(err.message)
+    // err.message is already writer-friendly from useGardenAuth
+    if (!err) {
+      navigate(returnTo, { replace: true })
+    } else {
+      setLocalError(err.message)
+    }
   }
 
+  // Prefer localError (set inline) over the hook-level error
   const displayError = localError || error || ''
 
   return (
     <div style={S.page}>
       <div style={S.card}>
         <span style={S.eyebrow}>Page Gallery Editions</span>
+
         <h1 style={S.h1}>
           {sent ? 'Check your inbox.' : 'Sign in to the Garden.'}
         </h1>
 
         {sent ? (
           <>
-            <p style={S.success}>
-              We've sent a sign-in link to <strong>{email}</strong>.
-              Follow it to enter the Garden — no password needed.
-            </p>
+            <div style={S.success}>
+              We&rsquo;ve sent a sign-in link to <strong>{email}</strong>.
+              Follow it to enter the Garden &mdash; no password needed.
+            </div>
             <button style={S.ghostLink} onClick={() => setSent(false)}>
               Try a different email
             </button>
@@ -230,6 +262,7 @@ export function AuthPage() {
             {mode === 'magic' ? (
               <form onSubmit={handleMagicLink}>
                 {displayError && <p style={S.error}>{displayError}</p>}
+
                 <div style={S.fieldGroup}>
                   <label style={S.fieldLabel}>Email address</label>
                   <input
@@ -238,20 +271,27 @@ export function AuthPage() {
                     required
                     autoFocus
                     value={email}
-                    onChange={e => setEmail(e.target.value)}
+                    onChange={(e) => setEmail(e.target.value)}
                     placeholder="hello@example.com"
                   />
                 </div>
-                <button style={S.submit} type="submit" disabled={loading || !email}>
+
+                <button
+                  type="submit"
+                  style={loading ? S.submitDisabled : S.submit}
+                  disabled={loading}
+                >
                   {loading ? 'Sending…' : 'Send me a sign-in link'}
                 </button>
+
                 <p style={S.noteInline}>
-                  Works for all existing Garden members — no password required.
+                  Works for all existing Garden members &mdash; no password required.
                 </p>
               </form>
             ) : (
               <form onSubmit={handlePassword}>
                 {displayError && <p style={S.error}>{displayError}</p>}
+
                 <div style={S.fieldGroup}>
                   <label style={S.fieldLabel}>Email address</label>
                   <input
@@ -260,10 +300,11 @@ export function AuthPage() {
                     required
                     autoFocus
                     value={email}
-                    onChange={e => setEmail(e.target.value)}
+                    onChange={(e) => setEmail(e.target.value)}
                     placeholder="hello@example.com"
                   />
                 </div>
+
                 <div style={S.fieldGroup}>
                   <label style={S.fieldLabel}>Password</label>
                   <input
@@ -271,14 +312,40 @@ export function AuthPage() {
                     type="password"
                     required
                     value={password}
-                    onChange={e => setPassword(e.target.value)}
+                    onChange={(e) => setPassword(e.target.value)}
                     placeholder="Your password"
                   />
                 </div>
-                <button style={S.submit} type="submit" disabled={loading || !email || !password}>
+
+                <button
+                  type="submit"
+                  style={loading ? S.submitDisabled : S.submit}
+                  disabled={loading}
+                >
                   {loading ? 'Signing in…' : 'Sign in'}
                 </button>
-                <button style={S.ghostLink} type="button" onClick={() => switchMode('magic')}>
+
+                {/* Soft hint — explains to magic-link members why password may not work */}
+                {!displayError && (
+                  <p style={S.passwordHint}>
+                    Most Garden members sign in via email link, not a password.
+                    If this isn&rsquo;t working, try the{' '}
+                    <button
+                      type="button"
+                      style={{ ...S.ghostLink, display: 'inline', marginTop: 0 }}
+                      onClick={() => switchMode('magic')}
+                    >
+                      Email link tab
+                    </button>
+                    {' '}instead.
+                  </p>
+                )}
+
+                <button
+                  type="button"
+                  style={S.ghostLink}
+                  onClick={() => switchMode('magic')}
+                >
                   No password? Use an email link instead
                 </button>
               </form>
