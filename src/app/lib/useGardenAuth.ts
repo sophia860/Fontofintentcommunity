@@ -106,14 +106,17 @@ export function useGardenAuth() {
   }, [fetchGardenUser])
 
   const signInWithMagicLink = useCallback(async (email: string, returnTo = '/') => {
-    const callback = new URL('/auth/callback', window.location.origin)
+    // Build the callback URL using Vite's BASE_URL so it works on both
+    // localhost (base='/') and GitHub Pages (base='/Fontofintentcommunity/').
+    const base = import.meta.env.BASE_URL ?? '/'
+    const callbackPath = base.replace(/\/$/, '') + '/auth/callback'
+    const callback = new URL(callbackPath, window.location.origin)
     callback.searchParams.set('returnTo', returnTo)
 
     const { error } = await supabase.auth.signInWithOtp({
       email,
       options: { emailRedirectTo: callback.toString() },
     })
-
     return { error }
   }, [])
 
