@@ -12,11 +12,8 @@ export function PageGalleryHome() {
       <Nav />
 
       <main className="max-w-7xl mx-auto px-6 lg:px-12 pt-20 pb-32">
-        {/* Hero grid: text left, illustrations right */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
-
-          {/* Left column — text */}
-          <div className="lg:col-span-7">
+        {/* Hero section */}
+        <div className="max-w-4xl">
             <h1
               className="text-[clamp(3rem,8vw,92px)] leading-[1.05] tracking-[-2px] mb-8 font-bold"
               style={{ fontFamily: "'Fira Code', monospace" }}
@@ -49,68 +46,6 @@ export function PageGalleryHome() {
                 Shop Limited Editions →
               </Link>
             </motion.div>
-          </div>
-
-          {/* Right column — floating illustrations */}
-          <div className="lg:col-span-5 relative h-[580px] lg:flex hidden justify-end">
-            <motion.div
-              initial={{ opacity: 0, y: 40 }}
-              animate={{ opacity: isLoaded ? 1 : 0, y: isLoaded ? 0 : 40 }}
-              transition={{ duration: 0.8, ease: 'easeOut' }}
-              className="absolute top-12 right-0"
-            >
-              <img
-                src="/illustrations/entrepreneur-girls.png"
-                alt="Two girls selling hand-drawn wrapping papers"
-                className="w-72 xl:w-80 drop-shadow-xl"
-              />
-            </motion.div>
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: isLoaded ? 0.65 : 0 }}
-              transition={{ duration: 1.2, delay: 0.3 }}
-              className="absolute top-80 right-28 w-36"
-            >
-              <img src="/illustrations/scribble.png" alt="" aria-hidden="true" />
-            </motion.div>
-          </div>
-        </div>
-
-        {/* Bottom anchor — "Making SOMETHING" */}
-        <div className="mt-32 lg:mt-48">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: isLoaded ? 1 : 0, y: isLoaded ? 0 : 30 }}
-            transition={{ duration: 0.9, delay: 0.4, ease: 'easeOut' }}
-            className="relative"
-          >
-            <div
-              className="text-[clamp(2.5rem,6vw,80px)] leading-tight tracking-tight"
-              style={{ fontFamily: "'Fira Code', monospace" }}
-            >
-              Making
-            </div>
-            <div
-              className="text-[clamp(4rem,14vw,160px)] leading-none font-black tracking-[-4px] lg:tracking-[-8px]"
-              style={{ fontFamily: "'Fira Code', monospace" }}
-            >
-              SOMETHING
-            </div>
-          </motion.div>
-
-          {/* Little character — bottom left float */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: isLoaded ? 1 : 0 }}
-            transition={{ duration: 1, delay: 0.6 }}
-            className="mt-8 -ml-2"
-          >
-            <img
-              src="/illustrations/little-character.png"
-              alt="Little entrepreneur character"
-              className="w-40 lg:w-48"
-            />
-          </motion.div>
         </div>
       </main>
 
