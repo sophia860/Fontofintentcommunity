@@ -1,12 +1,16 @@
 import { createClient } from '@supabase/supabase-js';
 
-const SUPABASE_URL = 'https://snulcgtnlurperqqkaps.supabase.co';
-const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNudWxjZ3RubHVycGVycXFrYXBzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzA1NjU4NTgsImV4cCI6MjA4NjE0MTg1OH0.eeR66DGAzaD0rvSnyXOmLQJCLCOXA_dzvYr1JX6kEfk';
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL as string;
+const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY as string;
 
-export const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+if (!supabaseUrl) throw new Error('Missing env var: VITE_SUPABASE_URL');
+if (!supabaseAnonKey) throw new Error('Missing env var: VITE_SUPABASE_ANON_KEY');
+
+export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
   auth: {
     autoRefreshToken: true,
     persistSession: true,
     detectSessionInUrl: true,
+    storage: localStorage,
   },
 });

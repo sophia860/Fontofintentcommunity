@@ -1,29 +1,4 @@
-import { useEffect, useState } from 'react';
-import type { User } from '@supabase/supabase-js';
-import { supabase } from './supabase';
-
-export function useAuth() {
-  const [user, setUser] = useState<User | null>(null);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    // Initialise from the current session
-    supabase.auth.getSession().then(({ data }) => {
-      setUser(data.session?.user ?? null);
-      setLoading(false);
-    });
-
-    // Keep in sync with auth state changes
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      setUser(session?.user ?? null);
-    });
-
-    return () => subscription.unsubscribe();
-  }, []);
-
-  async function signOut() {
-    await supabase.auth.signOut();
-  }
-
-  return { user, loading, signOut };
-}
+// Re-export from the shared AuthProvider context.
+// Components that import from this path will use the single session
+// listener established at the app root rather than creating their own.
+export { useAuth } from '../../contexts/AuthProvider';
