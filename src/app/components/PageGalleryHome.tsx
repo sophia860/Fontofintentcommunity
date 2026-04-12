@@ -25,6 +25,22 @@ import {
 } from 'motion/react';
 import { Nav } from './Nav';
 
+// ── Design tokens ─────────────────────────────────────────────────────────────
+
+/** Primary body / mono font. Repeated inline because Tailwind purges unused classes. */
+const FONT_MONO = "'Fira Code', monospace";
+
+// Typography scale used across the component
+const T = {
+  label:    { fontFamily: FONT_MONO, fontSize: '0.68rem', letterSpacing: '0.32em' },
+  micro:    { fontFamily: FONT_MONO, fontSize: '0.62rem', letterSpacing: '0.28em' },
+} as const;
+
+// Particle system limits
+const MAX_PARTICLES      = 220;
+const MIN_PARTICLE_LIFE  = 90;
+const PARTICLE_LIFE_RANGE = 160;  // maxLife = MIN + random * RANGE
+
 // ── Types ─────────────────────────────────────────────────────────────────────
 interface InkParticle {
   x: number; y: number;
@@ -64,12 +80,12 @@ function useInkCanvas() {
           vx: Math.cos(angle) * spd,
           vy: Math.sin(angle) * spd - 0.35,
           life: 0,
-          maxLife: 90 + Math.random() * 160,
+          maxLife: MIN_PARTICLE_LIFE + Math.random() * PARTICLE_LIFE_RANGE,
           size: 0.8 + Math.random() * 2.2,
           alpha: 0.25 + Math.random() * 0.35,
         });
       }
-      if (particles.length > 220) particles.splice(0, particles.length - 220);
+      if (particles.length > MAX_PARTICLES) particles.splice(0, particles.length - MAX_PARTICLES);
     };
 
     const onMove = (e: MouseEvent) => {
@@ -176,7 +192,7 @@ function Marquee() {
           <span
             key={i}
             style={{
-              fontFamily: "'Fira Code', monospace",
+              fontFamily: FONT_MONO,
               fontSize: '0.7rem',
               letterSpacing: '0.22em',
               color: '#F5EDE4',
@@ -224,7 +240,7 @@ function SomethingSection() {
         <motion.p
           style={{
             position: 'absolute', top: '11%', opacity,
-            fontFamily: "'Fira Code', monospace",
+            fontFamily: FONT_MONO,
             fontSize: '0.68rem', letterSpacing: '0.32em',
             textTransform: 'uppercase', color: '#9a9085',
           }}
@@ -235,7 +251,7 @@ function SomethingSection() {
         <motion.div
           style={{
             scale, opacity, filter: filterVal, y, color: rawColor,
-            fontFamily: "'Fira Code', monospace",
+            fontFamily: FONT_MONO,
             fontSize: 'clamp(4.5rem, 15vw, 168px)',
             fontWeight: 900, lineHeight: 1,
             letterSpacing: 'clamp(-4px,-0.04em,-8px)',
@@ -249,7 +265,7 @@ function SomethingSection() {
         <motion.p
           style={{
             position: 'absolute', bottom: '11%', opacity,
-            fontFamily: "'Fira Code', monospace",
+            fontFamily: FONT_MONO,
             fontSize: '0.68rem', letterSpacing: '0.32em',
             textTransform: 'uppercase', color: '#9a9085',
           }}
@@ -289,7 +305,7 @@ function MagneticCTA({ href, children }: { href: string; children: React.ReactNo
         style={{
           display: 'inline-block', padding: '1rem 2.5rem',
           border: '2px solid #2C2824',
-          fontFamily: "'Fira Code', monospace",
+          fontFamily: FONT_MONO,
           fontSize: '0.82rem', letterSpacing: '0.18em',
           textTransform: 'uppercase', color: '#2C2824',
           textDecoration: 'none', background: 'transparent',
@@ -348,7 +364,7 @@ function FeatureCard({
       />
       <Link to={href} style={{ textDecoration: 'none', color: 'inherit', display: 'block' }}>
         <p style={{
-          fontFamily: "'Fira Code', monospace",
+          fontFamily: FONT_MONO,
           fontSize: '0.62rem', letterSpacing: '0.28em',
           textTransform: 'uppercase', color: '#9a9085', marginBottom: '0.9rem',
         }}>
@@ -358,7 +374,7 @@ function FeatureCard({
           animate={{ x: hov ? 8 : 0 }}
           transition={{ duration: 0.3, ease: 'easeOut' }}
           style={{
-            fontFamily: "'Fira Code', monospace",
+            fontFamily: FONT_MONO,
             fontSize: 'clamp(1.4rem,2.2vw,1.9rem)',
             fontWeight: 700, letterSpacing: '-0.025em',
             lineHeight: 1.2, color: '#2C2824', marginBottom: '1rem',
@@ -367,7 +383,7 @@ function FeatureCard({
           {title}
         </motion.h3>
         <p style={{
-          fontFamily: "'Fira Code', monospace",
+          fontFamily: FONT_MONO,
           fontSize: '0.88rem', lineHeight: 1.8,
           color: '#5a534c', maxWidth: '34ch', marginBottom: '1.5rem',
         }}>
@@ -377,7 +393,7 @@ function FeatureCard({
           animate={{ x: hov ? 5 : 0 }}
           transition={{ duration: 0.28, ease: 'easeOut' }}
           style={{
-            fontFamily: "'Fira Code', monospace",
+            fontFamily: FONT_MONO,
             fontSize: '0.74rem', letterSpacing: '0.18em',
             textTransform: 'uppercase', color: '#2C2824',
             borderBottom: '1px solid currentColor', paddingBottom: '2px',
@@ -408,7 +424,7 @@ function ParallaxStamp() {
           border: '2px solid #2C2824', borderRadius: '50%',
           display: 'flex', flexDirection: 'column',
           alignItems: 'center', justifyContent: 'center',
-          fontFamily: "'Fira Code', monospace",
+          fontFamily: FONT_MONO,
           fontSize: '0.6rem', letterSpacing: '0.2em',
           textTransform: 'uppercase', color: '#2C2824',
           lineHeight: 2, textAlign: 'center',
@@ -502,7 +518,7 @@ export function PageGalleryHome() {
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.85, ease: [0.22, 1, 0.36, 1] }}
                 style={{
-                  fontFamily: "'Fira Code', monospace",
+                  fontFamily: FONT_MONO,
                   fontSize: '0.67rem', letterSpacing: '0.34em',
                   textTransform: 'uppercase', color: '#9a9085',
                   marginBottom: '2.5rem',
@@ -516,7 +532,7 @@ export function PageGalleryHome() {
                   text="Once an"
                   delay={0.1}
                   style={{
-                    fontFamily: "'Fira Code', monospace",
+                    fontFamily: FONT_MONO,
                     fontSize: 'clamp(2.2rem,4.5vw,4.5rem)',
                     letterSpacing: '-1.5px', color: '#2C2824', lineHeight: 1.05,
                   }}
@@ -525,7 +541,7 @@ export function PageGalleryHome() {
                   text="ENTREPRENEUR,"
                   delay={0.22}
                   style={{
-                    fontFamily: "'Fira Code', monospace",
+                    fontFamily: FONT_MONO,
                     fontSize: 'clamp(3rem,7.5vw,7.5rem)',
                     letterSpacing: '-3px', color: '#2C2824', lineHeight: 0.96,
                     marginTop: '0.07em',
@@ -535,7 +551,7 @@ export function PageGalleryHome() {
                   text="always an"
                   delay={0.52}
                   style={{
-                    fontFamily: "'Fira Code', monospace",
+                    fontFamily: FONT_MONO,
                     fontSize: 'clamp(2.2rem,4.5vw,4.5rem)',
                     letterSpacing: '-1.5px', color: '#2C2824', lineHeight: 1.05,
                     marginTop: '0.12em',
@@ -545,7 +561,7 @@ export function PageGalleryHome() {
                   text="ENTREPRENEUR."
                   delay={0.65}
                   style={{
-                    fontFamily: "'Fira Code', monospace",
+                    fontFamily: FONT_MONO,
                     fontSize: 'clamp(3rem,7.5vw,7.5rem)',
                     letterSpacing: '-3px', color: '#2C2824', lineHeight: 0.96,
                     marginTop: '0.07em',
@@ -572,7 +588,7 @@ export function PageGalleryHome() {
             <WordReveal
               text="Picture two primary school girls, circa 1992, prancing from door to door of their tiny rural German village — hand-drawn wrapping papers in hand. Their product: one of a kind. Their objective: a pony ride. That was my sister and me: creative entrepreneurs since Day 1."
               style={{
-                fontFamily: "'Fira Code', monospace",
+                fontFamily: FONT_MONO,
                 fontSize: '1rem', lineHeight: 1.92,
                 color: '#5a534c', maxWidth: '46ch',
               }}
@@ -602,7 +618,7 @@ export function PageGalleryHome() {
             }}
           >
             <span style={{
-              fontFamily: "'Fira Code', monospace",
+              fontFamily: FONT_MONO,
               fontSize: '0.58rem', letterSpacing: '0.32em',
               textTransform: 'uppercase', color: '#b0a8a0',
             }}>
@@ -646,14 +662,14 @@ export function PageGalleryHome() {
             style={{ marginBottom: '4rem' }}
           >
             <p style={{
-              fontFamily: "'Fira Code', monospace",
+              fontFamily: FONT_MONO,
               fontSize: '0.67rem', letterSpacing: '0.32em',
               textTransform: 'uppercase', color: '#9a9085', marginBottom: '1rem',
             }}>
               The platform
             </p>
             <h2 style={{
-              fontFamily: "'Fira Code', monospace",
+              fontFamily: FONT_MONO,
               fontSize: 'clamp(2rem,4vw,3.5rem)',
               fontWeight: 900, letterSpacing: '-2px',
               lineHeight: 1.05, color: '#2C2824', margin: 0,
@@ -692,13 +708,13 @@ export function PageGalleryHome() {
           }}
         >
           <span style={{
-            fontFamily: "'Fira Code', monospace",
+            fontFamily: FONT_MONO,
             fontSize: '0.76rem', letterSpacing: '0.22em', textTransform: 'uppercase',
           }}>
             The Page Gallery
           </span>
           <span style={{
-            fontFamily: "'Fira Code', monospace",
+            fontFamily: FONT_MONO,
             fontSize: '0.7rem', color: '#9A8F87', letterSpacing: '0.06em',
           }}>
             © {new Date().getFullYear()} · London / Digital

@@ -50,11 +50,14 @@ function CustomCursor() {
     let rx = 0, ry = 0;
     let rafId = 0;
 
+    /** Controls how quickly the ring lags behind the dot. Lower = more lag. */
+    const CURSOR_LAG_FACTOR = 0.12;
+
     const onMove = (e: MouseEvent) => {
       dot.style.left = `${e.clientX}px`;
       dot.style.top  = `${e.clientY}px`;
-      rx += (e.clientX - rx) * 0.12;
-      ry += (e.clientY - ry) * 0.12;
+      rx += (e.clientX - rx) * CURSOR_LAG_FACTOR;
+      ry += (e.clientY - ry) * CURSOR_LAG_FACTOR;
     };
 
     const tick = () => {
