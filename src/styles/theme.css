@@ -11,7 +11,7 @@
   --font-ink: 'Fira Code', monospace;
   --ink-red: #B71C1C;
   --highlighter: rgba(255, 244, 0, 0.45);
-  --background: #ffffff;
+  --background: #FAF7F2;
   --foreground: oklch(0.145 0 0);
   --card: #ffffff;
   --card-foreground: oklch(0.145 0 0);
@@ -137,8 +137,8 @@
   }
 
   body {
-    @apply bg-background text-foreground;
-    background: #F9F6F2;
+    @apply text-foreground;
+    background: #FAF7F2;
     font-family: var(--font-body);
   }
 
@@ -147,13 +147,9 @@
   * These are in @layer base, so Tailwind utility classes (like text-sm, text-lg) automatically override them.
   */
 
-  /* Paper grain texture — tiling SVG noise on the root element */
   html {
     font-size: var(--font-size);
-    background: #F9F6F2;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='paper'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23paper)' opacity='0.05'/%3E%3C/svg%3E");
-    background-repeat: repeat;
-    background-size: 300px 300px;
+    background: #FAF7F2;
   }
 
   h1 {
