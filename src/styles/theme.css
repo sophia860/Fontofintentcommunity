@@ -5,7 +5,7 @@
   --text-black: #111111;
   --accent-red: #E30613;
   --font-size: 16px;
-  --font-handwritten: 'TaktukBrush', cursive;
+  --font-handwritten: 'VanillaCreamOx', cursive;
   --font-body: 'Fira Code', monospace;
   --font-capitals: 'ACRealAdult', cursive;
   --font-biro: 'Fira Code', monospace;
@@ -238,10 +238,10 @@
   letter-spacing: -3.5px;
 }
 
-/* Handwritten / script utility — Caveat */
+/* Handwritten / script utility — VanillaCreamOx */
 .handwritten {
-  font-family: 'Caveat', cursive;
-  font-weight: 600;
+  font-family: 'VanillaCreamOx', cursive;
+  font-weight: 400;
   letter-spacing: -0.5px;
 }
 

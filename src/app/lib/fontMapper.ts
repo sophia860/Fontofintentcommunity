@@ -17,11 +17,11 @@ import type { CSSProperties } from 'react';
 const WRITING_FONT = "'Fira Code', monospace";
 
 /**
- * Full chaos font pool — replaced with TaktukBrush as the single handwritten font.
+ * Full chaos font pool — VanillaCreamOx as the single handwritten font.
  * Order matters: hash % length maps into this array.
  */
 export const CHAOS_FONTS = [
-  "'TaktukBrush', cursive",
+  "'VanillaCreamOx', cursive",
 ];
 
 /**
@@ -114,7 +114,7 @@ export function getBurstStyle(
  */
 export function getGhostStyle(): CSSProperties {
   return {
-    fontFamily: "'TaktukBrush', cursive",
+    fontFamily: "'VanillaCreamOx', cursive",
     color: '#8A7E72',
     opacity: 0.15,
     display: 'inline',
