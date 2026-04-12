@@ -228,6 +228,33 @@ export function PageGalleryHome() {
         </div>
       </section>
 
+      {/* Hand drawing — final emotional statement */}
+      <section className="relative bg-black text-white py-32 overflow-hidden">
+        <div className="max-w-5xl mx-auto px-8 flex flex-col md:flex-row items-center gap-16">
+          <div className="flex-1 space-y-6">
+            <p className="font-ink text-4xl leading-none tracking-tight max-w-xs">
+              we are<br />
+              interested<br />
+              in<br />
+              the hands
+            </p>
+            <div className="text-zinc-400 text-sm tracking-widest pt-8">
+              the ones that write.<br />
+              the ones that print.<br />
+              the ones that hold the editions.
+            </div>
+          </div>
+          <div className="flex-1 flex justify-center">
+            <img
+              src="/images/hand-drawing.png"
+              alt="we are interested in the hands"
+              className="w-full max-w-[420px] opacity-90 drop-shadow-2xl"
+            />
+          </div>
+        </div>
+        <div className="absolute inset-0 bg-[radial-gradient(#ffffff08_1px,transparent_1px)] bg-[length:4px_4px] pointer-events-none" />
+      </section>
+
       {/* Footer */}
       <footer style={S.footer}>
         <span style={S.footerWord}>The Page Gallery</span>
