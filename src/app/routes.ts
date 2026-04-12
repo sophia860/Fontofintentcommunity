@@ -25,6 +25,7 @@ import { AuthCallbackPage } from './components/AuthCallbackPage';
 import { AdminDashboard } from './components/AdminDashboard';
 import { Editions } from './components/Editions';
 import { EditionDetail } from './components/EditionDetail';
+import { WritingDashboard } from '../features/garden/poets/WritingDashboard';
 
 export const router = createBrowserRouter([
   {
@@ -138,5 +139,9 @@ export const router = createBrowserRouter([
   {
     path: '/admin',
     Component: AdminDashboard,
+  },
+  {
+    path: '/garden/poets/write',
+    Component: WritingDashboard,
   },
 ]);
