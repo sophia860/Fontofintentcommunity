@@ -20,6 +20,7 @@ export function PageGalleryHome() {
         <nav className="flex items-center gap-10 text-sm uppercase tracking-[0.5px] font-medium">
           <Link to="/categories" className="hover:underline">Categories</Link>
           <Link to="/about" className="hover:underline">About</Link>
+          <Link to="/typographic-scroll" className="hover:underline">Editorial</Link>
           <Link to="/commissions" className="hover:underline">Contact</Link>
           <Link
             to="/apply"
