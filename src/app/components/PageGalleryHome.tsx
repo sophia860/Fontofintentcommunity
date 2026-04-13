@@ -462,6 +462,8 @@ export function PageGalleryHome() {
     setLoaded(true);
   }, []);
 
+  const animate = loaded ? 'visible' : 'hidden';
+
   return (
     <div className="min-h-screen bg-[var(--bg-paper)] text-[var(--text-black)] overflow-hidden">
       {/* Minimal header – clean institution feel */}
@@ -485,13 +487,16 @@ export function PageGalleryHome() {
       </header>
 
       <main className="max-w-7xl mx-auto px-8 pt-24 pb-40">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-x-20 items-start">
+        <motion.div
+          variants={containerVariants}
+          initial="hidden"
+          animate={animate}
+          className="grid grid-cols-1 lg:grid-cols-12 gap-x-20 items-start"
+        >
           {/* Left column – generous story block */}
           <div className="lg:col-span-7">
             <motion.h1
-              initial={{ opacity: 0, y: 32 }}
-              animate={{ opacity: loaded ? 1 : 0, y: loaded ? 0 : 32 }}
-              transition={{ duration: 0.85, ease: 'easeOut' }}
+              variants={headlineVariants}
               className="serif-heading text-[clamp(3.5rem,8vw,108px)] leading-[0.92] mb-14"
             >
               Once an<br />
@@ -501,9 +506,7 @@ export function PageGalleryHome() {
             </motion.h1>
 
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: loaded ? 1 : 0, y: loaded ? 0 : 20 }}
-              transition={{ duration: 0.85, delay: 0.2, ease: 'easeOut' }}
+              variants={itemVariants}
               className="max-w-prose text-[17px] leading-[1.85] text-black/75"
             >
               Picture two primary school girls, circa 1992, prancing from door to door of their tiny
@@ -517,16 +520,11 @@ export function PageGalleryHome() {
             </motion.div>
 
             {/* Direct revenue CTA – editions shop entry */}
-            <motion.div
-              initial={{ opacity: 0, y: 16 }}
-              animate={{ opacity: loaded ? 1 : 0, y: loaded ? 0 : 16 }}
-              transition={{ duration: 0.8, delay: 0.4, ease: 'easeOut' }}
-              className="mt-16 inline-block"
-            >
-              <motion.div whileHover={{ scale: 1.015 }}>
+            <motion.div variants={itemVariants} className="mt-16 inline-block">
+              <motion.div whileHover={{ scale: 1.02 }}>
                 <Link
                   to="/editions"
-                  className="inline-flex items-center gap-4 px-12 py-5 border-2 border-black rounded-full text-lg font-medium tracking-wide hover:bg-black hover:text-white transition-all duration-300"
+                  className="cta-button inline-flex items-center gap-4 px-12 py-5 border-2 border-black rounded-full text-lg font-medium tracking-wide hover:bg-black hover:text-white transition-all duration-300"
                 >
                   Shop Limited Editions →
                 </Link>
@@ -536,12 +534,7 @@ export function PageGalleryHome() {
 
           {/* Right column – floating mark (accent dot cluster) */}
           <div className="lg:col-span-5 relative h-[540px] hidden lg:flex justify-end items-start pt-8">
-            <motion.div
-              initial={{ opacity: 0, scale: 0.85 }}
-              animate={{ opacity: loaded ? 1 : 0, scale: loaded ? 1 : 0.85 }}
-              transition={{ duration: 1, delay: 0.3, ease: 'easeOut' }}
-              className="relative"
-            >
+            <motion.div variants={floatingMarkVariants} className="relative">
               {/* Abstract geometric mark — circles evoking the brand dot */}
               <div className="w-64 h-64 rounded-full border-2 border-black/8 flex items-center justify-center">
                 <div className="w-44 h-44 rounded-full border border-black/12 flex items-center justify-center">
@@ -561,17 +554,22 @@ export function PageGalleryHome() {
             </motion.div>
           </div>
 
-        {/* Bottom typographic anchor – "Making SOMETHING" energy */}
+        {/* Bottom typographic anchor – "Making SOMETHING" spring reveal */}
         <motion.div
-          initial={{ opacity: 0, y: 40 }}
-          animate={{ opacity: loaded ? 1 : 0, y: loaded ? 0 : 40 }}
-          transition={{ duration: 0.9, delay: 0.5, ease: 'easeOut' }}
+          variants={makingVariants}
+          initial="hidden"
+          animate={animate}
           className="mt-40 flex flex-col items-center text-center"
         >
-          <p className="handwritten text-6xl tracking-tight mb-3 text-black/90">Making</p>
-          <h2 className="serif-heading text-[clamp(4rem,14vw,168px)] leading-none font-bold tracking-[-8px]">
+          <motion.p variants={itemVariants} className="handwritten text-6xl tracking-tight mb-3 text-black/90">
+            Making
+          </motion.p>
+          <motion.h2
+            variants={somethingVariants}
+            className="serif-heading text-[clamp(4rem,14vw,168px)] leading-none font-bold tracking-[-8px]"
+          >
             SOMETHING
-          </h2>
+          </motion.h2>
         </motion.div>
       </main>
 
