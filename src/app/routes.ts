@@ -28,6 +28,7 @@ import { EditionDetail } from './components/EditionDetail';
 import { CollectorCircle } from './components/CollectorCircle';
 import { GardenDashboard } from '../features/garden/GardenDashboard';
 import { WritingDashboard } from '../features/garden/poets/WritingDashboard';
+import { TypographicScrollPage } from './components/TypographicScrollPage';
 
 // BASE_URL is set by Vite: '/' locally, '/Fontofintentcommunity/' on GitHub Pages.
 // Strip trailing slash so react-router basename works correctly.
@@ -158,5 +159,9 @@ export const router = createBrowserRouter([
   {
     path: '/garden/poets',
     Component: WritingDashboard,
+  },
+  {
+    path: '/typographic-scroll',
+    Component: TypographicScrollPage,
   },
 ], { basename });
